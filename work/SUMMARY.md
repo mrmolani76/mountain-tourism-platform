@@ -14,7 +14,7 @@ Refresh on every work / bug / change status update.
 - **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
-- (none)
+- **13** — Project audit report
 
 ### Completed
 - **12** — EQMS-style modules layout (2026-11-02)

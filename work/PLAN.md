@@ -28,7 +28,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| | | | | | |
+| 13 | Project audit report | high | docs | docs | M |
 
 ## Completed
 
