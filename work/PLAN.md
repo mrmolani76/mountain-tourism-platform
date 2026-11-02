@@ -33,6 +33,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 16 | Backend structure gaps fill (pyproject, common, tests split, admin, env stub) | high | infra | backend | M | 2026-11-02 |
 | 15 | Backend structure gaps MD | medium | docs | docs | S | 2026-11-02 |
 | 14 | Audit module + business logic docs | medium | docs | docs | S | 2026-11-02 |
 | 13 | Project audit report | high | docs | docs | M | 2026-11-02 |

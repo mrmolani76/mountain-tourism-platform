@@ -1,0 +1,37 @@
+# Mountain Tourism API — project metadata and tool config (gap fill item 16).
+# Declared dependencies only; installs happen via uv/pip on the setup machine.
+# Aligned with backend/DEPENDENCIES.md. uv.lock is generated there, not here.
+
+[project]
+name = "mountain-tourism-api"
+version = "0.1.0"
+description = "Backend API for the mountain tourism complex SaaS (MVP)."
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=5.0,<6.0",
+    "djangorestframework>=3.14,<4",
+    "psycopg2-binary>=2.9",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.4",
+    "pytest>=8",
+    "pytest-django>=4.8",
+]
+
+# ---------------------------------------------------------------------------
+# Tool config
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py"]
+testpaths = ["tests"]

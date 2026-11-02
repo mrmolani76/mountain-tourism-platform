@@ -16,6 +16,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **16** — Backend structure gaps fill (pyproject, common, tests split, admin, env stub) (2026-11-02)
 - **06** — Buildings, outlets, seasons, tenant settings APIs (2026-11-02)
 - **15** — Backend structure gaps MD (2026-11-02)
 - **14** — Audit module + business logic docs (2026-11-02)
@@ -45,6 +46,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--16-backend-structure-gaps-fill.md` — gaps fill (item 16)
 - 2026-11-02 — `work/changes/2026-11-02--06-core-config-apis.md` — core config APIs (item 06) + BUG-TENANT-001
 - 2026-11-02 — `work/changes/2026-11-02--15-backend-structure-gaps-md.md` — BACKEND_STRUCTURE_GAPS.md
 - 2026-11-02 — `work/changes/2026-11-02--14-audit-module-business-logic-docs.md` — AUDIT_MODULE.md + services/ BL

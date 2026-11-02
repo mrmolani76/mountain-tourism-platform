@@ -12,8 +12,8 @@
 | Bucket | Status |
 |--------|--------|
 | `tenancy/`, `modules/` skeleton, `config/`, `docs/`, `work/`, `.github/` | Largely present |
-| `common/`, `pyproject.toml`, `uv.lock`, split `tests/` | **Missing** |
-| Per-module `admin.py`, root `.env.example` | **Missing** |
+| `common/`, `pyproject.toml`, split `tests/`, per-module `admin.py`, root `.env.example` | Added 2026-11-02 (item 16) |
+| `uv.lock` | Missing (setup machine) |
 | Settings / views naming | Present under different names |
 
 ---
@@ -43,11 +43,13 @@
 
 | Path | Why | Other-machine note |
 |------|-----|--------------------|
-| `backend/pyproject.toml` | Declared deps + tool config (uv/poetry-style) | Generate from [`DEPENDENCIES.md`](../backend/DEPENDENCIES.md); run `uv lock` there |
+| `backend/pyproject.toml` | Declared deps + tool config (uv/poetry-style) | **Added 2026-11-02 (item 16)**; generate `uv.lock` on setup machine |
 | `backend/uv.lock` | Locked installs | Create only when setup allowed on target machine |
-| `backend/requirements.txt` (optional) | CI currently mentions it in `docs/CI.md` | Can mirror pyproject export |
+| `backend/requirements.txt` (optional) | CI currently mentions it in `docs/CI.md` | **Added 2026-11-02 (item 16)**, mirrors pyproject |
 
 ### 3.2 Shared `common/` package (entire tree missing)
+
+> **Filled 2026-11-02 (item 16):** `common/{exceptions,pagination,responses,utilities,constants}/` scaffolded with empty packages; fill contents as needed.
 
 ```text
 backend/common/
@@ -76,6 +78,8 @@ backend/common/
 | `backend/tests/integration/` | — | Missing |
 | `backend/tests/api/` | flat `test_*.py` at `tests/` | Reorganize when tests are run on other machine |
 
+> **Filled 2026-11-02 (item 16):** split into `unit/`, `integration/` (`test_tenant_db_isolation.py`), `api/` (`test_auth.py`, `test_saas_registry.py`, `test_core_config.py`). Unit folder scaffolded empty.
+
 Current files (to relocate later):
 
 - `backend/tests/test_auth.py`
@@ -88,6 +92,8 @@ Missing under each of:
 
 `saas`, `core`, `hotel`, `folio`, `pos`, `rental`, `services`, `transport`, `weather`, `reports`
 
+> **Filled 2026-11-02 (item 16):** empty `admin.py` added to all ten modules (MVP-optional, nothing registered).
+
 (Django admin optional for MVP; still listed as tree gap.)
 
 ### 3.5 Root env example
@@ -95,6 +101,8 @@ Missing under each of:
 | Ideal | Gap |
 |-------|-----|
 | `/.env.example` | Missing; only `backend/.env.example` exists. Either add root pointer file or document that backend path is canonical. |
+
+> **Filled 2026-11-02 (item 16):** root `/.env.example` stub added, pointing at `backend/.env.example`.
 
 ### 3.6 Optional renames (not blockers)
 
