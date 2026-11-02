@@ -44,6 +44,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Tenant isolation: sets current tenant from authenticated staff user.
+    'apps.core.middleware.TenantContextMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
