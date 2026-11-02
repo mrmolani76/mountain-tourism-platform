@@ -4,7 +4,7 @@
 - **Before declaring done** → § Before Declaring Done + `verify-before-done` skill
 - **When a test fails** → MUST run `triage-before-fix` first; never weaken tests to go green when app code is broken
 - **Any change** → MUST write a Change Report under `work/changes/` (Rule 9)
-- **Starting any work item** → MUST run `work-tracker`: `work/todo/` → `work/inprogress/` BEFORE edits
+- **Starting any work item** → MUST run `work-tracker`: `work/todo/` → `work/inprogress/` BEFORE edits; sync `PLAN.md` + `SUMMARY.md` (see § Work Tracking)
 - **Confirmed bug** → MUST create `work/bugs/BUG-*.md` before fixing (`bug-tracker`)
 - **Money** → Charge and Payment are append-only; void only (Rule 5)
 - **Tenant** → Every business row carries `tenant_id`; no cross-tenant leaks (Rule 3)
@@ -151,7 +151,7 @@ Never edit a shipped migration. Schema gap → new migration file only.
 Every completed change writes `work/changes/YYYY-MM-DD--<desc>.md` from `work/changes/CHANGE_REPORT_TEMPLATE.md`. No "done" without the report.
 
 ### Rule 10 — Work kanban
-Planned work lives under `work/`. Pickup moves MD `todo` → `inprogress` before edits. Complete → `completed` + change report + ask commit/push. WIP limit = 1 unless user says otherwise.
+See § Work Tracking. Folder = status. Pickup before edits. Complete needs Completion Log + change report + PLAN/SUMMARY sync + ask commit/push. WIP = 1. Never delete work MDs. Validate with `bash scripts/check-work-kanban.sh`.
 
 ### Rule 11 — Bug reports first
 Confirmed bug → create `work/bugs/BUG-<TYPE>-<NNN>-<short>.md` before fixing. Keep `work/bugs/INDEX.md` and `work/SUMMARY.md` in sync.
@@ -161,6 +161,33 @@ Prefer tests for: tenant isolation, folio posting, voids, board-included meals, 
 
 ### Rule 13 — Secrets
 Never commit `.env`, tokens, or passwords. Never print real secrets in chat or reports.
+
+---
+
+## Work Tracking — Kanban Folders
+
+> Dashboard: `work/SUMMARY.md`. Flow detail: `work/README.md`. Skill: `work-tracker`. Handoff: `work/MEMORY.md`.
+
+**Folder = status.** One MD per item.
+
+| Location | Meaning |
+|----------|---------|
+| `work/todo/` | Planned (not picked up) |
+| `work/inprogress/` | Active (WIP limit 1) |
+| `work/completed/` | Finished |
+| `work/PLAN.md` | Three tables only: Todo / In Progress / Completed — rows **move** between tables |
+| `work/TEMPLATE.md` | Work-item format |
+| `work/changes/` | Mandatory change reports |
+| `work/bugs/` | Bug reports + INDEX |
+
+**Flow:**
+1. New → `work/todo/NN-title.md` + PLAN Todo row + SUMMARY
+2. Before edits → `todo` → `inprogress`, `status: inprogress`, PLAN row → In Progress
+3. Blocked → back to `todo` + Return to Pending Log + PLAN Todo
+4. Complete → Completion Log → `completed` + PLAN Completed + `work/changes/YYYY-MM-DD--NN-*.md` + SUMMARY
+5. Ask **"Commit aur push karun?"** — no commit until yes
+
+If folder / frontmatter / PLAN disagree: trust **folder**, then repair frontmatter + PLAN. Run `bash scripts/check-work-kanban.sh`.
 
 ---
 

@@ -13,10 +13,16 @@ description: >-
 ## Steps
 
 1. Create report from `work/changes/CHANGE_REPORT_TEMPLATE.md`
-2. Include Summary, Before, After, Reason, Files Affected, Verification
-3. Use concrete paths and values (never vague "updated config")
-4. Refresh `work/SUMMARY.md` Changes section
-5. Reference the report when declaring done
+2. Prefer filename `YYYY-MM-DD--NN-<desc>.md` when tied to a work item ID
+3. Include Summary, Before, After, Reason, Files Affected, Verification
+4. Use concrete paths and values (never vague "updated config")
+5. Link the report path inside the work item `## Completion Log`
+6. Refresh `work/SUMMARY.md` §4 Changes
+7. Reference the report when declaring done
+
+## With work-tracker
+
+Complete order: fill Completion Log → move MD to `completed/` → write this report → update PLAN/SUMMARY → ask commit/push.
 
 ## Refusal
 

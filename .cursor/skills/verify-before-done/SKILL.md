@@ -31,10 +31,14 @@ description: >-
 | Domain vocabulary names | [ ] Yes / [ ] N/A |
 | MVP scope boundary | [ ] Yes / [ ] N/A |
 
-### 5. Reports
-- [ ] `work/changes/YYYY-MM-DD--*.md` written
-- [ ] Work MD moved to `completed/` if tracked
-- [ ] SUMMARY/PLAN updated
+### 5. Work kanban (if this was a tracked item)
+- [ ] MD was in `inprogress/` while editing (not left in `todo/`)
+- [ ] Completion Log filled
+- [ ] MD moved to `work/completed/` with `status: completed`
+- [ ] PLAN row in **Completed** only
+- [ ] `work/changes/YYYY-MM-DD--NN-*.md` written
+- [ ] SUMMARY refreshed
+- [ ] `bash scripts/check-work-kanban.sh` OK (or equivalent manual check)
 
 ### 6. Git
 - [ ] Asked **"Commit aur push karun?"**
@@ -42,4 +46,4 @@ description: >-
 
 ## Refusal
 
-Do not declare done without change report, or when touched money/tenant behavior has no verification story.
+Do not declare done without change report, or when a tracked item skipped kanban moves, or when touched money/tenant behavior has no verification story.

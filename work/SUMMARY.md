@@ -11,7 +11,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
-- (none)
+- **01** — Harden work-tracker kanban workflow (2026-11-02)
 
 ## 2. Bugs
 
@@ -28,6 +28,7 @@ Refresh on every work / bug / change status update.
 - (none yet)
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--01-work-tracker-workflow.md` — work-tracker workflow
 - 2026-11-02 — `work/changes/2026-11-02--ai-rules-and-skills-bootstrap.md` — AI rules/skills bootstrap
 
 ## 5. Deploys

@@ -42,7 +42,7 @@ Skills: `.opencode/skills/<name>/SKILL.md`. Cursor mirrors: `.cursor/skills/`. C
 | `security-code-review` | Review only |
 | `django-best-practices` | Backend Python/Django |
 | `nuxt-vuetify-best-practices` | Frontend Nuxt/Vue/Vuetify |
-| `work-tracker` | Kanban under `work/` |
+| `work-tracker` | Kanban under `work/` — folder=status; pickup before edits; PLAN+SUMMARY sync; `scripts/check-work-kanban.sh` |
 | `change-report` | After any change |
 | `bug-tracker` | Confirmed bugs |
 | `triage-before-fix` | Red/flaky tests |

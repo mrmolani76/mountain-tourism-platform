@@ -1,0 +1,17 @@
+---
+description: Work kanban — folder=status; move MD todo→inprogress before edits; complete→completed + change report + PLAN/SUMMARY sync
+globs: work/**/*
+alwaysApply: true
+---
+
+# Work Tracker
+
+When creating, picking up, blocking, or completing work:
+
+1. **MUST follow** `.cursor/skills/work-tracker/SKILL.md` and `work/README.md`.
+2. **Folder = status.** `todo` / `inprogress` / `completed` must match frontmatter `status`.
+3. **Before edits** on a planned item: move MD `work/todo/` → `work/inprogress/` and move its `PLAN.md` row to **In Progress**.
+4. **WIP limit = 1** unless the user allows more.
+5. **On complete:** Completion Log + move to `completed/` + PLAN Completed row + `work/changes/` report + refresh `SUMMARY.md`.
+6. **Then ask:** "Commit aur push karun?" — no commit until yes.
+7. Run `bash scripts/check-work-kanban.sh` after moves when unsure.

@@ -39,11 +39,21 @@ Edit the skill under `.cursor/skills/<name>/`, then copy the same folder to:
 ### Engineering standards twin
 Keep `.cursor/rules/nexro-engineering.mdc` and `.opencode/rules.md` aligned.
 
+## Work kanban
+
+Follow `work/README.md` + `work-tracker` skill. After MD moves:
+
+```bash
+bash scripts/check-work-kanban.sh
+```
+
 ## Verification
 
 Ask any agent: **"Re-read CLAUDE.md and confirm current rules"**
 
 Expect: non-negotiables summarized, domain vocabulary, money append-only, tenant isolation, skill awareness.
+
+Also: **"Show work kanban status"** → PLAN / SUMMARY / folder agreement + WIP ≤ 1.
 
 ## No Secrets
 

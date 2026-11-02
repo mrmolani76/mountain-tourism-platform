@@ -42,9 +42,10 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 3. Use domain vocabulary from CLAUDE.md (Tenant, Building, Outlet, Folio, Charge, …)
 4. Money is append-only (void only)
 5. Tenant scope every business query
-6. Before edits on a tracked item: `work-tracker`
-7. Before saying done: `verify-before-done` + change report
-8. Commit/push only after explicit user approval
+6. Before edits on a tracked item: `work-tracker` (MD `todo` → `inprogress` + PLAN/SUMMARY). Detail: `work/README.md`
+7. WIP limit = 1. Validate: `bash scripts/check-work-kanban.sh`
+8. Before saying done: `verify-before-done` + Completion Log + change report + MD → `completed`
+9. Commit/push only after explicit user approval ("Commit aur push karun?")
 
 ## Key Project Facts
 - **Product**: Mountain tourism complex SaaS (MVP scope PDF in `document/`)
