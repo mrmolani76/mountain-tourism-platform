@@ -1,0 +1,13 @@
+---
+description: Security / code review — review only, no app patches. Activate security-code-review skill.
+alwaysApply: false
+---
+
+# Security Code Review
+
+When the user asks for security review, OWASP audit, authz check, or "find vulnerabilities":
+
+1. **MUST read and follow** `.cursor/skills/security-code-review/SKILL.md`.
+2. Review only — do not modify application code to fix findings.
+3. Focus on tenant isolation, authz, money voids, secrets, injection, CSRF.
+4. Redact secrets in all output.

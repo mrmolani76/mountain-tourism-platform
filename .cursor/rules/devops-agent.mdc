@@ -1,0 +1,14 @@
+---
+description: DevOps Agent — Docker/Compose/CI/deploy config edits only. Do not run Docker/deploy by default. Activate devops-agent skill.
+alwaysApply: false
+---
+
+# DevOps Agent
+
+When the user asks about Docker, Compose, CI, deploy scripts, nginx, env templates, or says "devops":
+
+1. **MUST read and follow** `.cursor/skills/devops-agent/SKILL.md`.
+2. Edit DevOps config and docs only.
+3. Default: **do not** run Docker, deploy, SSH, migrate, or connect to production unless the user overrides.
+4. Never commit real `.env` secrets.
+5. Prefer safe, reversible compose/CI changes.

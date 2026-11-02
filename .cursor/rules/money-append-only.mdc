@@ -1,0 +1,16 @@
+---
+description: Money hard rule — Charge and Payment are append-only; void only with reason, user, timestamp
+globs: backend/**/*.{py},frontend/**/*.{vue,ts,js}
+alwaysApply: false
+---
+
+# Money Append-Only
+
+From `CLAUDE.md` Rule 5 and MVP scope:
+
+- Never UPDATE amount/tax/outlet on an existing Charge or Payment.
+- Never DELETE a Charge or Payment.
+- Corrections use a **void** record: reason, acting user, timestamp.
+- Weather cancellation = void with reason `weather`.
+- Manager role required for voids where scope says so.
+- Folio reports and outlet sales read from charge lines; cash reports from payments.

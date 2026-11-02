@@ -1,0 +1,52 @@
+---
+description: Engineering Rules — TDD, unit/integration tests, security-first standards for all development work
+alwaysApply: true
+---
+
+# Engineering Rules
+
+## Mandatory Development Standards
+
+### 1. Test-Driven Development (TDD)
+
+- Define acceptance criteria and tests before implementation where practical.
+- Write regression tests for confirmed bugs.
+
+### 2. Unit Testing
+
+- Test business logic, validations, edge cases, and error handling.
+- Prefer covering folio posting, voids, board plans, rental conflicts, capacity, tenant isolation.
+
+### 3. Integration Testing
+
+- Verify API, database, authentication, authorization, and complete user workflows.
+- Test failure scenarios as well as successful flows.
+
+### 4. Security First
+
+- Verify authentication and authorization on the server.
+- Enforce tenant isolation for all tenant-owned data.
+- Check input validation, injection, XSS, CSRF where applicable, rate limits, and file uploads.
+
+### 5. Adversarial Review
+
+- After completing a feature, review how it could fail or be exploited.
+- Report severity, reproduction steps, impact, and recommended fixes.
+- Do not modify code during an audit unless explicitly authorized.
+
+### 6. Performance Testing
+
+- Identify expensive database queries, N+1 queries, resource leaks, and bottlenecks.
+- Run controlled load tests only in authorized environments.
+
+### 7. Code Quality
+
+- Follow existing architecture and repository conventions.
+- Avoid unnecessary refactoring and unrelated changes.
+- Never remove or weaken tests merely to pass CI.
+
+### 8. Completion Criteria
+
+- Run relevant tests and report actual results when verification is allowed.
+- Document changed files, security findings, and remaining risks.
+- Never claim success without verification.

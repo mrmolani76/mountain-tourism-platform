@@ -1,0 +1,14 @@
+---
+description: Testing Agent — author Django/API/frontend tests and plans. Do not run tests by default. Activate testing-agent skill.
+alwaysApply: false
+---
+
+# Testing Agent
+
+When the user asks to write tests, add coverage, or says "testing agent" / "test plan":
+
+1. **MUST read and follow** `.cursor/skills/testing-agent/SKILL.md`.
+2. Create/edit test files and test docs only.
+3. Default: **do not** run tests, coverage, Docker, or CI unless the user overrides in the same message.
+4. Do not patch application production code (use `coding-agent` for that).
+5. Prefer tenant isolation, folio/void, and capacity conflict coverage when relevant.

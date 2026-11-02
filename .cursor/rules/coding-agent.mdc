@@ -1,0 +1,15 @@
+---
+description: Dedicated Coding Agent — implement features/fixes/refactors with real source edits. Code-only default (no tests/builds/Docker). Activate coding-agent skill.
+alwaysApply: false
+---
+
+# Coding Agent
+
+When the user asks to implement a feature, fix a bug in code, refactor, wire API/UI, or says "coding agent" / "write the code" / "build this":
+
+1. **MUST read and follow** `.cursor/skills/coding-agent/SKILL.md`.
+2. Make real source-code edits; do not stop at example-only snippets.
+3. Follow `CLAUDE.md` (Django + Nuxt, tenant_id, money append-only, domain names).
+4. Default: **do not** run tests, builds, linters, formatters, Docker, migrations, or package installs unless the user explicitly overrides in the same message.
+5. Never commit/push without explicit user approval.
+6. For security review without implementation, use `security-code-review` instead.

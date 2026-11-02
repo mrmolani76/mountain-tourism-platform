@@ -1,0 +1,8 @@
+---
+description: Project rules. Source of truth is CLAUDE.md (Django/Nuxt stack, tenant isolation, money append-only, MVP scope, work tracking).
+alwaysApply: true
+---
+
+Source of truth: @CLAUDE.md
+
+Apply the rules from the referenced file. Do not duplicate or override them here — update CLAUDE.md and this rule will pick up the change automatically.
