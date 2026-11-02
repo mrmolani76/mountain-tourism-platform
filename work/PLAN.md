@@ -27,7 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| | | | | | |
+| 17 | Fix BUG-TENANT-001 — bind staff session to issuing tenant | high | A-core | backend | S |
 
 ## Completed
 

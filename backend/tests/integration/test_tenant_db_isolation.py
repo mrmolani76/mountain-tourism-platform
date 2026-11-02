@@ -4,7 +4,11 @@ DB-per-tenant isolation: staff in tenant A DB must not appear when B is active.
 Code only — requires tenant DB aliases migrated when tests are later executed.
 """
 
+from types import SimpleNamespace
+
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
+from django.db import connections as db_connections
 from django.test import TestCase, override_settings
 from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
@@ -12,6 +16,7 @@ from modules.core.models import Staff, StaffRole
 from modules.core.views import StaffViewSet
 from modules.saas.models import Domain, Tenant
 from tenancy import connections, context
+from tenancy.connections import tenant_alias
 
 
 @override_settings(
@@ -19,9 +24,32 @@ from tenancy import connections, context
     TENANCY_CENTRAL_PREFIX='saas.',
 )
 class TenantDbIsolationTests(TestCase):
-    databases = {'default'}
+    databases = {'default', 'tenant_1', 'tenant_2'}
+
+    # Aliases used by this class (tenant pks are deterministic in the test DB:
+    # each test's transaction rollback reuses pk 1 and 2).
+    TENANT_ALIASES = ((1, 'a_test'), (2, 'b_test'))
+
+    @classmethod
+    def setUpClass(cls):
+        # Register the tenant aliases this class needs. Django TestCase reads
+        # settings.DATABASES + alias .TEST.MIRROR at setUpClass, and also
+        # enumerates current aliases via the connection handler, so our
+        # aliases have to exist before super().setUpClass() fires.
+        for pk, db_name in cls.TENANT_ALIASES:
+            alias = tenant_alias(pk)
+            if alias not in db_connections.databases:
+                connections.ensure_tenant_connection(
+                    SimpleNamespace(pk=pk, db_name=db_name)
+                )
+            tc = settings.DATABASES[alias].setdefault('TEST', {})
+            tc.setdefault('MIRROR', None)
+            tcfg = db_connections.databases.setdefault(alias, {})
+            tcfg.setdefault('TEST', {}).setdefault('MIRROR', None)
+        super().setUpClass()
 
     def setUp(self):
+        super().setUp()
         self.factory = APIRequestFactory()
         self.client = APIClient()
 

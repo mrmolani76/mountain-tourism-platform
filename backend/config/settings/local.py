@@ -3,14 +3,19 @@ Local development settings.
 """
 from .base import *  # noqa: F401,F403
 
+import os
+
 DEBUG = True
 
-ALLOWED_HOSTS = [
+# Env hosts first (docker sets its own), plus local default suffix hosts.
+_env_hosts = [h.strip() for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',') if h.strip()]
+ALLOWED_HOSTS = list(dict.fromkeys([
+    *_env_hosts,
     'localhost',
     '127.0.0.1',
     'saas.local.mountain.local',
     '.local.mountain.local',
-]
+]))
 
 # Local: sqlite central unless Postgres env vars are provided.
 # Per-tenant DBs are registered at runtime via TENANT_DB_TEMPLATE (same engine).
@@ -27,7 +32,8 @@ DATABASES = {
 
 TENANT_DB_TEMPLATE = {
     'ENGINE': DATABASES['default']['ENGINE'],
-    'NAME': BASE_DIR / 'tenant_template.sqlite3',  # noqa: F405
+    # Postgres needs a valid NAME (overridden per tenant anyway); sqlite falls back.
+    'NAME': DATABASES['default']['NAME'] or (BASE_DIR / 'tenant_template.sqlite3'),  # noqa: F405
     'USER': DATABASES['default'].get('USER', ''),
     'PASSWORD': DATABASES['default'].get('PASSWORD', ''),
     'HOST': DATABASES['default'].get('HOST', ''),

@@ -4,12 +4,17 @@ DRF APIViews + ViewSets for tenant host (/api/).
 
 from django.middleware.csrf import get_token
 from rest_framework import viewsets
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from modules.core.auth import StaffSessionAuthentication
+from modules.core.auth import (
+    SESSION_TENANT_ID,
+    SESSION_TENANT_SLUG,
+    StaffSessionAuthentication,
+)
 from modules.core.models import Building, Outlet, Season, Staff, StaffOutletAccess, TenantSettings
 from modules.core.permissions import CanResetStaffPassword, IsOwner, IsTenantStaff
 from modules.core.serializers import (
@@ -71,7 +76,13 @@ class LoginView(APIView):
             email=serializer.validated_data['email'],
             password=serializer.validated_data['password'],
         )
+        tenant = get_current_tenant()
+        if tenant is None:
+            # Staff login is a tenant-host flow only (BUG-TENANT-001).
+            raise AuthenticationFailed('Staff login requires a tenant host.')
         request.session['staff_id'] = staff.id
+        request.session[SESSION_TENANT_ID] = tenant.pk
+        request.session[SESSION_TENANT_SLUG] = tenant.slug
         get_token(request)
         return Response(
             MeSerializer(staff, context={'tenant': get_current_tenant()}).data

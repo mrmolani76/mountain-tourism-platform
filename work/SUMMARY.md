@@ -13,7 +13,7 @@ Refresh on every work / bug / change status update.
 - **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
-- (none)
+- **17** — Fix BUG-TENANT-001 — bind staff session to issuing tenant
 
 ### Completed
 - **16** — Backend structure gaps fill (pyproject, common, tests split, admin, env stub) (2026-11-02)

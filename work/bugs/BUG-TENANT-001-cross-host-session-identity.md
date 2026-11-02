@@ -1,7 +1,7 @@
 ---
 id: BUG-TENANT-001
 title: Session staff_id resolves against whichever tenant DB the Host selects
-status: BUG_CREATED
+status: IN_PROGRESS
 type: TENANT
 severity: medium
 created: 2026-11-02
