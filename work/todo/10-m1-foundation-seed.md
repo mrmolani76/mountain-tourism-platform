@@ -15,26 +15,26 @@ updated: 2026-11-02
 
 # Foundation seed — §2 demo buildings (partial)
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-10
+
 ## What to do (What)
-Management command or seed that creates a demo tenant with §2 buildings/altitudes and sample outlets for API/dev. Full complex seed completes in Phase 5.
+Seed demo tenant with PDF §2 buildings/altitudes + minimal outlets. Full complex seed remains Phase 5.
 
 ## Current / Before
-No seed.
+No seed command.
 
 ## Expected / After
-Repeatable seed for Valley/Main hotel/Chalets/Mid/Hut/Summit with altitudes; useful for isolation and CRUD tests.
+Repeatable seed for isolation/CRUD demos.
 
 ## Why
-PDF §2 demo layout; handover full seed is Phase 5 — partial now unblocks backend work.
+PDF §2 layout; unblocks Module A testing.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Seed creates §2 buildings with altitudes
-- [ ] Idempotent or documented reset path
-- [ ] Safe for local/dev only flags documented
+- [ ] Valley 1050, Hotel 1200, Chalets 1250, Mid 1800, Hut 2100, Summit 2600
+- [ ] Sample outlets created
+- [ ] Idempotent or reset documented
+- [ ] Dev-only safety noted
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
-- `backend/` management commands / fixtures
-
-## Notes / Follow-ups
-- Expand in Phase 5 handover seed.
+- `backend/` management command / fixtures

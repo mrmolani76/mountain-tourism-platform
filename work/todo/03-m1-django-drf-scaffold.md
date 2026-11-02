@@ -15,29 +15,31 @@ updated: 2026-11-02
 
 # Django + DRF backend scaffold
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-03
+
 ## What to do (What)
-Create `backend/` with Django, DRF, PostgreSQL settings, project layout, health endpoint, `.env.example`, basic README for local API run. **No Nuxt/frontend scaffold.**
+Create `backend/` Django + DRF + Postgres env + health + OpenAPI stub + `.env.example`. No Nuxt.
 
 ## Current / Before
-Repo has docs/rules only; no `backend/` app.
+No `backend/` app in repo.
 
 ## Expected / After
-Runnable Django+DRF project; Postgres config via env; OpenAPI stub optional; `.env.example` documented.
+Runnable API project; health OK; env documented.
 
 ## Why
-API-first foundation for all later modules.
+Module A API foundation.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] `backend/` boots locally against Postgres
-- [ ] DRF installed; health or root API responds
-- [ ] `.env.example` lists required vars
-- [ ] No frontend package added in this item
+- [ ] `backend/` Django project exists
+- [ ] DRF installed; Postgres via env
+- [ ] `.env.example` complete
+- [ ] Health endpoint works
+- [ ] OpenAPI stub enabled
+- [ ] README local API run notes
+- [ ] No frontend scaffold in this item
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
 - `backend/**`
 - `.gitignore`
-- `README.md` (API local setup section)
-
-## Notes / Follow-ups
-- Frontend stays out of scope until user opens frontend focus.
+- `README.md`

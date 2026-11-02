@@ -4,7 +4,7 @@ id: 08
 priority: medium
 status: todo
 milestone: 1
-module: infra
+module: A-core
 area: devops
 effort: M
 dependencies: 03
@@ -15,27 +15,27 @@ updated: 2026-11-02
 
 # VPS setup script/guide for API
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-08
+
 ## What to do (What)
-Document/script fresh VPS setup for **backend only**: Linux user, Postgres DB/user, Nginx to gunicorn/uvicorn, systemd, `.env`, sslip.io or port. No Docker required. Do not touch other sites on the VPS.
+Fresh VPS guide/script for API only: user, Postgres, Nginx, systemd, env, sslip.io/port. No Docker. Do not touch other sites.
 
 ## Current / Before
-`docs/HOSTING.md` constraints exist; no step-by-step setup script for this repo.
+Hosting constraints in docs; no step-by-step setup for this repo.
 
 ## Expected / After
-`docs/` or `scripts/` guide that rebuilds API host from zero; matches PDF §6.
+Rebuildable VPS setup doc/script for Django API.
 
 ## Why
-Milestone 1 server setup deliverable; client must rebuild without us.
+PDF §6 + Milestone 1 server setup.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Setup guide/script covers user, DB, Nginx, systemd, env
-- [ ] Explicit no-Docker MVP path
-- [ ] Domain later = Nginx + env only, noted
+- [ ] Linux user + Postgres + Nginx + systemd covered
+- [ ] `.env` on server; no secrets in git
+- [ ] No-Docker path explicit
+- [ ] Domain-later = Nginx + env only noted
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
-- `docs/HOSTING.md` or `docs/VPS_SETUP.md`
+- `docs/VPS_SETUP.md` or `docs/HOSTING.md`
 - `scripts/` if any
-
-## Notes / Follow-ups
-- Frontend static deploy later.

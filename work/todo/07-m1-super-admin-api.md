@@ -15,27 +15,28 @@ updated: 2026-11-02
 
 # Super admin APIs — complex + owner activate/deactivate
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-07
+
 ## What to do (What)
-Super-admin-only APIs to create a complex (tenant) and its owner account; activate/deactivate complex. No Nuxt super-admin page yet.
+Super-admin-only APIs: create tenant + owner atomically; activate/deactivate; 403 for others.
 
 ## Current / Before
 No super admin surface.
 
 ## Expected / After
-Protected endpoints; only super admin; creates tenant + owner; activate/deactivate flags respected by auth/tenant access.
+Provision + toggle APIs with tests.
 
 ## Why
-PDF §5A / Milestone 1 super admin page (API first).
+PDF §5A super admin page (API first).
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Create complex + owner via API
-- [ ] Activate/deactivate works; inactive tenant blocked
-- [ ] Non–super-admin gets 403
-- [ ] Tests pass
+- [ ] Create complex + owner (atomic) + default settings
+- [ ] Activate / deactivate
+- [ ] Inactive tenant blocks staff API use
+- [ ] Non-super → 403
+- [ ] Tests green
+- [ ] OpenAPI updated
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
-- `backend/` saas/superadmin app, tests
-
-## Notes / Follow-ups
-- Super admin UI deferred.
+- `backend/` superadmin endpoints + tests

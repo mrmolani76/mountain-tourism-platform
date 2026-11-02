@@ -15,28 +15,28 @@ updated: 2026-11-02
 
 # Tenant isolation layer + cross-tenant test
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-04
+
 ## What to do (What)
-Implement **one** tenant scoping mechanism (scoped manager/repository or Postgres RLS) used by all tenant-owned queries. Add automated test: two tenants cannot read each other's data.
+Tenant model + single isolation layer + automated test that two complexes cannot see each other’s data (PDF §5A done when).
 
 ## Current / Before
-No Tenant model or isolation layer.
+No Tenant / isolation layer.
 
 ## Expected / After
-`tenant_id` on business models; single isolation path; pytest/Django test proves no cross-tenant leak (PDF §5A done-when for foundation).
+All tenant queries go through one mechanism; cross-tenant test green.
 
 ## Why
-PDF §7: tenant isolation in one place. Milestone 1 acceptance.
+Module A acceptance; PDF §7 isolation in one place.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Isolation mechanism documented in ARCHITECTURE/DECISIONS
-- [ ] Controllers/viewsets do not ad-hoc filter inconsistently
-- [ ] Automated cross-tenant test passes
+- [ ] Tenant model with is_active
+- [ ] tenant_id on tenant-owned base
+- [ ] Single isolation layer implemented
+- [ ] Client-sent tenant_id not trusted for authz
+- [ ] Automated cross-tenant list+detail test passes
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
-- `backend/` models, managers, middleware/permissions
-- `backend/` tests
-- `docs/DECISIONS.md`
-
-## Notes / Follow-ups
-- Super admin cross-tenant ops only on dedicated endpoints.
+- `backend/` models, managers, tests
+- `docs/DECISIONS.md` / ARCHITECTURE if needed

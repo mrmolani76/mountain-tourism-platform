@@ -4,7 +4,7 @@ id: 09
 priority: medium
 status: todo
 milestone: 1
-module: infra
+module: A-core
 area: devops
 effort: L
 dependencies: 03
@@ -15,28 +15,27 @@ updated: 2026-11-02
 
 # GitHub Actions — backend lint/test/deploy
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-09
+
 ## What to do (What)
-CI on PR: install, lint, test (backend). On merge to `main`: build on GitHub, SSH release folder on VPS, migrate, switch release, reload, health check, auto-rollback on failure. Secrets in GitHub Secrets only.
+PR: lint/test backend. Main: GitHub build → SSH release → migrate → reload → health → rollback. Secrets in GitHub only.
 
 ## Current / Before
 No workflows.
 
 ## Expected / After
-`.github/workflows/` for API; docs note deploy; last N releases keepable.
+API CI/CD workflows + docs.
 
 ## Why
-PDF §6 CI/CD; Milestone 1 automatic deploy.
+PDF §6 CI/CD; Milestone 1 auto deploy.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] PR pipeline runs backend lint/tests
-- [ ] Main deploy path documented (and implemented when SSH available)
-- [ ] Health check + rollback behavior described/implemented
+- [ ] PR lint/test workflow
+- [ ] Main deploy path (implemented or fully documented pending SSH)
+- [ ] Health check + rollback behavior
 - [ ] No secrets in repo
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
 - `.github/workflows/**`
-- `docs/HOSTING.md` / deploy docs
-
-## Notes / Follow-ups
-- Frontend build job later.
+- deploy docs

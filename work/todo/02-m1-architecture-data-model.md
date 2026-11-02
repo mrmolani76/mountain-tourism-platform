@@ -15,28 +15,33 @@ updated: 2026-11-02
 
 # Architecture note + core data model draft
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → section TODO-02
+
 ## What to do (What)
-Write/update `docs/ARCHITECTURE.md` for client review: API-first Django+DRF layout, tenancy approach, core entities from PDF glossary. Draft model list (Tenant, Building, Outlet, Season, Staff/Role, settings). Backend only.
+Fill architecture + data model for Module A (API-first). Record isolation and auth decisions. No frontend.
 
 ## Current / Before
-`docs/ARCHITECTURE.md` has placeholders and open questions; no formal data model draft tied to Phase 1.
+`docs/ARCHITECTURE.md` has placeholders; isolation/auth undecided.
 
 ## Expected / After
-Short architecture note + entity list/relationships ready for review; open questions resolved or explicitly listed. No frontend app.
+Review-ready architecture note; entity list; DECISIONS rows for isolation + auth.
 
 ## Why
-PDF Milestone 1 requires data model and architecture note before/with foundation build.
+PDF Milestone 1 requires architecture note + data model; unlocks scaffold.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] `docs/ARCHITECTURE.md` filled for backend/API
-- [ ] Core entities named per `docs/GLOSSARY.md`
-- [ ] Tenant isolation approach chosen (scoped manager vs RLS) documented
+- [ ] PDF §3–§5A + glossary + tech rules read
+- [ ] `docs/ARCHITECTURE.md` filled (Django API layout)
+- [ ] Isolation choice in `docs/DECISIONS.md`
+- [ ] Auth style in `docs/DECISIONS.md`
+- [ ] Entities listed: Tenant, Settings, Staff, OutletAccess, Building, Outlet, Season, Audit stub
+- [ ] App package names proposed
 - [ ] Change report written
 - [ ] PLAN.md + SUMMARY.md updated
 
 ## Files Likely Affected
 - `docs/ARCHITECTURE.md`
-- `docs/DECISIONS.md` (if isolation choice recorded)
+- `docs/DECISIONS.md`
 
 ## Notes / Follow-ups
-- Frontend deferred; API is the contract.
+- Checklist detail: `work/phases/01-todos/A-core-and-super-admin.md`

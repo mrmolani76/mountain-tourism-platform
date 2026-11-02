@@ -15,28 +15,30 @@ updated: 2026-11-02
 
 # Auth API — login, roles, outlet access, password reset
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-05
+
 ## What to do (What)
-Email/password login API; staff belong to one tenant; roles from PDF §3; outlet access; owners/managers reset staff passwords **without email**. Permissions enforced on API.
+Email/password login; PDF roles; outlet access; owner/manager password reset without email; inactive tenant/staff blocked.
 
 ## Current / Before
 No auth endpoints.
 
 ## Expected / After
-Login/session-or-token API documented in OpenAPI; role + outlet checks on protected routes; password reset by privileged staff only.
+Login + me + password reset APIs; role/outlet model; tests for 401/403.
 
 ## Why
-PDF §5A login and staff access; no email in MVP.
+PDF §5A login and staff access.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Login works for staff scoped to tenant
-- [ ] Roles model matches PDF roles needed for Phase 1
-- [ ] Outlet access enforced server-side
-- [ ] Staff password reset without email sending
-- [ ] Tests for 401/403 cases
+- [ ] Staff model with role + tenant_id
+- [ ] Roles cover PDF §3 set needed
+- [ ] Login / me APIs work
+- [ ] StaffOutletAccess wired
+- [ ] Owner and manager password reset (no email)
+- [ ] Inactive tenant/staff denied
+- [ ] Authz tests green
+- [ ] OpenAPI updated
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
-- `backend/` auth, users, permissions, tests
-
-## Notes / Follow-ups
-- UI login screen deferred (API only).
+- `backend/` accounts/auth/permissions/tests

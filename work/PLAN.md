@@ -8,7 +8,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | Phase | File | Status |
 |-------|------|--------|
-| 1 Foundation | `work/phases/01-foundation.md` | Active — todos 02–10 |
+| 1 Foundation | `work/phases/01-foundation.md` + `01-todos/A-*.md` | Active — Module A todos 02–10 |
 | 2 Hotel and folio | `work/phases/02-hotel-and-folio.md` | Planned |
 | 3 POS, rental, services | `work/phases/03-pos-rental-services.md` | Planned |
 | 4 Transport, lifts, weather | `work/phases/04-transport-lifts-weather.md` | Planned |

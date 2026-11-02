@@ -6,6 +6,7 @@
 - **Modules in this phase**: **A only** (complete description below)
 - **Depends on**: none
 - **Kanban**: `work/todo/` 02–10
+- **Module todo list (design)**: [`01-todos/A-core-and-super-admin.md`](01-todos/A-core-and-super-admin.md)
 - **Focus**: backend / API only (Django + DRF). UI deferred.
 - **Deep doc**: [`docs/modules/A-core-and-super-admin.md`](../../docs/modules/A-core-and-super-admin.md)
 
@@ -92,17 +93,19 @@ Rooms, folio, POS, rental, services, transport, lifts, weather, dashboard, Nuxt 
 
 #### Work packages (kanban)
 
-| ID | Package |
-|----|---------|
-| 02 | Architecture note + data model draft |
-| 03 | Django + DRF scaffold |
-| 04 | Tenant isolation + cross-tenant test |
-| 05 | Auth / roles / outlet access / password reset API |
-| 06 | Buildings, outlets, seasons, settings APIs |
-| 07 | Super admin APIs |
-| 08 | VPS setup guide for API |
-| 09 | GitHub Actions backend lint/test/deploy |
-| 10 | Partial §2 building seed |
+Full checkbox design: [`01-todos/A-core-and-super-admin.md`](01-todos/A-core-and-super-admin.md)
+
+| ID | Package | Kanban file |
+|----|---------|-------------|
+| 02 | Architecture note + data model draft | `work/todo/02-m1-architecture-data-model.md` |
+| 03 | Django + DRF scaffold | `work/todo/03-m1-django-drf-scaffold.md` |
+| 04 | Tenant isolation + cross-tenant test | `work/todo/04-m1-tenant-isolation.md` |
+| 05 | Auth / roles / outlet access / password reset API | `work/todo/05-m1-auth-roles-api.md` |
+| 06 | Buildings, outlets, seasons, settings APIs | `work/todo/06-m1-buildings-outlets-seasons-api.md` |
+| 07 | Super admin APIs | `work/todo/07-m1-super-admin-api.md` |
+| 08 | VPS setup guide for API | `work/todo/08-m1-vps-api-setup.md` |
+| 09 | GitHub Actions backend lint/test/deploy | `work/todo/09-m1-github-actions-api.md` |
+| 10 | Partial §2 building seed | `work/todo/10-m1-foundation-seed.md` |
 
 ---
 

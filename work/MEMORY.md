@@ -7,6 +7,7 @@
 - **Backend / API only** (Django + DRF). No Nuxt/Vuetify until user says so.
 - Phase 1 foundation: pick up from `work/todo/` starting **02** (architecture) then **03** (scaffold).
 - Phase plans: `work/phases/` — **each phase file fully describes its modules**.
+- Phase 1 Module A todo design: `work/phases/01-todos/A-core-and-super-admin.md`
 - Module index: `docs/MODULES.md` + `docs/modules/`.
 
 ## Blocked / waiting on user

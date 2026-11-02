@@ -17,10 +17,11 @@ Har phase MD ke andar **us phase ke saare modules** full describe hain (purpose,
 
 Short cross-links also live under [`docs/modules/`](../../docs/modules/).
 
-## Kanban
+## Kanban + module todo lists
 
-- Phase 1 backend packages: `work/todo/` IDs **02–10**
-- Later phases: seed todos only when that phase starts (`work-tracker`)
+- Phase 1 module todo **design**: [`01-todos/`](01-todos/) (Module A checklist)
+- Phase 1 executable items: `work/todo/` IDs **02–10**
+- Later phases: add `0N-todos/` + seed `work/todo/` when that phase starts
 - `milestone: N` on every work item
 
 ## Flow

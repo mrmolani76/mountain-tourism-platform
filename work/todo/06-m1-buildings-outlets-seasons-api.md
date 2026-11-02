@@ -15,28 +15,29 @@ updated: 2026-11-02
 
 # Buildings, outlets, seasons, tenant settings APIs
 
+**Todo list design**: [`work/phases/01-todos/A-core-and-super-admin.md`](../phases/01-todos/A-core-and-super-admin.md) → TODO-06
+
 ## What to do (What)
-CRUD APIs for Building (type, altitude, map position), Outlet (in building), Season (dates), tenant settings (currency, tax, timezone, units). All tenant-scoped.
+Owner APIs for settings, buildings (altitude + map position), outlets, seasons, staff CRUD + outlet access. All tenant-scoped.
 
 ## Current / Before
-No domain APIs beyond auth/tenant scaffolding.
+No domain CRUD beyond auth/tenant.
 
 ## Expected / After
-Owner/manager-accessible APIs; validation; tests; OpenAPI updated.
+Full Module A configuration APIs + cross-tenant denial tests.
 
 ## Why
-PDF Milestone 1 + §5A core entities; buildings are weather points later.
+PDF Milestone 1 / §5A core entities.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Building/Outlet/Season/settings endpoints work under tenant scope
-- [ ] Altitude and map position stored on buildings
-- [ ] Settings include currency, tax, timezone, units
-- [ ] Tests cover happy path + cross-tenant denial
+- [ ] Settings GET/PATCH (currency, tax, timezone, units)
+- [ ] Building CRUD with altitude + map position
+- [ ] Outlet CRUD under buildings
+- [ ] Season CRUD with kind + dates
+- [ ] Staff CRUD + outlet access assign
+- [ ] Cross-tenant tests on resources
+- [ ] OpenAPI updated
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
-- `backend/` apps for core domain
-- tests, OpenAPI schema
-
-## Notes / Follow-ups
-- Admin UI deferred.
+- `backend/` core domain apps + tests
