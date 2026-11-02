@@ -7,7 +7,6 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **05** — Auth API — login, roles, outlet access, password reset
 - **06** — Buildings, outlets, seasons, tenant settings APIs
 - **07** — Super admin APIs — complex + owner activate/deactivate
 - **08** — VPS setup script/guide for API
@@ -22,6 +21,7 @@ Refresh on every work / bug / change status update.
 - **02** — Architecture note + core data model draft (2026-11-02)
 - **03** — Django + DRF backend scaffold (2026-11-02)
 - **04** — Tenant isolation layer + cross-tenant test (2026-11-02)
+- **05** — Auth API — login, roles, outlet access, password reset (2026-11-02)
 
 ## 2. Bugs
 
@@ -36,11 +36,13 @@ Refresh on every work / bug / change status update.
 
 ## 3. Testing
 - 2026-11-02 — `backend/tests/test_tenant_isolation.py` — cross-tenant isolation (5/5 passing)
+- 2026-11-02 — `backend/tests/test_auth.py` — login/me/logout/password-reset authz (11/11 passing)
 
 ## 4. Changes
 - 2026-11-02 — `work/changes/2026-11-02--02-m1-architecture-data-model.md` — Module A architecture note + DECISIONS rows
 - 2026-11-02 — `work/changes/2026-11-02--03-m1-django-drf-scaffold.md` — backend/ Django + DRF scaffold
 - 2026-11-02 — `work/changes/2026-11-02--04-m1-tenant-isolation.md` — tenant isolation layer + cross-tenant test
+- 2026-11-02 — `work/changes/2026-11-02--05-m1-auth-roles-api.md` — Auth API: login, roles, outlet access, password reset
 - 2026-11-02 — `work/changes/2026-11-02--05-github-actions-ci-testing.md` — CI testing workflow
 - 2026-11-02 — `work/changes/2026-11-02--04-phase1-module-a-todo-list-design.md` — Module A todo list design
 - 2026-11-02 — `work/changes/2026-11-02--03-phase-complete-module-descriptions.md` — phase embeds full modules A–I
