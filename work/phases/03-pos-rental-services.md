@@ -52,7 +52,7 @@ Products and orders at any altitude outlet (valley restaurant, mid self-service,
 > Half-board guest’s dinner recorded as **included**; bottle of wine at same table **charged to the room**.
 
 #### Package
-`apps.pos`
+`modules.pos`
 
 ---
 
@@ -88,7 +88,7 @@ Rent skis/bikes/etc. to hotel guest or walk-in; return; damage fee; prevent doub
 > One item cannot be rented twice at the same time; late return adds the extra day to the bill.
 
 #### Package
-`apps.rental`
+`modules.rental`
 
 ---
 
@@ -125,7 +125,7 @@ Rent skis/bikes/etc. to hotel guest or walk-in; return; damage fee; prevent doub
 > Sauna slot cannot go over capacity; one instructor cannot be in two lessons at once; cancelled booking removes its charge; outing with missing participant cannot be closed.
 
 #### Package
-`apps.services`
+`modules.services`
 
 ---
 

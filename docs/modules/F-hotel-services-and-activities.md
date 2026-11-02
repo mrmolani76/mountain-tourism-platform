@@ -18,4 +18,4 @@ Single booking engine for all service types. Slots, staff assignment, capacity, 
 No over-capacity; no instructor double-book; cancel removes charge; missing participant blocks close.
 
 ## Package
-`apps.services`
+`modules.services`

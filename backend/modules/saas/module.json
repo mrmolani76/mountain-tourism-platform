@@ -1,0 +1,7 @@
+{
+  "name": "Saas",
+  "alias": "saas",
+  "description": "Central tenant registry",
+  "central": true,
+  "priority": 1
+}

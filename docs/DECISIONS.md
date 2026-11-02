@@ -15,5 +15,10 @@ Record choices that differ from or extend the MVP PDF preferences.
 | 2026-11-02 | **Delivery order = API/backend first**; Nuxt UI deferred | User: work API-base pehle; phases/todos backend-only for now | Accepted |
 | 2026-11-02 | Tenant isolation = **scoped manager** (custom Django manager + base model), not Postgres RLS | Simpler, Django-idiomatic, testable without DB setup; single layer per TECHNICAL_RULES §2 | Accepted |
 | 2026-11-02 | API auth = **session-based** (DRF SessionAuthentication), email/password | MVP simplest; Nuxt deferred; token can be added later if cross-origin | Accepted |
+| 2026-11-02 | Tenancy = **DB-per-tenant** (one Postgres DB per complex); Host/`Domain` resolve; central `apps.saas` registry | User: EQMS-style; supersedes shared-DB + `tenant_id` row filter for MVP | Accepted |
+| 2026-11-02 | Isolation = **active DB connection** (`tenancy/` + `DATABASE_ROUTERS`), not scoped manager | Follows DB-per-tenant | Accepted |
+| 2026-11-02 | API surface = **DRF ViewSets + DefaultRouter**; auth = APIView; thin views → services | User: DRF-aligned | Accepted |
+| 2026-11-02 | **SSO out of scope** (no SAML/ADFS/OAuth2/MFA) | User: leave SSO | Accepted |
+| 2026-11-02 | Domain code under **`backend/modules/`** (Complere `Modules/{Name}` mirror), not flat `apps/` | User: module-wise like eQMS | Accepted |
 
 When adding a decision: append a row, never rewrite history silently.

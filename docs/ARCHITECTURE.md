@@ -8,20 +8,24 @@ Pilot complex runs one full winter/summer day: pickup → check-in → rent → 
 ## High-level
 
 ```text
-Browser (Nuxt/Vuetify staff UI)
+Browser (Nuxt/Vuetify staff UI) — deferred
         │ HTTPS
         ▼
-Nginx → Django/DRF API (gunicorn/uvicorn)
+Nginx → Django/DRF API
         │
-        ├─ PostgreSQL (shared DB, tenant-scoped access layer)
+        ├─ Host saas.*     → central DB (Tenant, Domain, SaasUser)
+        ├─ Host {slug}.*   → tenant DB (Staff, Building, Folio, …)
         ├─ Scheduler/cron (weather fetch, nightly posting)
         └─ File/static as needed
 ```
 
-## Tenancy
-- One DB, `tenant_id` on business tables.
-- **Single** isolation mechanism: **scoped manager** (custom Django manager + base model), not RLS — simpler, Django-idiomatic, testable without DB setup.
-- Super admin is the only cross-tenant operator.
+## Tenancy (DB-per-tenant)
+- Central DB (`default`): `modules.saas` — Tenant, Domain, SaasUser.
+- Each complex: own Postgres DB named `{slug}_{env}`; no `tenant_id` on business rows.
+- Resolve: `tenancy.middleware.TenantResolveMiddleware` (Host → Domain → activate alias).
+- Router: `config.db_router.TenantDatabaseRouter`.
+- Super admin = `SaasUser` on central host only (`/api/saas/`).
+- SSO: out of scope.
 
 ## Money
 - Integer minor units.
@@ -29,20 +33,28 @@ Nginx → Django/DRF API (gunicorn/uvicorn)
 - Outlet revenue from charges; cash from payments.
 
 ## Auth
-- Email/password, **session-based** (DRF `SessionAuthentication`) for MVP.
-- Owners/managers reset staff passwords (no email sending in MVP).
-- Permissions enforced in API.
-- Token auth can be added later if Nuxt moves to a different domain.
+- Tenant host: email/password, DRF session (`StaffSessionAuthentication`).
+- Central host: email/password session (`SaasSessionAuthentication`).
+- Permissions on API (DRF permission classes). No SSO.
 
-## Backend layout (`backend/`)
-- Django project `config/`
-- Domain apps: `apps.core` (Tenant, Staff, Building, Outlet, Season, settings, audit stub)
-- `tests/` with unit + API tests
-- Migrations append-only: never edit a shipped migration
+## Backend layout (`backend/`) — Complere-style modules
+```text
+tenancy/                 # platform (like Complere app/)
+modules/                 # like Complere Modules/
+  saas/                  # central registry + DRF TenantViewSet
+  core/                  # Staff, outlets, auth
+  hotel|folio|pos|rental|services|transport|weather|reports/
+config/
+tests/
+```
+
+Each module: `models/`, `services/`, `serializers/`, `views/`, `permissions/`, `urls.py`, `migrations/`, `module.json`.
+
+- Thin DRF views/viewsets → `services/`
+- Migrations append-only; saas → central; other modules → tenant DBs
 
 ## Frontend
-- Role-oriented screens; tablet-friendly POS; phone lift status; lobby TV private link.
-- **Deferred** — backend/API only in Phase 1.
+- Deferred — backend/API only.
 
 ## External free services
 - MET Norway (server job).
@@ -51,23 +63,7 @@ Nginx → Django/DRF API (gunicorn/uvicorn)
 ## Deploy shape
 - No Docker required on VPS (direct user + Postgres + Nginx + systemd).
 - Process supervisor: **systemd**.
-- No paid APIs. No native apps.
-
-## Entities (Module A)
-| Entity | Key fields / notes |
-|--------|--------------------|
-| Tenant | name, is_active; one complex |
-| TenantSettings | currency, tax_rates, timezone, units |
-| Staff | email, password, role, tenant_id, is_active |
-| StaffOutletAccess | staff + outlet M2M-ish access |
-| Building | type, name, altitude_m, map position |
-| Outlet | building_id, name, type (restaurant, shop, rental, spa, sports, transport, lifts, …) |
-| Season | winter/summer/closed + starts_on, ends_on |
-| Audit stub | ready for charge/payment/void writers (Module C+) |
-
-## App packages
-- `apps.core` (primary; Tenant, Staff, Building, Outlet, Season, settings)
-- `apps.accounts` optional split later
+- Physical createdb/migrate/hosts = setup work (not this layout item).
 
 ## Open questions
-- [ ] None remaining for Module A foundation
+- [ ] None remaining for Module A foundation layout

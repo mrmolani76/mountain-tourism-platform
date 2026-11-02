@@ -1,0 +1,7 @@
+{
+  "name": "Folio",
+  "alias": "folio",
+  "description": "Charges, payments, checkout",
+  "central": false,
+  "priority": 4
+}

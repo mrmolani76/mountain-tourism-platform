@@ -17,4 +17,4 @@ Revenue by outlet / service / payment method; weather cancellations; CSV.
 Totals match folio charges + direct sales to the cent.
 
 ## Package
-`apps.reports`
+`modules.reports`

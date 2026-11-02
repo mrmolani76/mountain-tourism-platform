@@ -58,7 +58,7 @@ Owner operational visibility and money-true reports; lobby TV data; avalanche le
 > Report totals match the folio charges plus direct sales for the same dates, **to the cent**.
 
 #### Package
-`apps.reports`
+`modules.reports`
 
 ---
 

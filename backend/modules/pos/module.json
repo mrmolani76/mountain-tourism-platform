@@ -1,0 +1,7 @@
+{
+  "name": "Pos",
+  "alias": "pos",
+  "description": "Restaurants, huts, shop",
+  "central": false,
+  "priority": 5
+}

@@ -30,5 +30,5 @@ Short cross-links also live under [`docs/modules/`](../../docs/modules/).
 PDF §8 milestone
     → work/phases/0N-*.md  (modules complete inside)
     → work/todo/NN-*.md    (executable backend tasks)
-    → apps.* implementation
+    → modules.* implementation
 ```

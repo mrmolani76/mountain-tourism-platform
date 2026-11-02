@@ -27,7 +27,8 @@ Security review without coding → `security-code-review`.
 |-------|-----------|
 | Backend | `backend/` — Django + DRF |
 | Frontend | `frontend/` — Nuxt, Vue, Vuetify |
-| Tenancy | Shared DB, `tenant_id` on every business row |
+| Tenancy | DB-per-tenant; `modules/saas` + Host resolve via `tenancy/` |
+| Layout | Domain code in `backend/modules/{Name}/` (EQMS/Complere-style) |
 | Money | Charge/Payment append-only; void only |
 | Domain | Tenant, Building, Outlet, Season, Stay, Folio, Charge, Payment, Service, Slot, Rental, Trip, Lift |
 | Scope | `document/Mountain_MVP_Scope_v1.pdf` |

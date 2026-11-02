@@ -1,0 +1,7 @@
+{
+  "name": "Weather",
+  "alias": "weather",
+  "description": "Limits and warnings",
+  "central": false,
+  "priority": 9
+}

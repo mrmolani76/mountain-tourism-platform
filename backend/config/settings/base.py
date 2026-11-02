@@ -32,8 +32,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third party
     'rest_framework',
-    # Local apps
-    'apps.core',
+    # Platform
+    'tenancy',
+    # Central (landlord)
+    'modules.saas',
+    # Tenant domain apps
+    'modules.core',
+    'modules.hotel',
+    'modules.folio',
+    'modules.pos',
+    'modules.rental',
+    'modules.services',
+    'modules.transport',
+    'modules.weather',
+    'modules.reports',
 ]
 
 MIDDLEWARE = [
@@ -41,11 +53,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # Host → tenant DB before any tenant auth/query.
+    'tenancy.middleware.TenantResolveMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Tenant isolation: sets current tenant from authenticated staff user.
-    'apps.core.middleware.TenantContextMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -69,7 +81,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
 # ---------------------------------------------------------------------------
-# Database (PostgreSQL via env vars; sqlite fallback for local smoke tests)
+# Database — central (default) + per-tenant aliases registered at runtime
 # ---------------------------------------------------------------------------
 DATABASES = {
     'default': {
@@ -81,6 +93,18 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', ''),
     }
 }
+
+# Cloned per tenant with NAME=tenant.db_name (see tenancy.connections).
+TENANT_DB_TEMPLATE = {
+    'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+    'NAME': os.environ.get('DB_NAME', BASE_DIR / 'db.sqlite3'),
+    'USER': os.environ.get('DB_USER', ''),
+    'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+    'HOST': os.environ.get('DB_HOST', ''),
+    'PORT': os.environ.get('DB_PORT', ''),
+}
+
+DATABASE_ROUTERS = ['config.db_router.TenantDatabaseRouter']
 
 # ---------------------------------------------------------------------------
 # Password validation
@@ -116,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ---------------------------------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'apps.core.auth.StaffSessionAuthentication',
+        'modules.core.auth.StaffSessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -125,9 +149,14 @@ REST_FRAMEWORK = {
 }
 
 # ---------------------------------------------------------------------------
-# Tenancy
+# Tenancy (DB-per-tenant; resolve by Host)
 # ---------------------------------------------------------------------------
-# Single isolation layer lives in apps.core.managers.TenantManager.
-# Every business model uses tenant_id FK; tenant is resolved from the
-# authenticated staff user (never trusted from the client).
-TENANT_ID_FIELD = 'tenant_id'
+TENANCY_CENTRAL_HOSTS = tuple(
+    h.strip()
+    for h in os.environ.get(
+        'TENANCY_CENTRAL_HOSTS',
+        'saas.local.mountain.local,localhost,127.0.0.1',
+    ).split(',')
+    if h.strip()
+)
+TENANCY_CENTRAL_PREFIX = os.environ.get('TENANCY_CENTRAL_PREFIX', 'saas.')

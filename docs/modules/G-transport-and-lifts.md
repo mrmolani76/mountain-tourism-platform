@@ -20,4 +20,4 @@ Own / Lifts / External — see phase file table.
 No driver double-book; pickup from train arrival; closed lift visible to lobby within a minute.
 
 ## Package
-`apps.transport`
+`modules.transport`

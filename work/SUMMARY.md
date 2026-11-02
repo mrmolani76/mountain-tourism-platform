@@ -17,6 +17,8 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **12** — EQMS-style modules layout (2026-11-02)
+- **11** — DB-per-tenant backend layout (DRF) (2026-11-02)
 - **01** — Harden work-tracker kanban workflow (2026-11-02)
 - **02** — Architecture note + core data model draft (2026-11-02)
 - **03** — Django + DRF backend scaffold (2026-11-02)
@@ -35,10 +37,12 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ## 3. Testing
-- 2026-11-02 — `backend/tests/test_tenant_isolation.py` — cross-tenant isolation (5/5 passing)
-- 2026-11-02 — `backend/tests/test_auth.py` — login/me/logout/password-reset authz (11/11 passing)
+- 2026-11-02 — tests rewritten for DB-per-tenant / SaaS registry (not run — code-only item 11)
+- 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--12-eqms-style-modules-layout.md` — Complere-style `modules/` layout
+- 2026-11-02 — `work/changes/2026-11-02--11-db-per-tenant-backend-layout.md` — DB-per-tenant + DRF layout
 - 2026-11-02 — `work/changes/2026-11-02--02-m1-architecture-data-model.md` — Module A architecture note + DECISIONS rows
 - 2026-11-02 — `work/changes/2026-11-02--03-m1-django-drf-scaffold.md` — backend/ Django + DRF scaffold
 - 2026-11-02 — `work/changes/2026-11-02--04-m1-tenant-isolation.md` — tenant isolation layer + cross-tenant test

@@ -30,4 +30,4 @@ Lunch + lesson on room; weather void; half card/half cash; zero close; outlet re
 Immutability; void math; split tender; checkout gate; tenant isolation on folios.
 
 ## Package
-`apps.folio`
+`modules.folio`

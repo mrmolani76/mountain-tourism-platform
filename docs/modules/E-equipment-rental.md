@@ -17,4 +17,4 @@ Item types/items, day rates, deposit, rent/return/damage, out list, overdue extr
 Cannot rent twice; late return adds day to bill.
 
 ## Package
-`apps.rental`
+`modules.rental`

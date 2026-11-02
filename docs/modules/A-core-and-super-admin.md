@@ -3,7 +3,7 @@
 - **PDF**: §5A, §3 roles, §4 Tenant/Building/Outlet/Season
 - **Phase**: 1 ([`work/phases/01-foundation.md`](../../work/phases/01-foundation.md))
 - **Kanban**: 02–10
-- **Backend app**: `apps.core` (+ thin `apps.accounts` if split)
+- **Backend module**: `modules.core` (+ central `modules.saas` for registry / SaasUser)
 
 ## 1. Purpose
 

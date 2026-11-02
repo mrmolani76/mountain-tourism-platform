@@ -1,0 +1,7 @@
+{
+  "name": "Rental",
+  "alias": "rental",
+  "description": "Equipment rental",
+  "central": false,
+  "priority": 6
+}

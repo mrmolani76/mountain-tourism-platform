@@ -19,4 +19,4 @@ Server-side MET Norway cache; limits; warnings on lifts/trips/outdoor slots; exp
 Lowering limit warns matching targets; weather cancel leaves folios correct.
 
 ## Package
-`apps.weather`
+`modules.weather`

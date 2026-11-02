@@ -1,0 +1,7 @@
+{
+  "name": "Reports",
+  "alias": "reports",
+  "description": "Owner dashboard and reports",
+  "central": false,
+  "priority": 10
+}

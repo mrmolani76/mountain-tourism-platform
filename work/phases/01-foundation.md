@@ -89,7 +89,7 @@ Rooms, folio, POS, rental, services, transport, lifts, weather, dashboard, Nuxt 
 
 #### Suggested backend package
 
-`apps.core` (+ `apps.accounts` if split)
+`modules.core` (+ `apps.accounts` if split)
 
 #### Work packages (kanban)
 

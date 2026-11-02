@@ -36,7 +36,7 @@ Status legend: `[ ]` pending · `[~]` in progress · `[x]` done
 - [ ] Choose tenant isolation: scoped manager **or** Postgres RLS → row in `docs/DECISIONS.md`
 - [ ] Choose auth style for API (session vs token) → `docs/DECISIONS.md`
 - [ ] Entity list: Tenant, TenantSettings, Staff, StaffOutletAccess, Building, Outlet, Season, Audit stub
-- [ ] Suggested app packages: `apps.core` / `apps.accounts`
+- [ ] Suggested app packages: `modules.core` / `apps.accounts`
 - [ ] Open questions closed or explicitly listed
 - [ ] Change report + PLAN/SUMMARY
 

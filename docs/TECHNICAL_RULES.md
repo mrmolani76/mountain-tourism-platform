@@ -4,7 +4,7 @@
    Weather: MET Norway Locationforecast (`api.met.no`). Maps: free OSM-based tiles with Leaflet or MapLibre. No paid APIs, no API keys, no trials that later charge. Anything else needs client OK first.
 
 2. **Tenant isolation in one place**  
-   Postgres RLS **or** a single scoped repository/manager every query goes through. Do not repeat `where tenant_id = ?` ad hoc in every controller.
+   **DB-per-tenant:** isolation is the active database connection (`tenancy/` middleware + `DATABASE_ROUTERS`). Do not add ad hoc cross-DB queries. (Historical note: shared-DB scoped manager was replaced 2026-11-02.)
 
 3. **Money = integer minor units**  
    Store amounts in cents (or equivalent), never floats / Decimal for money math that can drift. Display formats in the UI/API layer.

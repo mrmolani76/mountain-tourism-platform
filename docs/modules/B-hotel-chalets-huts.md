@@ -28,4 +28,4 @@ CRUD inventory/prices/board/reservations; availability/calendar reads; check-in/
 Posting correctness; bed vs room inventory; timezone boundary around midnight; checkout blocked if folio non-zero (with C).
 
 ## Package
-`apps.hotel`
+`modules.hotel`

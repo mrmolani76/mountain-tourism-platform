@@ -7,7 +7,7 @@
 - **Starting any work item** → MUST run `work-tracker`: `work/todo/` → `work/inprogress/` BEFORE edits; sync `PLAN.md` + `SUMMARY.md` (see § Work Tracking)
 - **Confirmed bug** → MUST create `work/bugs/BUG-*.md` before fixing (`bug-tracker`)
 - **Money** → Charge and Payment are append-only; void only (Rule 5)
-- **Tenant** → Every business row carries `tenant_id`; no cross-tenant leaks (Rule 3)
+- **Tenant** → DB-per-tenant; no cross-tenant DB access (Rule 3)
 - **Scope** → `document/Mountain_MVP_Scope_v1.pdf` is the contract; out-of-scope needs written agreement
 - **Focus** → Backend/API first (`work/phases/`); no frontend work unless user asks
 - **Chat output** → Response Style table below. Chat = Hinglish, repo = English, no em-dash
@@ -49,7 +49,7 @@ Contract scope: `document/Mountain_MVP_Scope_v1.pdf`.
 | Frontend | Nuxt, Vue.js, Vuetify (**deferred** until user opens frontend focus) |
 | Layout | `backend/` (Django API) first; `frontend/` later |
 | Auth (MVP) | Email + password; owners/managers reset staff passwords; no email sending in MVP |
-| Tenancy | Shared DB, row-level `tenant_id` on every business table (no subdomain tenancy in MVP) |
+| Tenancy | DB-per-tenant (one Postgres DB per complex); Host/`Domain` resolve; central `modules.saas` |
 | Money | Append-only charges and payments; voids only |
 
 **Current delivery focus: backend / API only.** Do not scaffold or build Nuxt unless the user explicitly asks. Phase plans: `work/phases/`.
@@ -62,7 +62,7 @@ Confirm frameworks from real project files when they exist. Do not invent anothe
 
 | Concept | Meaning |
 |---------|---------|
-| Tenant | One complex. Every table carries `tenant_id`. Staff belong to one tenant (known from login). |
+| Tenant | One complex = one DB. Registry row on central DB. Staff live in that complex's DB. |
 | Building | Place with type, map position, altitude. Also a weather point. |
 | Outlet | Business unit in a building: restaurant, shop, rental, spa, sports, transport, lifts. Own products, staff, reports. |
 | Season | Winter, summer, or closed, with dates. Prices/menus/services can differ. |
@@ -106,8 +106,9 @@ Drivers do not log in in MVP (printed passenger list).
 - Permissions and tenant scoping on every tenant-owned endpoint
 - Migrations append-only: never edit a shipped migration; add a new one
 
-Suggested layout (adjust only if repo already differs):
-- `apps/` or domain packages for core, hotel, folio, pos, rental, services, transport, weather
+Layout:
+- `tenancy/` platform; `modules.saas` central; domain apps `core`, `hotel`, `folio`, `pos`, `rental`, `services_app`, `transport`, `weather`, `reports`
+- DRF ViewSets + routers; thin views → services
 - `tests/` with unit + API tests
 - Audit for every charge, payment, and void
 
@@ -133,7 +134,7 @@ Build only what the MVP scope lists. If asked for out-of-scope work, say so and 
 `git commit`, `git push`, force push, and PR create happen ONLY after the user clearly approves in that exchange. When work is complete, ask: **"Commit aur push karun?"**
 
 ### Rule 3 — Tenant isolation
-Every business query is scoped by `tenant_id`. Automated tests must prove two complexes cannot see each other's data. Super admin is the only cross-tenant operator surface.
+Each complex uses its own database. Activate the tenant connection from Host/`Domain`; never query another tenant's DB from tenant APIs. Automated tests must prove two complexes cannot see each other's data. Super admin (`SaasUser` on central host) is the only cross-tenant operator surface.
 
 ### Rule 4 — No drive-by deps
 Do not add new Python/npm packages without explicit user approval.

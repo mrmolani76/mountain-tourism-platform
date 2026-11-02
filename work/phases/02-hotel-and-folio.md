@@ -69,7 +69,7 @@ Sell rooms, chalets, and hut **beds**; take reservations with arrival details; c
 (Included-dinner part fully proven with Module D; B must post board correctly and expose inclusion.)
 
 #### Package
-`apps.hotel`
+`modules.hotel`
 
 ---
 
@@ -121,7 +121,7 @@ One bill per stay. Every outlet posts **charges** onto the folio. Staff record *
 (Ski lesson may need Module F; prove with available sources + void/payment/split first.)
 
 #### Package
-`apps.folio`
+`modules.folio`
 
 ---
 

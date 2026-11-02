@@ -20,4 +20,4 @@ Product, Category, Order, OrderLine, BoardCheck result, PackedLunchOrder, Cashie
 Half-board dinner included; wine charged to room.
 
 ## Package
-`apps.pos`
+`modules.pos`

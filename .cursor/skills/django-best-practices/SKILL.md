@@ -14,7 +14,7 @@ Source of truth: `CLAUDE.md`. Detailed notes in `rules/`.
 
 - Business logic in services, not fat views
 - DRF serializers/viewsets at the API boundary
-- Every tenant-owned model has `tenant_id` (or FK to Tenant) and queries are scoped
+- Tenant data lives in the tenant DB (no `tenant_id` row filter); never query across tenant connections
 - Permissions checked on the server (role + outlet access)
 - Migrations: append-only; never edit shipped files
 - Charge/Payment: create + void only; no update/delete of money rows

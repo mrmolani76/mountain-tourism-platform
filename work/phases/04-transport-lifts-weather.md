@@ -71,7 +71,7 @@ Three transport groups with different behavior. Own transport: vehicles, drivers
 (Lobby **page** may be Phase 5; Phase 4 must expose status suitable for lobby.)
 
 #### Package
-`apps.transport`
+`modules.transport`
 
 ---
 
@@ -122,7 +122,7 @@ Temperature, wind, gusts, direction, precip as snow/rain from temp at altitude, 
 > Lowering a limit makes warnings appear on matching lift, trips and outdoor slots; a weather cancellation leaves every affected folio correct.
 
 #### Package
-`apps.weather`
+`modules.weather`
 
 ---
 
