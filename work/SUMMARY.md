@@ -17,6 +17,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **15** — Backend structure gaps MD (2026-11-02)
 - **14** — Audit module + business logic docs (2026-11-02)
 - **13** — Project audit report (2026-11-02)
 - **12** — EQMS-style modules layout (2026-11-02)
@@ -43,6 +44,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--15-backend-structure-gaps-md.md` — BACKEND_STRUCTURE_GAPS.md
 - 2026-11-02 — `work/changes/2026-11-02--14-audit-module-business-logic-docs.md` — AUDIT_MODULE.md + services/ BL
 - 2026-11-02 — `work/changes/2026-11-02--13-project-audit-report.md` — audit + DEPENDENCIES.md (no setup)
 - 2026-11-02 — `work/changes/2026-11-02--12-eqms-style-modules-layout.md` — Complere-style `modules/` layout
