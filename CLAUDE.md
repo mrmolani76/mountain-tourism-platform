@@ -9,6 +9,7 @@
 - **Money** → Charge and Payment are append-only; void only (Rule 5)
 - **Tenant** → Every business row carries `tenant_id`; no cross-tenant leaks (Rule 3)
 - **Scope** → `document/Mountain_MVP_Scope_v1.pdf` is the contract; out-of-scope needs written agreement
+- **Focus** → Backend/API first (`work/phases/`); no frontend work unless user asks
 - **Chat output** → Response Style table below. Chat = Hinglish, repo = English, no em-dash
 - **Engineering standards** → `.cursor/rules/nexro-engineering.mdc` + `.opencode/rules.md` (keep twins in sync)
 
@@ -45,11 +46,13 @@ Contract scope: `document/Mountain_MVP_Scope_v1.pdf`.
 | Layer | Choice |
 |-------|--------|
 | Backend | Python, Django, Django REST Framework |
-| Frontend | Nuxt, Vue.js, Vuetify |
-| Layout | `backend/` (Django API), `frontend/` (Nuxt app) |
+| Frontend | Nuxt, Vue.js, Vuetify (**deferred** until user opens frontend focus) |
+| Layout | `backend/` (Django API) first; `frontend/` later |
 | Auth (MVP) | Email + password; owners/managers reset staff passwords; no email sending in MVP |
 | Tenancy | Shared DB, row-level `tenant_id` on every business table (no subdomain tenancy in MVP) |
 | Money | Append-only charges and payments; voids only |
+
+**Current delivery focus: backend / API only.** Do not scaffold or build Nuxt unless the user explicitly asks. Phase plans: `work/phases/`.
 
 Confirm frameworks from real project files when they exist. Do not invent another stack.
 

@@ -4,21 +4,25 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- (none — pick from `work/todo/` via `work-tracker`)
+- **Backend / API only** (Django + DRF). No Nuxt/Vuetify until user says so.
+- Phase 1 foundation: pick up from `work/todo/` starting **02** (architecture) then **03** (scaffold).
+- Phase plans: `work/phases/`.
 
 ## Blocked / waiting on user
 - (none)
 
 ## Recently completed (this week)
-- **01** — Work-tracker workflow hardened (`work/changes/2026-11-02--01-work-tracker-workflow.md`)
-- 2026-11-02 — AI rules/skills bootstrap (`work/changes/2026-11-02--ai-rules-and-skills-bootstrap.md`)
+- **01** — Work-tracker workflow hardened
+- Phase MD files 01–05 + Phase 1 todos 02–10 (backend-focused)
+- AI rules/skills bootstrap
 
 ## Next suggested pickups
-1. After docs/rules settle: Milestone 1 scaffold (`backend/` Django + `frontend/` Nuxt) as a numbered work item
-2. Fill `docs/ARCHITECTURE.md` open questions during M1
+1. **02** — Architecture note + data model (`work-tracker` → inprogress first)
+2. **03** — Django + DRF scaffold
+3. **04** — Tenant isolation + automated test
 
 ## Do not forget
-- Folder = status (`todo` / `inprogress` / `completed`)
-- WIP = 1
-- Money append-only; tenant isolation in one place; no Docker required for MVP VPS
+- Folder = status; WIP = 1
+- API-first; money append-only; tenant isolation in one place
+- MVP VPS = no Docker required
 - Commit/push only after user says yes

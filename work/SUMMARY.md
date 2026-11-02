@@ -2,10 +2,20 @@
 
 Refresh on every work / bug / change status update.
 
+**Focus:** backend / API only until user opens frontend.
+
 ## 1. Work
 
 ### Todo
-- (none)
+- **02** — Architecture note + core data model draft
+- **03** — Django + DRF backend scaffold
+- **04** — Tenant isolation layer + cross-tenant test
+- **05** — Auth API — login, roles, outlet access, password reset
+- **06** — Buildings, outlets, seasons, tenant settings APIs
+- **07** — Super admin APIs — complex + owner activate/deactivate
+- **08** — VPS setup script/guide for API
+- **09** — GitHub Actions — backend lint/test/deploy
+- **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
 - (none)
@@ -25,9 +35,10 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ## 3. Testing
-- (none yet)
+- (none yet — starts with item 04 cross-tenant test)
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--02-phase-work-plans-backend-focus.md` — phase plans + P1 todos (API-first)
 - 2026-11-02 — `work/changes/2026-11-02--01-work-tracker-workflow.md` — work-tracker workflow
 - 2026-11-02 — `work/changes/2026-11-02--ai-rules-and-skills-bootstrap.md` — AI rules/skills bootstrap
 
