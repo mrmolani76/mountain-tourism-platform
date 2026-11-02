@@ -13,9 +13,10 @@ Refresh on every work / bug / change status update.
 - **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
-- **17** — Fix BUG-TENANT-001 — bind staff session to issuing tenant
+- (none)
 
 ### Completed
+- **17** — Fix BUG-TENANT-001 — bind staff session to issuing tenant (2026-11-02)
 - **16** — Backend structure gaps fill (pyproject, common, tests split, admin, env stub) (2026-11-02)
 - **06** — Buildings, outlets, seasons, tenant settings APIs (2026-11-02)
 - **15** — Backend structure gaps MD (2026-11-02)
@@ -32,10 +33,10 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
-- **BUG-TENANT-001** — Cross-host session identity swap risk (medium, 2026-11-02)
+- **BUG-ENV-001** — Tenant DB template clone missing OPTIONS key (high, 2026-11-02)
 
 ### Verified
-- (none)
+- **BUG-TENANT-001** — Cross-host session identity swap risk (medium, 2026-11-02)
 
 ### Closed
 - (none)

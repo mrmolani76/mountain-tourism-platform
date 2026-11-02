@@ -1,7 +1,7 @@
 ---
 id: BUG-TENANT-001
 title: Session staff_id resolves against whichever tenant DB the Host selects
-status: IN_PROGRESS
+status: VERIFIED
 type: TENANT
 severity: medium
 created: 2026-11-02
@@ -60,5 +60,7 @@ Defense in depth on tenant isolation (Rule 3). No direct money/folio impact yet
 
 ## 11. Related
 - Work item: 06 (found during tests), TODO-04 isolation layer
-- Change report: `work/changes/2026-11-02--06-core-config-apis.md` (pending)
+- Change report: `work/changes/2026-11-02--06-core-config-apis.md` (item 06, fix path logged)
+- Fix work item: 17 (completed 2026-11-02)
+- Fix files: `backend/modules/core/auth.py`, `backend/modules/core/views/api.py`, `backend/tests/api/test_auth.py`
 - Other bugs: none

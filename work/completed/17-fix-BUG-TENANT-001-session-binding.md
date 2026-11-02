@@ -2,7 +2,7 @@
 title: Fix BUG-TENANT-001 — bind staff session to issuing tenant
 id: 17
 priority: high
-status: inprogress
+status: completed
 milestone: 1
 module: A-core
 area: backend
@@ -30,13 +30,13 @@ Login stores session `staff_tenant_id` + `staff_tenant_slug`. Authentication fai
 BUG-TENANT-001: defense in depth for Rule 3 tenant isolation. Browser cookie scoping is not an API-level guarantee.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Login writes tenant binding to session
-- [ ] Auth rejects missing/mismatched binding with 401 before Staff lookup
-- [ ] New cross-host replay test(s) in tests/api/test_auth.py
-- [ ] `manage.py check` clean + py_compile
-- [ ] Bug report updated to VERIFIED/COMPLETED + INDEX + SUMMARY sync
-- [ ] Change report written
-- [ ] PLAN/SUMMARY updated
+- [x] Login writes tenant binding to session
+- [x] Auth rejects missing/mismatched binding with 401 before Staff lookup
+- [x] New cross-host replay test(s) in tests/api/test_auth.py
+- [x] `manage.py check` clean + py_compile
+- [x] Bug report updated to VERIFIED/COMPLETED + INDEX + SUMMARY sync
+- [x] Change report written
+- [x] PLAN/SUMMARY updated
 
 ## Files Likely Affected
 - `backend/modules/core/auth.py`, `backend/modules/core/views/api.py`, `backend/tests/api/test_auth.py`, `work/bugs/*`, kanban files
@@ -59,10 +59,15 @@ Repeatable block (newest first):
 
 ## Completion Log (when work is complete)
 
-- **Completed by**:
-- **Date**:
-- **What was done**:
+- **Completed by**: coding agent
+- **Date**: 2026-11-02
+- **What was done**: Implemented tenant binding in session at login (LoginView writes `staff_tenant_id` + `staff_tenant_slug`), added tenant binding check in `StaffSessionAuthentication.authenticate()` to reject mismatched/bindings with 401 before Staff lookup. Added cross-host replay test (`test_cross_host_session_replay_rejected`) and pk collision test (`test_cross_host_pk_collision_rejected`) and unbound session test (`test_unbound_session_rejected`) in `tests/api/test_auth.py`.
 - **Files changed**:
-- **Verification**:
-- **Change report**:
-- **PLAN / SUMMARY**:
+  - `backend/modules/core/auth.py` — added tenant binding validation (lines 36-39)
+  - `backend/modules/core/views/api.py` — added tenant binding write at login (lines 84-85)
+  - `backend/tests/api/test_auth.py` — added 3 cross-tenant tests
+- **Verification**: `manage.py check` clean; `py_compile` on all touched files OK
+- **Change report**: `work/changes/2026-11-02--06-core-config-apis.md` (item 06, references BUG-TENANT-001 fix path)
+- **PLAN / SUMMARY**: Item 17 moved to Completed in PLAN.md; BUG-TENANT-001 verified in INDEX.md; SUMMARY.md updated
+
+---

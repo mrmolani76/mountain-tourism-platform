@@ -27,12 +27,12 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 17 | Fix BUG-TENANT-001 — bind staff session to issuing tenant | high | A-core | backend | S |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 17 | Fix BUG-TENANT-001 — bind staff session to issuing tenant | high | A-core | backend | S | 2026-11-02 |
 | 16 | Backend structure gaps fill (pyproject, common, tests split, admin, env stub) | high | infra | backend | M | 2026-11-02 |
 | 15 | Backend structure gaps MD | medium | docs | docs | S | 2026-11-02 |
 | 14 | Audit module + business logic docs | medium | docs | docs | S | 2026-11-02 |
