@@ -13,11 +13,14 @@ cp .env.example .env
 python3 -m venv .venv   # optional but recommended
 source .venv/bin/activate
 
-pip install Django djangorestframework   # or use system packages
+# Declared packages: see DEPENDENCIES.md (do not install until setup is opened)
+pip install Django djangorestframework   # setup only when user allows
 
-python3 manage.py migrate
+python3 manage.py migrate               # setup only when user allows
 python3 manage.py runserver 0.0.0.0:8000
 ```
+
+Package list (no install): [`DEPENDENCIES.md`](DEPENDENCIES.md).
 
 ## Endpoints
 

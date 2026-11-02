@@ -14,9 +14,10 @@ Refresh on every work / bug / change status update.
 - **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
-- **13** — Project audit report
+- (none)
 
 ### Completed
+- **13** — Project audit report (2026-11-02)
 - **12** — EQMS-style modules layout (2026-11-02)
 - **11** — DB-per-tenant backend layout (DRF) (2026-11-02)
 - **01** — Harden work-tracker kanban workflow (2026-11-02)
@@ -41,6 +42,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--13-project-audit-report.md` — audit + DEPENDENCIES.md (no setup)
 - 2026-11-02 — `work/changes/2026-11-02--12-eqms-style-modules-layout.md` — Complere-style `modules/` layout
 - 2026-11-02 — `work/changes/2026-11-02--11-db-per-tenant-backend-layout.md` — DB-per-tenant + DRF layout
 - 2026-11-02 — `work/changes/2026-11-02--02-m1-architecture-data-model.md` — Module A architecture note + DECISIONS rows

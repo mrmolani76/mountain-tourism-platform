@@ -160,4 +160,5 @@ Host {slug}.* → tenant DB   →  modules.core (+ hotel…reports stubs)
 
 - Marked superseded tenancy decisions in `docs/DECISIONS.md`.
 - Rewrote `docs/modules/README.md` cross-cutting + layout for `modules/` + DB-per-tenant.
+- Added `backend/DEPENDENCIES.md` (declared packages only; no pip/setup).
 - This audit file + change report.
