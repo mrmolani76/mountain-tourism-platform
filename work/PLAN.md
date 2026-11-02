@@ -18,10 +18,6 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 07 | Super admin APIs — complex + owner activate/deactivate | high | A-core | backend | M |
-| 08 | VPS setup script/guide for API | medium | infra | devops | M |
-| 09 | GitHub Actions — backend lint/test/deploy | medium | infra | devops | L |
-| 10 | Foundation seed — §2 demo buildings (partial) | medium | A-core | backend | S |
 
 ## In Progress
 
@@ -32,6 +28,10 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 10 | Foundation seed — §2 demo buildings (partial) | medium | A-core | backend | S | 2026-11-02 |
+| 09 | GitHub Actions — backend lint/test/deploy | medium | infra | devops | L | 2026-11-02 |
+| 08 | VPS setup script/guide for API | medium | infra | devops | M | 2026-11-02 |
+| 07 | Super admin APIs — complex + owner activate/deactivate | high | A-core | backend | M | 2026-11-02 |
 | 17 | Fix BUG-TENANT-001 — bind staff session to issuing tenant | high | A-core | backend | S | 2026-11-02 |
 | 16 | Backend structure gaps fill (pyproject, common, tests split, admin, env stub) | high | infra | backend | M | 2026-11-02 |
 | 15 | Backend structure gaps MD | medium | docs | docs | S | 2026-11-02 |

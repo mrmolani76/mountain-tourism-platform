@@ -25,12 +25,16 @@ class TenantSerializer(serializers.ModelSerializer):
 
 
 class TenantCreateSerializer(serializers.Serializer):
-    """Register tenant + domain only (no physical DB create)."""
+    """Register tenant + domain + optional owner (no physical DB create)."""
 
     name = serializers.CharField(max_length=200)
     slug = serializers.SlugField(max_length=64)
     base_domain = serializers.CharField(
         max_length=255, required=False, default='local.mountain.local'
+    )
+    owner_email = serializers.EmailField(required=False)
+    owner_password = serializers.CharField(
+        write_only=True, required=False, min_length=8
     )
 
 

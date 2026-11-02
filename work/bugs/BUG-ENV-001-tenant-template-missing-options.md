@@ -1,7 +1,7 @@
 ---
 id: BUG-ENV-001
 title: ensure_tenant_connection clones DB template without OPTIONS key
-status: IN_PROGRESS
+status: VERIFIED
 type: ENV
 severity: high
 created: 2026-11-02

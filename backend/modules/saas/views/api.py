@@ -83,6 +83,8 @@ class TenantViewSet(viewsets.ModelViewSet):
             base_domain=serializer.validated_data.get(
                 'base_domain', 'local.mountain.local'
             ),
+            owner_email=serializer.validated_data.get('owner_email'),
+            owner_password=serializer.validated_data.get('owner_password'),
         )
         out = TenantSerializer(tenant)
         return Response(out.data, status=status.HTTP_201_CREATED)

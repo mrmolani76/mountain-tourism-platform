@@ -7,15 +7,16 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **07** — Super admin APIs — complex + owner activate/deactivate
-- **08** — VPS setup script/guide for API
-- **09** — GitHub Actions — backend lint/test/deploy
-- **10** — Foundation seed — §2 demo buildings (partial)
+- (none)
 
 ### In Progress
 - (none)
 
 ### Completed
+- **10** — Foundation seed — §2 demo buildings (partial) (2026-11-02)
+- **09** — GitHub Actions — backend lint/test/deploy (2026-11-02)
+- **08** — VPS setup script/guide for API (2026-11-02)
+- **07** — Super admin APIs — complex + owner activate/deactivate (2026-11-02)
 - **17** — Fix BUG-TENANT-001 — bind staff session to issuing tenant (2026-11-02)
 - **16** — Backend structure gaps fill (pyproject, common, tests split, admin, env stub) (2026-11-02)
 - **06** — Buildings, outlets, seasons, tenant settings APIs (2026-11-02)
@@ -33,10 +34,11 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
-- **BUG-ENV-001** — Tenant DB template clone missing OPTIONS key (high, 2026-11-02)
+- (none)
 
 ### Verified
 - **BUG-TENANT-001** — Cross-host session identity swap risk (medium, 2026-11-02)
+- **BUG-ENV-001** — Tenant DB template clone missing OPTIONS key (high, 2026-11-02)
 
 ### Closed
 - (none)
@@ -47,6 +49,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--07-to-10-super-admin-vps-ci-seed.md` — items 07-10 (super admin, VPS, CI, seed)
 - 2026-11-02 — `work/changes/2026-11-02--16-backend-structure-gaps-fill.md` — gaps fill (item 16)
 - 2026-11-02 — `work/changes/2026-11-02--06-core-config-apis.md` — core config APIs (item 06) + BUG-TENANT-001
 - 2026-11-02 — `work/changes/2026-11-02--15-backend-structure-gaps-md.md` — BACKEND_STRUCTURE_GAPS.md

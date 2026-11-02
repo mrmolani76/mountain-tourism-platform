@@ -2,7 +2,7 @@
 title: GitHub Actions — backend lint/test/deploy
 id: 09
 priority: medium
-status: todo
+status: completed
 milestone: 1
 module: A-core
 area: devops

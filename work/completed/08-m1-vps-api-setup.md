@@ -2,7 +2,7 @@
 title: VPS setup script/guide for API
 id: 08
 priority: medium
-status: todo
+status: completed
 milestone: 1
 module: A-core
 area: devops

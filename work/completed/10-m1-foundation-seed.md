@@ -2,7 +2,7 @@
 title: Foundation seed — §2 demo buildings (partial)
 id: 10
 priority: medium
-status: todo
+status: completed
 milestone: 1
 module: A-core
 area: backend

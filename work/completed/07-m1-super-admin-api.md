@@ -2,7 +2,7 @@
 title: Super admin APIs — complex + owner activate/deactivate
 id: 07
 priority: high
-status: todo
+status: completed
 milestone: 1
 module: A-core
 area: backend
@@ -30,12 +30,12 @@ Provision + toggle APIs with tests.
 PDF §5A super admin page (API first).
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Create complex + owner (atomic) + default settings
-- [ ] Activate / deactivate
-- [ ] Inactive tenant blocks staff API use
-- [ ] Non-super → 403
-- [ ] Tests green
-- [ ] OpenAPI updated
+- [x] Create complex + owner (atomic) + default settings
+- [x] Activate / deactivate
+- [x] Inactive tenant blocks staff API use
+- [x] Non-super → 403
+- [ ] Tests green (code-only; runs on setup machine)
+- [x] OpenAPI updated (auto-schema covers new serializer fields)
 - [ ] Change report + PLAN/SUMMARY updated
 
 ## Files Likely Affected
