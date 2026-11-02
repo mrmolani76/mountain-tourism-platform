@@ -38,5 +38,6 @@ modules/<alias>/
 
 - Modules must not import concrete classes from sibling domain modules; use services/events/DTOs at boundaries. Core is the shared tenant foundation.
 - SaaS routes only on central host (`/api/saas/`).
-- Thin DRF views → `services/`.
+- Thin DRF views → `services/` (**business logic lives in `services/`**).
+- Domain audit trail design: [`../../docs/AUDIT_MODULE.md`](../../docs/AUDIT_MODULE.md) (not `work/audits/`).
 - No SSO in MVP.
