@@ -1,71 +1,118 @@
-# Phase 1 — Foundation (backend focus)
+# Phase 1 — Foundation
 
 - **PDF**: Milestone 1 (§8)
 - **Weeks**: 1–2
 - **Payment**: 15%
-- **Modules**: A (Core and super admin)
+- **Modules in this phase**: **A only** (complete description below)
 - **Depends on**: none
-- **Kanban IDs**: 02–10 (seeded in `work/todo/`)
-- **Focus**: backend / API / tests / VPS+CI for API only
+- **Kanban**: `work/todo/` 02–10
+- **Focus**: backend / API only (Django + DRF). UI deferred.
+- **Deep doc**: [`docs/modules/A-core-and-super-admin.md`](../../docs/modules/A-core-and-super-admin.md)
 
-## Goal
+---
 
-Stand up the **Django + DRF** skeleton: data model + architecture note, auth API, multi-tenant core (buildings, outlets, staff/roles, seasons, settings), super-admin APIs, CI/CD deploy path for the API.
+## Phase goal
 
-## In scope — backend now
+Stand up the API foundation on which every later module depends: tenancy, auth, buildings/outlets/seasons/settings, super-admin provisioning, VPS+CI for the API, architecture note.
 
-- [ ] Data model and short architecture note for client review
-- [ ] `backend/` Django + DRF + PostgreSQL + `.env.example`
-- [ ] Tenant isolation in one place + automated cross-tenant test
-- [ ] Login API (email/password); staff password reset by owner/manager (no email)
-- [ ] Tenants; every business table carries `tenant_id`
-- [ ] Buildings (type, altitude, map position); outlets; seasons; settings (currency, tax, timezone, units)
-- [ ] Staff with role + outlet access (API + permissions)
-- [ ] Super admin APIs: create complex + owner; activate/deactivate
-- [ ] Audit log foundation for charge/payment/void (models/hooks; money in Phase 2)
-- [ ] OpenAPI (Swagger) for shipped endpoints
-- [ ] VPS setup script/guide for API process (systemd/gunicorn + Nginx + Postgres)
-- [ ] GitHub Actions: PR lint/test; main deploy + health + rollback for API
+**Payment unlocks when** this runs on the client VPS and Module A “done when” passes.
 
-## Deferred (frontend)
+---
 
-- [ ] Nuxt/Vuetify app and staff/super-admin **screens** (same features via UI later)
+## Modules in this phase
 
-## Out of scope this phase
+### Module A — Core and super admin (COMPLETE)
 
-- Hotel/folio/POS/rental/services/transport/lifts/weather/dashboard (Phases 2–5)
-- All §9 after-MVP items
+**PDF**: §5A, §3 roles, §4 Tenant / Building / Outlet / Season
 
-## Acceptance (done when)
+#### Purpose
+One complex = one **Tenant**. Staff login knows the tenant (no subdomains). Super admin creates complexes. Owners configure buildings, outlets, staff, seasons, and locale settings. This module must prove **automated tenant isolation**.
 
-Two complexes on the same server cannot see each other's data, proven by an **automated test** (PDF §5A).
+#### Actors (this phase)
 
-Also: architecture note ready; API auth + super-admin + core resources working; deploy path documented/tested for backend.
+| Role | What they do via API |
+|------|----------------------|
+| Super admin | Create complex + owner; activate/deactivate complex |
+| Owner | Buildings, outlets, seasons, settings, staff |
+| Manager | May reset staff passwords (PDF); outlet ops mainly later |
+| Other roles | Enum present; feature APIs in later phases |
 
-## Hard constraints (§6 / §7)
+Drivers do not log in (PDF). No email sending for password reset in MVP — owner/manager sets password directly.
 
-- No Docker required for MVP VPS install
-- Tenant isolation in **one place** (RLS or scoped manager)
-- Permissions on the API
-- Secrets only in `.env`
-- Builds on GitHub Actions
-- Stack now: **Django + DRF + PostgreSQL** (Nuxt later)
+#### Entities to implement
 
-## Work packages (backend)
+| Entity | Key fields / notes |
+|--------|--------------------|
+| Tenant | name, is_active; one complex |
+| TenantSettings | currency, tax rates, timezone, units (°C/km/h or °F/mph) |
+| Staff/User | email, password, role, tenant_id (super admin special), is_active |
+| StaffOutletAccess | which outlets a staff member may use |
+| Building | type, altitude, map position; also future weather point |
+| Outlet | in a building; type: restaurant, hut kitchen, shop, rental, spa, sports, transport, lifts, … |
+| Season | winter / summer / closed + dates |
+| Audit foundation | ready for charge/payment/void writers (Module C+) |
 
-| ID | Package | Area |
-|----|---------|------|
-| 02 | Architecture note + core data model draft | docs |
-| 03 | Django + DRF backend scaffold, Postgres, `.env.example` | backend |
-| 04 | Tenant isolation layer + automated cross-tenant test | backend / tests |
-| 05 | Auth API: login, roles, outlet access, staff password reset (no email) | backend |
-| 06 | Buildings, outlets, seasons, tenant settings APIs | backend |
-| 07 | Super admin APIs: create complex + owner, activate/deactivate | backend |
-| 08 | VPS setup script/guide for API (user, DB, Nginx, systemd) | devops |
-| 09 | GitHub Actions: backend lint/test; deploy + health + rollback | devops |
-| 10 | Foundation seed for §2 demo buildings (partial) | backend |
+#### Business rules (must enforce in API)
 
-## Status
+1. Every business table carries `tenant_id`.
+2. Tenant isolation in **one place** (scoped manager or Postgres RLS) — not copy-paste filters in every view.
+3. Never trust client-supplied `tenant_id` for authorization.
+4. Deactivated tenant → staff cannot use the API.
+5. Super admin is the only cross-tenant operator.
+6. Permissions checked on the API, not only hidden in a future UI.
+7. “Today” / nightly jobs / reports later use **tenant timezone** (settings here).
 
-- Focus: backend only
-- Kanban: 02–10 in `work/todo/` until picked up
+#### API surface (this phase)
+
+- Auth: login, logout (if session), me, staff password reset (owner/manager)
+- Super: create tenant+owner, activate, deactivate
+- CRUD: buildings, outlets, seasons, staff (+ outlet access)
+- GET/PATCH: tenant settings
+- OpenAPI for all shipped endpoints
+
+#### Services
+
+- Tenant context from authenticated user
+- ProvisionTenant (atomic tenant + owner + default settings)
+- PasswordSet (no mailer)
+
+#### Acceptance — Module A done when (PDF)
+
+> Two complexes on the same server cannot see each other's data, proven by an **automated test**, not by clicking around.
+
+Extra Phase 1 gates: architecture note delivered; API deployable per §6 path (script/CI).
+
+#### Explicitly NOT in Module A / Phase 1
+
+Rooms, folio, POS, rental, services, transport, lifts, weather, dashboard, Nuxt UI, §9 after-MVP.
+
+#### Suggested backend package
+
+`apps.core` (+ `apps.accounts` if split)
+
+#### Work packages (kanban)
+
+| ID | Package |
+|----|---------|
+| 02 | Architecture note + data model draft |
+| 03 | Django + DRF scaffold |
+| 04 | Tenant isolation + cross-tenant test |
+| 05 | Auth / roles / outlet access / password reset API |
+| 06 | Buildings, outlets, seasons, settings APIs |
+| 07 | Super admin APIs |
+| 08 | VPS setup guide for API |
+| 09 | GitHub Actions backend lint/test/deploy |
+| 10 | Partial §2 building seed |
+
+---
+
+## Phase-level out of scope
+
+Modules B–I, all frontend screens, §9 product expansions.
+
+## Hard constraints (§6 / §7) for this phase
+
+- No Docker required on VPS; own user/DB/Nginx/systemd
+- Secrets in `.env` only
+- Free stack; PostgreSQL
+- Web API only (no native apps)

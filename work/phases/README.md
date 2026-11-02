@@ -1,41 +1,33 @@
 # Phase plans (from MVP PDF)
 
-Source of truth: `document/Mountain_MVP_Scope_v1.pdf` (§5 modules, §6 hosting, §7 tech rules, §8 milestones, §11 handover).
+Source: `document/Mountain_MVP_Scope_v1.pdf` (§5–§8, §11).  
+Stack focus: **Django + DRF API only** until frontend is opened.
 
-Stack: Django + DRF + PostgreSQL (`docs/DECISIONS.md`). Nuxt/Vuetify is planned later.
+## Rule: phase file = complete module description
 
-## Current focus: backend only
+Har phase MD ke andar **us phase ke saare modules** full describe hain (purpose, actors, entities, rules, APIs, done-when, package).
 
-Until the user says otherwise:
+| Phase | Modules fully described inside the phase file |
+|-------|-----------------------------------------------|
+| [01-foundation.md](01-foundation.md) | **A** Core and super admin |
+| [02-hotel-and-folio.md](02-hotel-and-folio.md) | **B** Hotel + **C** Folio |
+| [03-pos-rental-services.md](03-pos-rental-services.md) | **D** POS + **E** Rental + **F** Services |
+| [04-transport-lifts-weather.md](04-transport-lifts-weather.md) | **G** Transport/lifts + **H** Weather core |
+| [05-dashboard-and-handover.md](05-dashboard-and-handover.md) | **I** Reports + **H** lobby/avalanche + §11 handover |
 
-- Implement **Django + DRF API**, models, services, tests, OpenAPI, VPS/CI for the API.
-- **Do not** scaffold or build Nuxt/Vuetify screens in this focus window.
-- Phase MDs still list full MVP UI deliverables for later; mark UI packages as **deferred (frontend)**.
-- Kanban items for now are backend/API/devops only.
+Short cross-links also live under [`docs/modules/`](../../docs/modules/).
 
-## How this relates to kanban
+## Kanban
 
-| Layer | Role |
-|-------|------|
-| `work/phases/*.md` | Phase contract: scope, done-when, work packages |
-| `work/todo|inprogress|completed/` | Executable work items (`milestone: N` in frontmatter) |
-| `work/PLAN.md` | Live Todo / In Progress / Completed tables |
+- Phase 1 backend packages: `work/todo/` IDs **02–10**
+- Later phases: seed todos only when that phase starts (`work-tracker`)
+- `milestone: N` on every work item
 
-Rules:
+## Flow
 
-1. Start a phase only when the previous phase **backend** acceptance is met (automated tests + API on VPS when deploy exists).
-2. Turn work packages into `work/todo/NN-*.md` via `work-tracker`. Phase 1 backend packages seeded as **02–10**.
-3. Prefix titles with milestone when helpful: `03-m1-django-scaffold`.
-4. Do not implement §9 “After the MVP” items inside these phases.
-
-## Index
-
-| Phase | File | Weeks | Payment | Modules |
-|-------|------|-------|---------|---------|
-| 1 Foundation | [01-foundation.md](01-foundation.md) | 1–2 | 15% | A |
-| 2 Hotel and folio | [02-hotel-and-folio.md](02-hotel-and-folio.md) | 3–5 | 25% | B + C |
-| 3 POS, rental, services | [03-pos-rental-services.md](03-pos-rental-services.md) | 6–8 | 25% | D + E + F |
-| 4 Transport, lifts, weather | [04-transport-lifts-weather.md](04-transport-lifts-weather.md) | 9–10 | 20% | G + H core |
-| 5 Dashboard and handover | [05-dashboard-and-handover.md](05-dashboard-and-handover.md) | 11–12 | 15% | I + lobby/avalanche + §11 |
-
-Lobby TV and avalanche are described under module H but are **Milestone 5** deliverables in §8. Phase 4 builds the weather engine; Phase 5 ships lobby + avalanche + handover (UI deferred while backend-only).
+```text
+PDF §8 milestone
+    → work/phases/0N-*.md  (modules complete inside)
+    → work/todo/NN-*.md    (executable backend tasks)
+    → apps.* implementation
+```

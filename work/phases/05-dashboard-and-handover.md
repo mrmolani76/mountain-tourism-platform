@@ -1,57 +1,113 @@
-# Phase 5 — Dashboard and handover (backend focus first)
+# Phase 5 — Dashboard and handover
 
-- **PDF**: Milestone 5 (§8) + handover (§11)
+- **PDF**: Milestone 5 (§8) + §11 handover
 - **Weeks**: 11–12
 - **Payment**: 15%
-- **Modules**: I (Owner dashboard and reports) + lobby/avalanche from H + §11
-- **Depends on**: Phases 1–4 domain data
-- **Kanban IDs**: seed when Phase 5 starts (suggested 56–70)
-- **Focus**: report/dashboard **APIs**, backups, seed, docs; UI screens deferred until frontend focus returns
+- **Modules in this phase**: **I (full)** + **H leftovers** (lobby screen, avalanche entry) + handover ops
+- **Depends on**: Phases 1–4 data (charges, payments, lifts, weather, rentals, …)
+- **Focus**: backend report/lobby/avalanche APIs + ops scripts first; dashboard/lobby UI deferred under current focus
+- **Deep docs**: [I](../../docs/modules/I-owner-dashboard-and-reports.md) · [H](../../docs/modules/H-weather.md)
 
-## Goal
+---
 
-Owner “today” and date-range report APIs (totals to the cent), lobby read-only data + private link token, avalanche level API, backups/restore proof, full §2 seed, handover artifacts.
+## Phase goal
 
-## In scope — backend now
+Owner operational visibility and money-true reports; lobby TV data; avalanche level; backups; full §2 seed; handover checklist. After this, 30-day free bugfix on in-scope MVP.
 
-- [ ] Today aggregates API: occupancy by building, arrivals/departures + transport, revenue by outlet, rentals out, open folios, lift status, weather warnings
-- [ ] Date-range reports: revenue by outlet/service/payment method, weather cancellations; CSV export endpoints
-- [ ] Report totals match folio charges + direct sales to the cent (tests)
-- [ ] Avalanche danger level 1–5 storage + API (staff morning entry)
-- [ ] Lobby: private link token, no-login read API (valley/summit weather, lift status, avalanche, today’s activities)
-- [ ] Nightly `pg_dump` backup script; keep last 7; restore tested once
-- [ ] Full seed script for §2 demo complex
-- [ ] `.env.example` complete; README local + deploy; OpenAPI complete for shipped API
-- [ ] Release rollback already from Phase 1 CI — re-verify
+---
 
-## Deferred (frontend)
+## Modules in this phase
 
-- [ ] Owner dashboard UI, lobby TV page chrome, report download UX, recorded walkthrough is human process
+### Module I — Owner dashboard and reports (COMPLETE)
 
-## Out of scope
+**PDF**: §5I
 
-- §9 after-MVP product features
+#### Purpose
+“Today” snapshot for the complex, plus date-range reports and CSV. Totals must match folio charges + direct sales **to the cent** (integer math).
 
-## Acceptance (done when)
+#### Actors
+| Role | Jobs |
+|------|------|
+| Owner | Today dashboard + reports |
+| Manager | Outlet reports (subset) |
 
-- Report totals match folio charges + direct sales for same dates, to the cent (§5I)
-- Handover checklist (§11) for **backend**: code in GitHub, running on VPS via CI/CD, setup script/guide, README, `.env.example`, Swagger, DB restore + rollback tested, seed script, walkthrough scheduled with client
+#### “Today” aggregates (API)
+- Occupancy by building
+- Arrivals and departures with their transport
+- Revenue by outlet
+- Rentals currently out
+- Open folios
+- Lift status
+- Weather warnings
 
-## Hard constraints
+#### Date-range reports
+- Revenue by outlet
+- Revenue by service
+- Revenue by payment method
+- Weather cancellations
+- CSV export endpoints
 
-- Totals from charge/payment lines only (no float drift)
-- Lobby link must not expose other tenants
-- No secrets in repo
+#### Business rules
+1. Outlet sales from **charge** lines (non-voided).
+2. Cash/card from **payment** lines.
+3. No float drift — integer cents end-to-end.
+4. Tenant timezone for “today” and range bounds.
+5. Manager sees only assigned outlets if required by role rules.
 
-## Work packages (backend — seed later)
+#### Acceptance — Module I done when (PDF)
+> Report totals match the folio charges plus direct sales for the same dates, **to the cent**.
 
-- Today + report query services + CSV + cent-accurate tests
-- Avalanche + lobby token APIs
-- Backup/restore scripts + doc proof
-- Full §2 seed
-- Handover doc pass
+#### Package
+`apps.reports`
 
-## Status
+---
 
-- Not started; wait for Phase 4
-- Frontend deferred under current focus
+### Module H leftovers — Lobby + avalanche (COMPLETE for Phase 5 delivery)
+
+**PDF**: §5H bullets on avalanche + lobby; §8 Milestone 5 line items
+
+#### Avalanche
+- Level 1–5 entered by staff each morning from official regional bulletin
+- Stored per tenant per date; shown on lobby + relevant dashboards
+
+#### Lobby screen
+- Read-only page for TV in lobby / valley station
+- Opened by **private link**, **no login**
+- Shows: weather at valley and summit, lift status, avalanche level, today’s activities
+- Backend: tokenized public read API; must not leak other tenants
+- Frontend TV page deferred under current focus; API required for Milestone 5
+
+#### Acceptance (with H core from Phase 4)
+Lobby consumers see lift closed within a minute (G); weather credits on weather payloads.
+
+---
+
+### Handover block (§11) — not a product module, but Phase 5 scope
+
+Complete when:
+
+- [ ] All code in client GitHub
+- [ ] Running on VPS, deployed by CI/CD
+- [ ] Server setup script/guide for fresh VPS
+- [ ] README: local setup + deploy
+- [ ] `.env.example` every variable explained
+- [ ] API docs (Swagger/OpenAPI)
+- [ ] DB restore tested once; release rollback tested once
+- [ ] Seed script = full demo complex from PDF §2
+- [ ] ~1h recorded walkthrough call
+
+Also: nightly `pg_dump`, keep last 7 backups (PDF §6).
+
+---
+
+## Phase work packages (seed later)
+
+- Today + report query services + CSV + cent-accurate tests (I)
+- Avalanche API + lobby token read API (H leftovers)
+- Backup/restore scripts + proof notes
+- Full §2 seed command
+- Handover doc pass (README, env example, OpenAPI completeness)
+
+## Phase out of scope
+
+§9 after-MVP (guest portal, RFID, offline, SMS, paid weather, OTA, SaaS billing, …). Design must not block them.

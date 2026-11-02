@@ -7,7 +7,9 @@ PDF remains the legal contract. If docs and PDF disagree, **PDF wins** until hum
 |-----|---------|
 | [TECHNICAL_RULES.md](TECHNICAL_RULES.md) | Non-negotiable tech rules (§7) |
 | [GLOSSARY.md](GLOSSARY.md) | Domain vocabulary |
-| [MODULES.md](MODULES.md) | Modules A–I + done-when |
+| [MODULES.md](MODULES.md) | Modules A–I index + done-when |
+| [modules/](modules/) | Per-module deep files (link to phase embeds) |
+| [../work/phases/](../work/phases/) | Phase plans with **complete** module descriptions |
 | [MILESTONES.md](MILESTONES.md) | Payment milestones 1–5 |
 | [HOSTING.md](HOSTING.md) | VPS / CI/CD constraints (§6) |
 | [ROLES.md](ROLES.md) | Staff roles |
