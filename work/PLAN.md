@@ -23,6 +23,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 23 | Frontend SPA — copy into repo and wire to Django backend | high | A-core | frontend | L | 2026-11-02 | 2026-11-02 | Work done: rewired Nuxt SPA to Django auth, static menu, health check, proxy, branding, env, and module placeholders. |
 
 ## Completed
 

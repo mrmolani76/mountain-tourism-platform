@@ -9,6 +9,9 @@ Refresh on every work / bug / change status update.
 ### Todo
 - (none)
 
+### Completed
+- **23** — Frontend SPA — copy into repo and wire to Django backend (high)
+
 ### In Progress
 - (none)
 

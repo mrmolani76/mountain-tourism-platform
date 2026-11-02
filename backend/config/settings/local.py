@@ -41,3 +41,15 @@ TENANT_DB_TEMPLATE = {
 }
 
 INTERNAL_IPS = ['127.0.0.1']
+
+# Browser origins allowed to send unsafe requests through the Nuxt dev proxy.
+# The proxy keeps the browser origin (localhost:3000) while Django sees the
+# tenant host, so Django's CSRF origin check needs this allow-list.
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        'DJANGO_CSRF_TRUSTED_ORIGINS',
+        'http://localhost:3000,http://127.0.0.1:3000',
+    ).split(',')
+    if origin.strip()
+]

@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.sticky-header {
+    position: sticky !important;
+    z-index: 9 !important;
+    inset-block-end: 0;
+    inset-block-start: 4rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.resetRteStyle {
+    overflow: auto;
+
+    ol,
+    ul {
+        list-style: revert !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: revert;
+        font-weight: revert;
+    }
+}
+
+/* Temporary fix for scrim to cover whole instead of parent compoenent */
+.v-navigation-drawer__scrim {
+    position: fixed !important;
+}
+
+.sticky-footer {
+    position: fixed !important;
+    bottom: 0;
+    width: calc(100% - 260px);
+    left: 260px;
+    z-index: 9 !important;
+
+}
+
+.stickyTableHeader {
+    height: calc(100vh - 225px);
+}
+
+.pac-container {
+    z-index: 10000;
+}
+
+@media (max-width: 1279px) {
+    .sticky-footer {
+        width: 100%;
+        left: 0;
+    }
+}
+
+@media (min-width: 1280px) {
+    .sticky-footer {
+        width: calc(100% - 260px);
+        left: 260px;
+    }
+}

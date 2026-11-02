@@ -47,5 +47,35 @@ services:
       sh -c "python manage.py migrate --no-input &&
              python manage.py runserver 0.0.0.0:8000"
 
+# Nuxt SPA (development)
+  spa:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mtmtp_spa
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      # Public config baked at build time (ssr:false)
+      NUXT_PUBLIC_API_BASE_URL: http://backend:8000
+      NUXT_PUBLIC_ENABLE_REALTIME: "false"
+      ENV: local
+      # Backend URL for vite proxy (same-origin within compose network)
+      BACKEND_URL: http://backend:8000
+      # Hosts file entry so `lab.local.mountain.local` resolves inside containers
+      # (matches ALLOWED_HOSTS .local.mountain.local entry)
+      DOCKER_HOSTS_ENTRY: "127.0.0.1 lab.local.mountain.local"
+    volumes:
+      - ./frontend:/app:ro
+      - /app/node_modules
+    networks:
+      - mtmtp_net
+    depends_on:
+      - web
+
+networks:
+  mtmtp_net:
+    driver: bridge
+
 volumes:
   mtmtp_pgdata:

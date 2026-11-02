@@ -1,0 +1,184 @@
+﻿docker :  Image mountain-tourism-platform-web Building 
+At line:1 char:1
++ docker compose -f docker-compose.dev.yml up -d 2>&1 | Out-File -Encod ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Image mountain...m-web Building :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Image mountain-tourism-platform-spa Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.15kB done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 943B done
+#2 DONE 0.0s
+
+#3 [spa internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.44kB done
+#3 DONE 0.0s
+
+#4 [spa internal] load metadata for docker.io/library/nginx:1.27-alpine
+#4 DONE 0.0s
+
+#5 [auth] library/python:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#6 [auth] library/node:pull token for registry-1.docker.io
+#6 DONE 0.0s
+
+#7 [spa internal] load metadata for docker.io/library/node:22-alpine
+#7 DONE 2.1s
+
+#8 [web internal] load metadata for docker.io/library/python:3.12-slim
+#8 DONE 2.1s
+
+#9 [spa internal] load .dockerignore
+#9 transferring context: 2B done
+#9 DONE 0.0s
+
+#10 [web internal] load .dockerignore
+#10 transferring context: 2B done
+#10 DONE 0.0s
+
+#11 [spa internal] load build context
+#11 DONE 0.0s
+
+#12 [web internal] load build context
+#12 transferring context: 16.13kB 0.0s done
+#12 DONE 0.1s
+
+#13 [web 1/6] FROM docker.io/library/python:3.12-slim@sha256:b18b261e1b4974b4f321451ad5251ded85abb22c2b8b262da527dda1d031ab30
+#13 resolve docker.io/library/python:3.12-slim@sha256:b18b261e1b4974b4f321451ad5251ded85abb22c2b8b262da527dda1d031ab30
+#13 resolve docker.io/library/python:3.12-slim@sha256:b18b261e1b4974b4f321451ad5251ded85abb22c2b8b262da527dda1d031ab30 0.1s done
+#13 DONE 0.1s
+
+#14 [spa builder 1/8] FROM docker.io/library/node:22-alpine@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914
+#14 resolve docker.io/library/node:22-alpine@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914 0.1s done
+#14 DONE 0.1s
+
+#15 [web 2/6] RUN apt-get update     && apt-get install -y --no-install-recommends build-essential libpq-dev pkg-config curl     && rm -rf /var/lib/apt/lists/*
+#15 CACHED
+
+#16 [web 3/6] WORKDIR /app/backend
+#16 CACHED
+
+#17 [web 4/6] COPY requirements.txt requirements-dev.txt ./
+#17 CACHED
+
+#18 [spa production 1/4] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+#18 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 0.2s done
+#18 DONE 0.2s
+
+#11 [spa internal] load build context
+#11 transferring context: 53.81kB 0.1s done
+#11 DONE 0.1s
+
+#19 [spa production 2/4] RUN rm /etc/nginx/conf.d/default.conf
+#19 CACHED
+
+#20 [spa builder 2/8] RUN corepack enable && corepack prepare pnpm@latest --activate
+#20 CACHED
+
+#21 [spa builder 3/8] WORKDIR /app
+#21 CACHED
+
+#22 [spa builder 4/8] COPY package.json pnpm-lock.yaml .npmrc ./
+#22 CACHED
+
+#23 [spa production 3/4] COPY docker/nginx-spa-proxy.conf /etc/nginx/conf.d/default.conf
+#23 CACHED
+
+#24 [spa builder 5/8] RUN pnpm install --no-frozen-lockfile --ignore-scripts
+#24 CACHED
+
+#25 [spa builder 6/8] COPY . .
+#25 DONE 0.4s
+
+#26 [web 5/6] RUN python -m pip install --no-cache-dir --upgrade pip     && python -m pip install --no-cache-dir -r requirements-dev.txt
+#26 1.971 Requirement already satisfied: pip in /usr/local/lib/python3.12/site-packages (25.0.1)
+#26 2.126 Collecting pip
+#26 2.229   Downloading pip-26.2.2-py3-none-any.whl.metadata (4.6 kB)
+#26 2.255 Downloading pip-26.2.2-py3-none-any.whl (1.8 MB)
+#26 2.646    ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 1.8/1.8 MB 4.8 MB/s eta 0:00:00
+#26 2.669 Installing collected packages: pip
+#26 2.669   Attempting uninstall: pip
+#26 2.673     Found existing installation: pip 25.0.1
+#26 2.742     Uninstalling pip-25.0.1:
+#26 2.885       Successfully uninstalled pip-25.0.1
+#26 4.030 Successfully installed pip-26.2.2
+#26 4.031 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#26 ...
+
+#27 [spa builder 7/8] RUN pnpm run build:icons
+#27 0.742 Γ£ô Lockfile passes supply-chain policies (verified 41s ago)
+#27 0.742 Lockfile is up to date, resolution step is skipped
+#27 1.419 Already up to date
+#27 1.792 . postinstall$ nuxt prepare && npm run build:icons
+#27 3.013 . postinstall: 
+#27 3.013 . postinstall:  ERROR  ParseError: Unexpected token  
+#27 3.013 . postinstall:  /app/nuxt.config.ts:154:0
+#27 3.013 . postinstall: 
+#27 3.013 . postinstall:    
+#27 3.013 . postinstall: 
+#27 3.013 . postinstall: 
+#27 3.052 . postinstall: Failed
+#27 3.067 Error: ERR_PNPM_EXECUTOR_LIFECYCLE_SCRIPT_FAILED
+#27 3.067 
+#27 3.067   ├ù installing dependencies
+#27 3.067   Γò░ΓöÇΓû╢ /app postinstall: `nuxt prepare && npm run build:icons` exited with exit
+#27 3.067       status: 1
+#27 3.067 
+#27 3.069 [WARN] The install that runs before scripts failed, so your node_modules may be out of sync with your lockfile. Set "verifyDepsBeforeRun: false" to skip this install.
+#27 3.070 $ tsx plugins/iconify/build-icons.ts
+#27 4.800 Saved CSS to /app/plugins/iconify/icons.css!
+#27 DONE 5.1s
+
+#28 [spa builder 8/8] RUN pnpm exec nuxt generate
+#28 0.484 Γöî  Building Nuxt for production...
+#28 1.446 
+#28 1.446  ERROR  ParseError: Unexpected token  
+#28 1.446  /app/nuxt.config.ts:154:0
+#28 1.446 
+#28 1.446    
+#28 1.446 
+#28 1.446 
+#28 ERROR: process "/bin/sh -c pnpm exec nuxt generate" did not complete successfully: exit code: 1
+
+#26 [web 5/6] RUN python -m pip install --no-cache-dir --upgrade pip     && python -m pip install --no-cache-dir -r requirements-dev.txt
+#26 6.322 Collecting Django<6.0,>=5.0 (from -r /app/backend/requirements.txt (line 3))
+#26 6.407   Downloading django-5.2.18-py3-none-any.whl.metadata (4.1 kB)
+#26 6.782 Collecting djangorestframework<4,>=3.14 (from -r /app/backend/requirements.txt (line 4))
+#26 6.809   Downloading djangorestframework-3.18.3-py3-none-any.whl.metadata (7.8 kB)
+#26 6.938 Collecting psycopg2-binary>=2.9 (from -r /app/backend/requirements.txt (line 5))
+#26 6.954   Downloading psycopg2_binary-2.9.13-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+#26 CANCELED
+------
+ > [spa builder 8/8] RUN pnpm exec nuxt generate:
+0.484 Γöî  Building Nuxt for production...
+1.446 
+1.446  ERROR  ParseError: Unexpected token  
+1.446  /app/nuxt.config.ts:154:0
+1.446 
+1.446    
+1.446 
+1.446 
+------
+Dockerfile:25
+
+--------------------
+
+  23 |     
+
+  24 |     # Generate the static SPA (SSR=false) ΓÇö emits index.html + 200.html in .output/public
+
+  25 | >>> RUN pnpm exec nuxt generate
+
+  26 |     
+
+  27 |     ###############################################################################
+
+--------------------
+
+target spa: failed to solve: process "/bin/sh -c pnpm exec nuxt generate" did not complete successfully: exit code: 1
+

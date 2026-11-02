@@ -19,11 +19,12 @@ class LoginSerializer(serializers.Serializer):
 
 class MeSerializer(serializers.ModelSerializer):
     role = serializers.CharField(source='get_role_display', read_only=True)
+    role_code = serializers.CharField(source='role', read_only=True)
     tenant_slug = serializers.SerializerMethodField()
 
     class Meta:
         model = Staff
-        fields = ['id', 'email', 'role', 'is_active', 'tenant_slug']
+        fields = ['id', 'email', 'role', 'role_code', 'is_active', 'tenant_slug']
 
     def get_tenant_slug(self, obj):
         tenant = self.context.get('tenant')
