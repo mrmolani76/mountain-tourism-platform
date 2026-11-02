@@ -1,0 +1,51 @@
+# Mountain Tourism Platform — backend dev stack (Docker).
+# Postgres 16 + Django API. Dev only; prod path is gunicorn on VPS (todo 08).
+# Ports 8010 (web) / 5433 (db host mapping) to avoid clashes on this machine.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mtmtp_db
+    environment:
+      POSTGRES_DB: mountain_tourism
+      POSTGRES_USER: mt_app
+      POSTGRES_PASSWORD: devpass
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - mtmtp_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mt_app -d mountain_tourism"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mtmtp_web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SECRET_KEY: dev-only-docker-secret-change-me
+      DJANGO_DEBUG: "True"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,db,mtmtp_web
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: mountain_tourism
+      DB_USER: mt_app
+      DB_PASSWORD: devpass
+      DB_HOST: db
+      DB_PORT: "5432"
+      TENANCY_CENTRAL_HOSTS: localhost,127.0.0.1,db,0.0.0.0,mt-saas.test
+    ports:
+      - "127.0.0.1:8010:8000"
+    volumes:
+      - ./backend:/app/backend
+    command: >
+      sh -c "python manage.py migrate --no-input &&
+             python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  mtmtp_pgdata:
