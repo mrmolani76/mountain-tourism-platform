@@ -13,9 +13,10 @@ Refresh on every work / bug / change status update.
 - **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
-- **06** — Buildings, outlets, seasons, tenant settings APIs
+- (none)
 
 ### Completed
+- **06** — Buildings, outlets, seasons, tenant settings APIs (2026-11-02)
 - **15** — Backend structure gaps MD (2026-11-02)
 - **14** — Audit module + business logic docs (2026-11-02)
 - **13** — Project audit report (2026-11-02)
@@ -30,7 +31,7 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
-- (none)
+- **BUG-TENANT-001** — Cross-host session identity swap risk (medium, 2026-11-02)
 
 ### Verified
 - (none)
@@ -39,10 +40,12 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ## 3. Testing
+- 2026-11-02 — item 06: `manage.py check` clean; migration-model check clean; new config tests code-only (suite runs on setup machine)
 - 2026-11-02 — tests rewritten for DB-per-tenant / SaaS registry (not run — code-only item 11)
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-02 — `work/changes/2026-11-02--06-core-config-apis.md` — core config APIs (item 06) + BUG-TENANT-001
 - 2026-11-02 — `work/changes/2026-11-02--15-backend-structure-gaps-md.md` — BACKEND_STRUCTURE_GAPS.md
 - 2026-11-02 — `work/changes/2026-11-02--14-audit-module-business-logic-docs.md` — AUDIT_MODULE.md + services/ BL
 - 2026-11-02 — `work/changes/2026-11-02--13-project-audit-report.md` — audit + DEPENDENCIES.md (no setup)

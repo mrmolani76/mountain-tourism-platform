@@ -27,7 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 06 | Buildings, outlets, seasons, tenant settings APIs | high | A-core | backend | M |
+| | | | | | |
 
 ## Completed
 
@@ -38,6 +38,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 | 13 | Project audit report | high | docs | docs | M | 2026-11-02 |
 | 12 | EQMS-style modules layout | high | A-core | backend | M | 2026-11-02 |
 | 11 | DB-per-tenant backend layout (DRF) | high | A-core | backend | L | 2026-11-02 |
+| 06 | Buildings, outlets, seasons, tenant settings APIs | high | A-core | backend | M | 2026-11-02 |
 | 01 | Harden work-tracker kanban workflow | high | ai-rules | docs | S | 2026-11-02 |
 | 02 | Architecture note + core data model draft | high | A-core | docs | M | 2026-11-02 |
 | 03 | Django + DRF backend scaffold | high | A-core | backend | M | 2026-11-02 |
