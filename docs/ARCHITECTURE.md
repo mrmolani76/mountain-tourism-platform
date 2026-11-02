@@ -20,7 +20,7 @@ Nginx → Django/DRF API (gunicorn/uvicorn)
 
 ## Tenancy
 - One DB, `tenant_id` on business tables.
-- **Single** isolation mechanism (document choice here when implemented: RLS vs scoped manager).
+- **Single** isolation mechanism: **scoped manager** (custom Django manager + base model), not RLS — simpler, Django-idiomatic, testable without DB setup.
 - Super admin is the only cross-tenant operator.
 
 ## Money
@@ -29,24 +29,45 @@ Nginx → Django/DRF API (gunicorn/uvicorn)
 - Outlet revenue from charges; cash from payments.
 
 ## Auth
-- Email/password.
+- Email/password, **session-based** (DRF `SessionAuthentication`) for MVP.
 - Owners/managers reset staff passwords (no email sending in MVP).
 - Permissions enforced in API.
+- Token auth can be added later if Nuxt moves to a different domain.
+
+## Backend layout (`backend/`)
+- Django project `config/`
+- Domain apps: `apps.core` (Tenant, Staff, Building, Outlet, Season, settings, audit stub)
+- `tests/` with unit + API tests
+- Migrations append-only: never edit a shipped migration
 
 ## Frontend
 - Role-oriented screens; tablet-friendly POS; phone lift status; lobby TV private link.
+- **Deferred** — backend/API only in Phase 1.
 
 ## External free services
 - MET Norway (server job).
 - OSM tiles + Leaflet/MapLibre.
 
-## Out of MVP deploy shape
-- No Docker required on VPS.
-- No paid APIs.
-- No native apps.
+## Deploy shape
+- No Docker required on VPS (direct user + Postgres + Nginx + systemd).
+- Process supervisor: **systemd**.
+- No paid APIs. No native apps.
+
+## Entities (Module A)
+| Entity | Key fields / notes |
+|--------|--------------------|
+| Tenant | name, is_active; one complex |
+| TenantSettings | currency, tax_rates, timezone, units |
+| Staff | email, password, role, tenant_id, is_active |
+| StaffOutletAccess | staff + outlet M2M-ish access |
+| Building | type, name, altitude_m, map position |
+| Outlet | building_id, name, type (restaurant, shop, rental, spa, sports, transport, lifts, …) |
+| Season | winter/summer/closed + starts_on, ends_on |
+| Audit stub | ready for charge/payment/void writers (Module C+) |
+
+## App packages
+- `apps.core` (primary; Tenant, Staff, Building, Outlet, Season, settings)
+- `apps.accounts` optional split later
 
 ## Open questions
-- [ ] Exact Django project layout (`apps/` package names)
-- [ ] Auth: session vs JWT for Nuxt (document when chosen)
-- [ ] Tenant isolation mechanism: RLS vs manager
-- [ ] Process supervisor: systemd vs PM2 for Node build artifacts only
+- [ ] None remaining for Module A foundation

@@ -2,7 +2,7 @@
 title: Architecture note + core data model draft
 id: 02
 priority: high
-status: todo
+status: completed
 milestone: 1
 module: A-core
 area: docs
