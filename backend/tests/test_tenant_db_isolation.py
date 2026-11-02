@@ -39,6 +39,12 @@ class TenantDbIsolationTests(TestCase):
 
         context.set_current_tenant(self.tenant_a, alias=self.alias_a)
         try:
+            self.owner_a = Staff.objects.create(
+                email='owner-a@test.com',
+                password=make_password('x'),
+                role=StaffRole.OWNER,
+                is_active=True,
+            )
             self.staff_a = Staff.objects.create(
                 email='a@test.com',
                 password=make_password('x'),
@@ -63,7 +69,7 @@ class TenantDbIsolationTests(TestCase):
         context.set_current_tenant(self.tenant_a, alias=self.alias_a)
         try:
             req = self.factory.get('/api/staff/')
-            force_authenticate(req, user=self.staff_a)
+            force_authenticate(req, user=self.owner_a)
             req.is_central = False
             req.tenant = self.tenant_a
             view = StaffViewSet.as_view({'get': 'list'})
@@ -71,6 +77,20 @@ class TenantDbIsolationTests(TestCase):
             emails = {row['email'] for row in response.data}
             self.assertIn('a@test.com', emails)
             self.assertNotIn('b@test.com', emails)
+        finally:
+            context.clear_current_tenant()
+
+    def test_staff_list_denied_to_front_desk(self):
+        # Staff administration is owner-only since TODO-06.
+        context.set_current_tenant(self.tenant_a, alias=self.alias_a)
+        try:
+            req = self.factory.get('/api/staff/')
+            force_authenticate(req, user=self.staff_a)
+            req.is_central = False
+            req.tenant = self.tenant_a
+            view = StaffViewSet.as_view({'get': 'list'})
+            response = view(req)
+            self.assertEqual(response.status_code, 403)
         finally:
             context.clear_current_tenant()
 

@@ -10,6 +10,9 @@ app_name = 'core'
 router = DefaultRouter()
 router.register(r'staff', views.StaffViewSet, basename='staff')
 router.register(r'outlet-access', views.StaffOutletAccessViewSet, basename='outlet-access')
+router.register(r'buildings', views.BuildingViewSet, basename='building')
+router.register(r'outlets', views.OutletViewSet, basename='outlet')
+router.register(r'seasons', views.SeasonViewSet, basename='season')
 
 urlpatterns = [
     path('health/', views.HealthView.as_view(), name='health'),
@@ -18,5 +21,6 @@ urlpatterns = [
     path('auth/logout/', views.LogoutView.as_view(), name='logout'),
     path('auth/me/', views.MeView.as_view(), name='me'),
     path('auth/reset-password/', views.PasswordResetView.as_view(), name='reset-password'),
+    path('settings/', views.TenantSettingsView.as_view(), name='settings'),
     path('', include(router.urls)),
 ]

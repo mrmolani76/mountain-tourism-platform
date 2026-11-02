@@ -7,14 +7,13 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **06** — Buildings, outlets, seasons, tenant settings APIs
 - **07** — Super admin APIs — complex + owner activate/deactivate
 - **08** — VPS setup script/guide for API
 - **09** — GitHub Actions — backend lint/test/deploy
 - **10** — Foundation seed — §2 demo buildings (partial)
 
 ### In Progress
-- (none)
+- **06** — Buildings, outlets, seasons, tenant settings APIs
 
 ### Completed
 - **15** — Backend structure gaps MD (2026-11-02)

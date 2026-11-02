@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from modules.core.models import Outlet, Staff, StaffOutletAccess
+from modules.core.models import Staff, StaffOutletAccess
 
 
 class StaffSerializer(serializers.ModelSerializer):
@@ -39,11 +39,4 @@ class StaffOutletAccessSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffOutletAccess
         fields = ['id', 'staff', 'outlet', 'created_at']
-        read_only_fields = ['id', 'created_at']
-
-
-class OutletSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Outlet
-        fields = ['id', 'name', 'is_active', 'created_at']
         read_only_fields = ['id', 'created_at']

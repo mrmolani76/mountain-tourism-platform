@@ -1,3 +1,3 @@
-from .base import CanResetStaffPassword, IsTenantStaff
+from .base import CanResetStaffPassword, IsOwner, IsTenantStaff
 
-__all__ = ['CanResetStaffPassword', 'IsTenantStaff']
+__all__ = ['CanResetStaffPassword', 'IsOwner', 'IsTenantStaff']

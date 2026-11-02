@@ -2,7 +2,7 @@
 title: Buildings, outlets, seasons, tenant settings APIs
 id: 06
 priority: high
-status: todo
+status: inprogress
 milestone: 1
 module: A-core
 area: backend

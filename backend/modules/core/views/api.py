@@ -10,16 +10,20 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from modules.core.auth import StaffSessionAuthentication
-from modules.core.models import Staff, StaffOutletAccess
-from modules.core.permissions import CanResetStaffPassword, IsTenantStaff
+from modules.core.models import Building, Outlet, Season, Staff, StaffOutletAccess, TenantSettings
+from modules.core.permissions import CanResetStaffPassword, IsOwner, IsTenantStaff
 from modules.core.serializers import (
+    BuildingSerializer,
     LoginSerializer,
     MeSerializer,
+    OutletSerializer,
     PasswordResetSerializer,
+    SeasonSerializer,
     StaffOutletAccessSerializer,
     StaffSerializer,
+    TenantSettingsSerializer,
 )
-from modules.core.services import authenticate_staff, reset_staff_password
+from modules.core.services import authenticate_staff, get_tenant_settings, reset_staff_password
 from tenancy.context import get_current_tenant
 
 
@@ -36,14 +40,24 @@ class ApiRootView(APIView):
     permission_classes = [IsAuthenticated, IsTenantStaff]
 
     def get(self, request):
-        return Response({
+        tenant = get_current_tenant()
+        if tenant is not None:
+            body = {'tenant': tenant.slug}
+        else:
+            body = {}
+        body.update({
             'health': reverse('health', request=request),
             'login': reverse('login', request=request),
             'me': reverse('me', request=request),
             'logout': reverse('logout', request=request),
+            'settings': reverse('settings', request=request),
             'staff': reverse('staff-list', request=request),
             'outlet-access': reverse('outlet-access-list', request=request),
+            'buildings': reverse('building-list', request=request),
+            'outlets': reverse('outlet-list', request=request),
+            'seasons': reverse('season-list', request=request),
         })
+        return Response(body)
 
 
 class LoginView(APIView):
@@ -101,18 +115,69 @@ class PasswordResetView(APIView):
 
 
 class StaffViewSet(viewsets.ModelViewSet):
-    """Staff CRUD on the active tenant database."""
+    """Staff CRUD under owner administration (active tenant DB)."""
 
     authentication_classes = [StaffSessionAuthentication]
-    permission_classes = [IsAuthenticated, IsTenantStaff]
+    permission_classes = [IsAuthenticated, IsTenantStaff, IsOwner]
     serializer_class = StaffSerializer
     queryset = Staff.objects.all()
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
 
 class StaffOutletAccessViewSet(viewsets.ModelViewSet):
+    """Outlet access assign/unassign (owner only)."""
+
     authentication_classes = [StaffSessionAuthentication]
-    permission_classes = [IsAuthenticated, IsTenantStaff]
+    permission_classes = [IsAuthenticated, IsTenantStaff, IsOwner]
     serializer_class = StaffOutletAccessSerializer
     queryset = StaffOutletAccess.objects.all()
     http_method_names = ['get', 'post', 'delete', 'head', 'options']
+
+
+class TenantSettingsView(APIView):
+    """Singleton settings row: GET reads, PATCH partially updates (owner)."""
+
+    authentication_classes = [StaffSessionAuthentication]
+    permission_classes = [IsAuthenticated, IsTenantStaff, IsOwner]
+
+    def get(self, request):
+        return Response(TenantSettingsSerializer(get_tenant_settings()).data)
+
+    def patch(self, request):
+        settings = get_tenant_settings()
+        serializer = TenantSettingsSerializer(
+            settings, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class BuildingViewSet(viewsets.ModelViewSet):
+    """Building CRUD with altitude + map position (owner)."""
+
+    authentication_classes = [StaffSessionAuthentication]
+    permission_classes = [IsAuthenticated, IsTenantStaff, IsOwner]
+    serializer_class = BuildingSerializer
+    queryset = Building.objects.all()
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+
+
+class OutletViewSet(viewsets.ModelViewSet):
+    """Outlet CRUD under buildings (owner)."""
+
+    authentication_classes = [StaffSessionAuthentication]
+    permission_classes = [IsAuthenticated, IsTenantStaff, IsOwner]
+    serializer_class = OutletSerializer
+    queryset = Outlet.objects.all()
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+
+
+class SeasonViewSet(viewsets.ModelViewSet):
+    """Season CRUD with kind + dates + overlap rule (owner)."""
+
+    authentication_classes = [StaffSessionAuthentication]
+    permission_classes = [IsAuthenticated, IsTenantStaff, IsOwner]
+    serializer_class = SeasonSerializer
+    queryset = Season.objects.all()
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']

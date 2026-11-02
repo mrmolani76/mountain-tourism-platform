@@ -18,7 +18,6 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 06 | Buildings, outlets, seasons, tenant settings APIs | high | A-core | backend | M |
 | 07 | Super admin APIs — complex + owner activate/deactivate | high | A-core | backend | M |
 | 08 | VPS setup script/guide for API | medium | infra | devops | M |
 | 09 | GitHub Actions — backend lint/test/deploy | medium | infra | devops | L |
@@ -28,7 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| | | | | | |
+| 06 | Buildings, outlets, seasons, tenant settings APIs | high | A-core | backend | M |
 
 ## Completed
 

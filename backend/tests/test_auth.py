@@ -33,8 +33,8 @@ class AuthTests(TestCase):
             is_primary=True,
         )
         self.alias = connections.ensure_tenant_connection(self.tenant)
-        # When physical tenant DB exists, staff rows live there.
-        # Until setup runs, tests that hit tenant DB need that alias migrated.
+        # When the physical tenant DB exists, staff rows live there.
+        # Until setup runs, tests hitting the tenant DB need that alias migrated.
         context.set_current_tenant(self.tenant, alias=self.alias)
         try:
             self.owner = Staff.objects.create(
