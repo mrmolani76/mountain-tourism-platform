@@ -1,4 +1,15 @@
-"""DRF routes for modules.folio (populated in later phases)."""
-from django.urls import path
+"""DRF routes for modules.folio (Module C — folio, charges, payments)."""
 
-urlpatterns = []
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from modules.folio import views
+
+router = DefaultRouter()
+router.register(r'folios', views.FolioViewSet, basename='folio')
+router.register(r'charges', views.ChargeViewSet, basename='charge')
+router.register(r'payments', views.PaymentViewSet, basename='payment')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]

@@ -13,6 +13,11 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **22** — remaining modules — rental, services, transport, weather, reports DRF APIs (2026-11-02)
+- **21** — pos module — Product, Order, OrderLine models + DRF APIs (2026-11-02)
+- **20** — hotel module — Room, Stay, BoardPlan models + DRF APIs (2026-11-02)
+- **19** — folio module — Folio, Charge, Payment models + DRF APIs (2026-11-02)
+- **18** — DRF settings — pagination, filtering, JSON envelope (2026-11-02)
 - **10** — Foundation seed — §2 demo buildings (partial) (2026-11-02)
 - **09** — GitHub Actions — backend lint/test/deploy (2026-11-02)
 - **08** — VPS setup script/guide for API (2026-11-02)
@@ -67,6 +72,11 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — `work/changes/2026-11-02--02-phase-work-plans-backend-focus.md` — phase plans + P1 todos (API-first)
 - 2026-11-02 — `work/changes/2026-11-02--01-work-tracker-workflow.md` — work-tracker workflow
 - 2026-11-02 — `work/changes/2026-11-02--ai-rules-and-skills-bootstrap.md` — AI rules/skills bootstrap
+- 2026-11-02 — `work/changes/2026-11-02--22-remaining-modules-drff-apis.md` — remaining modules: rental, services, transport, weather, reports DRF APIs (item 22)
+- 2026-11-02 — `work/changes/2026-11-02--21-pos-module-models-drff-apis.md` — pos module: Product, Order, OrderLine models + DRF APIs (item 21)
+- 2026-11-02 — `work/changes/2026-11-02--20-hotel-module-models-drff-apis.md` — hotel module: Room, Stay, BoardPlan models + DRF APIs (item 20)
+- 2026-11-02 — `work/changes/2026-11-02--19-folio-module-models-drff-apis.md` — folio module: Folio, Charge, Payment models + DRF APIs (item 19)
+- 2026-11-02 — `work/changes/2026-11-02--18-drf-settings-pagination-filtering-envelope.md` — DRF settings: pagination, filtering, JSON envelope (item 18)
 
 ## 5. Deploys
 - (none yet)

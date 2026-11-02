@@ -1,1 +1,1 @@
-# Business logic lives here (thin DRF views).
+"""Services business logic (Module F)."""

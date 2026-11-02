@@ -28,6 +28,11 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 22 | remaining modules — rental, services, transport, weather, reports DRF APIs | medium | E–I | backend | L | 2026-11-02 |
+| 21 | pos module — Product, Order, OrderLine models + DRF APIs | high | D-pos | backend | L | 2026-11-02 |
+| 20 | hotel module — Room, Stay, BoardPlan models + DRF APIs | high | B-hotel | backend | L | 2026-11-02 |
+| 19 | folio module — Folio, Charge, Payment models + DRF APIs | high | C-folio | backend | L | 2026-11-02 |
+| 18 | DRF settings — pagination, filtering, JSON envelope | high | A-core | backend | M | 2026-11-02 |
 | 10 | Foundation seed — §2 demo buildings (partial) | medium | A-core | backend | S | 2026-11-02 |
 | 09 | GitHub Actions — backend lint/test/deploy | medium | infra | devops | L | 2026-11-02 |
 | 08 | VPS setup script/guide for API | medium | infra | devops | M | 2026-11-02 |

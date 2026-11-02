@@ -1,1 +1,1 @@
-# Business logic lives here (thin DRF views).
+"""Weather business logic (Module H)."""

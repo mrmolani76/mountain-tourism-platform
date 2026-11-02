@@ -1,1 +1,1 @@
-# Business logic lives here (thin DRF views).
+"""Transport business logic (Module G)."""
