@@ -30,11 +30,11 @@ API CI/CD workflows + docs.
 PDF §6 CI/CD; Milestone 1 auto deploy.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] PR lint/test workflow
+- [x] PR lint/test workflow (`.github/workflows/ci.yml` + `docs/CI.md`) — testing only; runs after `backend/manage.py` exists
 - [ ] Main deploy path (implemented or fully documented pending SSH)
 - [ ] Health check + rollback behavior
-- [ ] No secrets in repo
-- [ ] Change report + PLAN/SUMMARY updated
+- [x] No secrets in testing workflow
+- [ ] Change report + PLAN/SUMMARY updated (partial for testing CI)
 
 ## Files Likely Affected
 - `.github/workflows/**`

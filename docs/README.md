@@ -12,6 +12,7 @@ PDF remains the legal contract. If docs and PDF disagree, **PDF wins** until hum
 | [../work/phases/](../work/phases/) | Phase plans with **complete** module descriptions |
 | [MILESTONES.md](MILESTONES.md) | Payment milestones 1–5 |
 | [HOSTING.md](HOSTING.md) | VPS / CI/CD constraints (§6) |
+| [CI.md](CI.md) | GitHub Actions testing workflow |
 | [ROLES.md](ROLES.md) | Staff roles |
 | [SEED_COMPLEX.md](SEED_COMPLEX.md) | Demo buildings/altitudes |
 | [DECISIONS.md](DECISIONS.md) | Stack choices (Django + Nuxt) |

@@ -18,9 +18,10 @@
 
 ## CI/CD
 
-**On every PR:** install, lint, tests, build. Failed check blocks merge.
+**On every PR:** install, lint, tests, build. Failed check blocks merge.  
+See [CI.md](CI.md) and [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) (testing).
 
-**On merge to `main`:** build on GitHub → SSH copy to new release folder → migrate → switch release → reload without downtime → health check → auto-rollback on failure. Keep last 5 releases.
+**On merge to `main`:** build on GitHub → SSH copy to new release folder → migrate → switch release → reload without downtime → health check → auto-rollback on failure. Keep last 5 releases. (Deploy workflow = todo 09; separate from testing CI.)
 
 SSH key in GitHub Secrets only.
 
