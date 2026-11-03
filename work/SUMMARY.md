@@ -7,7 +7,7 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **30–33** — Module 1 closeout (audit → edge tests → policy → exit)
+- **31–33** — Module 1 closeout (edge tests → policy → exit)
 - **34** — Fix domain ViewSets auth (hotel…reports)
 - **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
 - **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
@@ -24,6 +24,7 @@ Refresh on every work / bug / change status update.
 
 ### Completed
 - **29** — Module 1 tenancy decision frozen (DB-per-tenant + Host/Domain) (high, 2026-11-03)
+- **30** — Module 1 audit foundation — AuditEvent + AuditService.record(), migration `0006_add_audit_event`, `manage.py check` clean (high, 2026-11-03)
 - **28** — Module 1 verification — first full test run, 38 green (high, 2026-11-03)
 - **27** — Project audit complete report (post items 18–26) (high, 2026-11-03)
 - **26** — Tenant dev setup — physical DB, migrate, owner seed, E2E login verify (high, 2026-11-03)
@@ -75,6 +76,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--30-m1-audit-foundation.md` — item 30: AuditEvent + AuditService + migration `0006_add_audit_event`
 - 2026-11-03 — `work/changes/2026-11-03--modules-b-i-kanban-todos-34-66.md` — Module B–I (+auth) todos 34–66 in `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--module1-closeout-todos-29-33.md` — Module 1 closeout todos 29–33; `phases/01-todos/` removed → `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — full project audit (item 27); report at `work/audits/2026-11-03-project-audit.md`

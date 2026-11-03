@@ -1,3 +1,4 @@
+from .audit import AuditEvent
 from .building import Building, BuildingType
 from .outlet import Outlet, OutletType
 from .season import Season, SeasonKind
@@ -5,6 +6,7 @@ from .settings import TenantSettings, Units
 from .staff import Staff, StaffRole, StaffOutletAccess
 
 __all__ = [
+    'AuditEvent',
     'Building',
     'BuildingType',
     'Outlet',

@@ -18,7 +18,6 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 30 | Module 1 — audit foundation (AuditEvent + service) | high | A-core | backend | M |
 | 31 | Module 1 — edge authz tests (inactive tenant + SaaS 403) | high | A-core | tests | S |
 | 32 | Module 1 — MVP policy defaults for open questions | medium | A-core | docs | S |
 | 33 | Module 1 — exit gate and mark complete | high | A-core | docs | S |
@@ -66,6 +65,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
 | 29 | Module 1 — freeze tenancy decision (DB-per-tenant) | high | A-core | docs | S | 2026-11-03 |
+| 30 | Module 1 — audit foundation (AuditEvent + service) | high | A-core | backend | M | 2026-11-03 |
 | 28 | Module 1 verification — run DB-per-tenant suite, fix failures | high | A-core | tests | L | 2026-11-03 |
 | 27 | Project audit complete report (post items 18–26) | high | docs | docs | M | 2026-11-03 |
 | 26 | Tenant dev setup — physical DB, migrate, owner seed, E2E login verify | high | infra | devops | M | 2026-11-03 |

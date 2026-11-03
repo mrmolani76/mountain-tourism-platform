@@ -9,16 +9,16 @@
 - **Test suite runs now**: `docker compose -f docker-compose.dev.yml exec web python -m pytest -q` → 38 passed (first run after rewrite; scratch DBs `lab_test`/`other_test` required — CI must create + migrate them the same way).
 
 ## Next suggested pickups (kanban order)
-1. **30** — Audit foundation (AuditEvent + AuditService) — in progress next
-2. **31** — Edge authz tests (inactive tenant + SaaS 403)
-3. **32** — MVP policy defaults for §19 open questions
-4. **33** — Module 1 exit gate (honest DoD; frontend deferred)
-5. **34** — Domain ViewSets auth fix (hotel…reports) — audit's critical defect
-6. Then **35→66** module-wise (WIP = 1); **SaaS tenant-create console last**
+1. **31** — Edge authz tests (inactive tenant + SaaS 403)
+2. **32** — MVP policy defaults for §19 open questions
+3. **33** — Module 1 exit gate (honest DoD; frontend deferred)
+4. **34** — Domain ViewSets auth fix (hotel…reports) — audit's critical defect
+5. Then **35→66** module-wise (WIP = 1); **SaaS tenant-create console last**
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **30** — Module 1 audit foundation — AuditEvent + AuditService.record(), migration `0006_add_audit_event`, `manage.py check` clean (high, 2026-11-03)
 - **29** — Module 1 tenancy decision frozen (DB-per-tenant + Host/Domain; docs-only)
 - **28** — Module 1 verification; first full test run, 38 green; BUG-APP-002/003/004 (pagination 500, season cross-kind overlap, login 401)
 - **27** — Full project audit report (2026-11-03)
