@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **25** — Fix BUG-APP-001 — prod SPA blank screen (register Nuxt modules) (high, 2026-11-03)
 - **24** — Docker dev setup — inventory-style dev stack (compose, docs, scripts, verify) (high, 2026-11-03)
 - **23** — Frontend SPA — copy into repo and wire to Django backend (high, 2026-11-03)
 - **22** — remaining modules — rental, services, transport, weather, reports DRF APIs (2026-11-02)
@@ -44,6 +45,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Verified
+- **BUG-APP-001** — Prod SPA blank screen — Nuxt modules not registered (high, 2026-11-03)
 - **BUG-TENANT-001** — Cross-host session identity swap risk (medium, 2026-11-02)
 - **BUG-ENV-001** — Tenant DB template clone missing OPTIONS key (high, 2026-11-02)
 
@@ -56,6 +58,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--25-spa-nuxt-modules-blank-screen.md` — BUG-APP-001: prod SPA blank screen fix (Nuxt modules + i18n wired); login page verified
 - 2026-11-03 — `work/changes/2026-11-03--24-docker-dev-setup.md` — Docker dev setup (item 24): compose/nginx/Dockerfile fixes, docs, scripts, stack verified
 - 2026-11-02 — `work/changes/2026-11-02--07-to-10-super-admin-vps-ci-seed.md` — items 07-10 (super admin, VPS, CI, seed)
 - 2026-11-02 — `work/changes/2026-11-02--16-backend-structure-gaps-fill.md` — gaps fill (item 16)

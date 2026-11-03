@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import vuetify from 'vite-plugin-vuetify'
 import svgLoader from 'vite-svg-loader'
+import i18nConfig from './i18n.config'
 
 export default defineNuxtConfig({
   ssr: false,
@@ -134,4 +135,6 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
+  i18n: i18nConfig as any,
+  modules: ['@vueuse/nuxt', '@nuxtjs/i18n', '@nuxtjs/device', '@pinia/nuxt'],
 })

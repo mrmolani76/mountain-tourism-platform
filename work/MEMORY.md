@@ -8,6 +8,7 @@
 - **Tenancy = DB-per-tenant**; domain in `backend/modules/` (Complere-style). No SSO.
 - Phase 1: next todos **06**, **07**.
 - **Docker dev stack done (item 24)**: `./start.sh` / `./stop.sh` / `./status.sh`; SPA :3000 → `/api` → `web:8000`; db :5433; API :8010. Guide: `docs/DOCKER_SETUP.md`. Inventory stack untouched.
+- **BUG-APP-001 fixed (item 25)**: `nuxt.config.ts` now registers `@vueuse/nuxt`, `@nuxtjs/i18n`, `@nuxtjs/device`, `@pinia/nuxt` + `i18n` config; login page renders, no console errors. Root cause: `modules` array missing (Vuexy theme relies on module auto-imports).
 
 ## Blocked / waiting on user
 - (none)
