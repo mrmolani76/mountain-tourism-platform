@@ -9,10 +9,11 @@
 - **Test suite runs now**: `docker compose -f docker-compose.dev.yml exec web python -m pytest -q` → 38 passed (first run after rewrite; scratch DBs `lab_test`/`other_test` required — CI must create + migrate them the same way).
 
 ## Next suggested pickups
-1. **29** Module 1 tenancy decision freeze → then **30** audit foundation → **31** edge tests → **32** policy defaults → **33** Module 1 exit
-2. After Module 1 closed: Module B/C depth (check-in → Folio, nightly posting, integer money)
-3. Domain modules auth defect (`authentication_classes = []`) — separate bug + fix
-4. Frontend desks only when user asks
+1. **29→33** Module 1 closeout
+2. **34** domain ViewSets auth fix (blocks safe B–I work)
+3. **35→39** Module 2 Hotel, then **40→44** Folio (see `work/todo/README-all-modules-todos.md`)
+4. Continue **45→66** module-wise; WIP = 1
+5. Frontend desks only when user asks
 
 ## Recently completed (this week)
 - **28** — Module 1 verification; first full test run, 38 green; BUG-APP-002/003/004 (pagination 500, season cross-kind overlap, login 401)

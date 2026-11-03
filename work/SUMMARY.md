@@ -7,11 +7,17 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **29** — Module 1 — freeze tenancy decision (DB-per-tenant) (high, docs, S)
-- **30** — Module 1 — audit foundation (AuditEvent + service) (high, backend, M)
-- **31** — Module 1 — edge authz tests (inactive tenant + SaaS 403) (high, tests, S)
-- **32** — Module 1 — MVP policy defaults for open questions (medium, docs, S)
-- **33** — Module 1 — exit gate and mark complete (high, docs, S)
+- **29–33** — Module 1 closeout (tenancy freeze → audit → edge tests → policy → exit)
+- **34** — Fix domain ViewSets auth (hotel…reports)
+- **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
+- **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
+- **45–48** — Module 4 POS (season menu → board/folio → packed/shift → exit)
+- **49–51** — Module 5 Rental (catalog → out/return/late → exit)
+- **52–55** — Module 6 Services (config → booking → outing → exit)
+- **56–59** — Module 7 Transport/lifts (trips → pickup → lifts → exit)
+- **60–63** — Module 8 Weather (MET → warnings → cancel/lobby → exit)
+- **64–66** — Module 9 Reports (Today → CSV/cents → MVP exit)
+- Full list: `work/PLAN.md` Todo table + `work/todo/README-all-modules-todos.md`
 
 ### In Progress
 - (none)
@@ -68,6 +74,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--modules-b-i-kanban-todos-34-66.md` — Module B–I (+auth) todos 34–66 in `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--module1-closeout-todos-29-33.md` — Module 1 closeout todos 29–33; `phases/01-todos/` removed → `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — full project audit (item 27); report at `work/audits/2026-11-03-project-audit.md`
 - 2026-11-03 — `work/changes/2026-11-03--code-first-no-setup-rule.md` — standing rule: product/API code only; no Docker/VPS/CI/env setup unless user asks
