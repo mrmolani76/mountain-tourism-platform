@@ -1,22 +1,12 @@
-# All-module kanban todos (executable)
+# Modules TODOs — status
 
-Only `NN-*.md` files are pickup/complete items. Historical Module A design: [A-core-and-super-admin.md](A-core-and-super-admin.md).
+**Active Laravel focus:** Module 1 only (central **Saas** + tenant **Core**). Work item **71**.
 
-**Order:** finish Module 1 (**29–33**), then **34** (shared auth), then modules in PDF dependency order.
+Kanban rows **35–66** (Modules 2–9 depth) were removed from `work/todo/` on 2026-11-03 so WIP stays on Module 1. Restore from git history / phase deep MDs when Module 1 Laravel is Verified.
 
-| Module | IDs | Flow |
-|--------|-----|------|
-| 1 Core (closeout) | 29–33 | decision → audit → edge tests → policy → exit |
-| Shared auth | 34 | Fix domain ViewSets auth before B–I depth |
-| 2 Hotel | 35–39 | inventory/reservation → check-in+folio → nightly → calendar → exit |
-| 3 Folio | 40–44 | cents → void/audit → charge-to-room → checkout/invoice → exit |
-| 4 POS | 45–48 | season menu → board+folio → packed/shift → exit |
-| 5 Rental | 49–51 | catalog → out/return/late → exit |
-| 6 Services | 52–55 | config/slots → booking engine → outing → exit |
-| 7 Transport | 56–59 | trips/conflicts → pickup → lifts/passes → exit |
-| 8 Weather | 60–63 | MET → warnings → cancel/lobby → exit |
-| 9 Reports | 64–66 | Today → range+CSV → MVP exit |
+| Module | PDF | Laravel home | Status |
+|--------|-----|--------------|--------|
+| A | Core + super admin | `Modules/Saas` (central) + `Modules/Core` (tenant) | In progress (71) |
+| B–I | Hotel…Reports | deferred | Not started on Laravel |
 
-Deep specs: `work/phases/Module_*_Deep_Analysis.md`.
-
-Rules: WIP = 1; API/backend first; no setup/frontend unless user asks.
+Design notes for Module A remain in `work/todo/A-core-and-super-admin.md` and `README-module-a-todos-design.md`.

@@ -2,25 +2,18 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Laravel backend switch (client 2026-11-03). Phase 0 audit done (item 68); Stage B foundation next (item 69; backend-laravel/ separate directory). All modules represented as Markdown TODOs until backend work resumes.
+**Focus:** Laravel Module 1 only — Inventory pattern: **central Saas** + **tenant Core**. Item **71**. Modules B–I deferred. PDF: `document/Mountain_MVP_Scope_v1.pdf` §5.A.
 
 ## 1. Work
 
 ### Todo
-- **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
-- **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
-- **45–48** — Module 4 POS (season menu → board/folio → packed/shift → exit)
-- **49–51** — Module 5 Rental (catalog → out/return/late → exit)
-- **52–55** — Module 6 Services (config → booking → outing → exit)
-- **56–59** — Module 7 Transport/lifts (trips → pickup → lifts → exit)
-- **60–63** — Module 8 Weather (MET → warnings → cancel/lobby → exit)
-- **64–66** — Module 9 Reports (Today → CSV/cents → MVP exit)
-- Full list: `work/PLAN.md` Todo table + `work/todo/README-all-modules-todos.md`
+- (empty) Module 2–9 kanban 35–66 removed; restore after Laravel Module 1 Verified. See `work/todo/README-all-modules-todos.md`.
 
 ### In Progress
-- **70** — Laravel Stage C — pilot slice: auth login/me/logout + buildings (high)
+- **71** — Laravel Module 1 — central Saas + tenant Core (Inventory pattern) (high)
 
 ### Completed
+- **70** — Laravel Stage C — pilot slice auth + buildings (high, 2026-11-03)
 - **69** — Laravel foundation Stage B: backend-laravel/ (Laravel 13.39/PHP 8.5), pgsql 18.6 connected, envelope macros, health endpoint live, CI quality job (high, 2026-11-03)
 - **68** — Laravel switch Phase 0 — Django/DRF audit: 45-endpoint API inventory, schema + auth matrix, risks; master plan saved (high, 2026-11-03)
 - **67** — GitHub Actions CI/CD improvement — quality-only CI, Laravel-ready deploy guard, ruff 0 errors (high, 2026-11-03)
@@ -81,6 +74,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--71-module1-saas-core-inventory-align.md` — item 71: keep Saas+Core only; Inventory central/tenant routes; DRF field parity; drop B–I Modules + todos 35–66
 - 2026-11-03 — `work/changes/2026-11-03--30-m1-audit-foundation.md` — item 30: AuditEvent + AuditService + migration `0006_add_audit_event`
 - 2026-11-03 — `work/changes/2026-11-03--modules-b-i-kanban-todos-34-66.md` — Module B–I (+auth) todos 34–66 in `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--module1-closeout-todos-29-33.md` — Module 1 closeout todos 29–33; `phases/01-todos/` removed → `work/todo/`

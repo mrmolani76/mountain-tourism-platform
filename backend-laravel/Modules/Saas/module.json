@@ -1,0 +1,12 @@
+{
+  "name": "Saas",
+  "alias": "saas",
+  "description": "Mountain Tourism Module Saas",
+  "keywords": [],
+  "priority": 0,
+  "providers": [
+    "Modules\\Saas\\Providers\\SaasServiceProvider"
+  ],
+  "files": [],
+  "central": true
+}

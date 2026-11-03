@@ -1,29 +1,20 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BuildingController;
+/**
+ * Central API surface (Inventory `routes/api.php` pattern).
+ *
+ * - Health is public on any host.
+ * - SaaS (Module Saas) routes are central-only: complexes, owners, activate/deactivate.
+ * - Tenant business APIs live in Modules/Core (and later B–I modules), loaded by
+ *   CoreServiceProvider — same Host→tenant resolve as Inventory tenant.php.
+ */
+
 use App\Http\Controllers\Api\HealthController;
 use Illuminate\Support\Facades\Route;
 
-// Public — no tenant resolution required (HealthView has its own handling).
 Route::get('/health', HealthController::class);
 
-// Tenant-resolved routes. On central hosts resolve() returns null (no abort),
-// so login can still surface "Staff login requires a tenant host." (DRF parity).
-Route::group([], function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-    Route::middleware('staff.auth')->group(function () {
-        Route::get('/auth/me', [AuthController::class, 'me']);
-        Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
-
-        // Owner-gated inside the controller (DRF IsOwner on all actions).
-        // PUT is intentionally not registered -> MethodNotAllowed 405 parity.
-        Route::get('/buildings', [BuildingController::class, 'index']);
-        Route::post('/buildings', [BuildingController::class, 'store']);
-        Route::get('/buildings/{building}', [BuildingController::class, 'show']);
-        Route::patch('/buildings/{building}', [BuildingController::class, 'update']);
-        Route::delete('/buildings/{building}', [BuildingController::class, 'destroy']);
-    });
-});
+$saasRoutes = base_path('Modules/Saas/Routes/api.php');
+if (is_file($saasRoutes)) {
+    require $saasRoutes;
+}

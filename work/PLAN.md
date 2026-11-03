@@ -4,62 +4,30 @@ Rows move between tables. An ID appears in **exactly one** table, matching its f
 
 ## Phases
 
-See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
+See `work/phases/`. **Current focus: backend / API only** (frontend deferred). Laravel switch: Module 1 (central Saas + tenant Core) first.
 
 | Phase | File | Status |
 |-------|------|--------|
-| 1 Foundation | `work/phases/01-foundation.md` + `Module_1_*.md` | Closeout open (kanban **29–33**); 02–10 + 28 done |
-| 2 Hotel and folio | `work/phases/02-hotel-and-folio.md` + Module_2/3 | Planned depth: kanban **35–44** |
-| 3 POS, rental, services | `work/phases/03-pos-rental-services.md` + Module_4/5/6 | Planned depth: kanban **45–55** |
-| 4 Transport, lifts, weather | `work/phases/04-transport-lifts-weather.md` + Module_7/8 | Planned depth: kanban **56–63** |
-| 5 Dashboard and handover | `work/phases/05-dashboard-and-handover.md` + Module_9 | Planned depth: kanban **64–66** |
+| 1 Foundation | `work/phases/01-foundation.md` + `Module_1_*.md` | Django M1 closed (29–33); Laravel M1 = item **71** |
+| 2–5 Hotel…Reports | `work/phases/02`–`05` + Module_2–9 | Deferred until Laravel Module 1 Verified |
 
 ## Todo
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 35 | Module 2 — HutBed, season prices, Reservation APIs | high | B-hotel | backend | L |
-| 36 | Module 2 — check-in opens Stay + Folio | high | B-hotel | backend | M |
-| 37 | Module 2 — nightly room + board posting job | high | B-hotel | backend | L |
-| 38 | Module 2 — calendar and availability APIs | medium | B-hotel | backend | M |
-| 39 | Module 2 — acceptance tests and exit gate | high | B-hotel | tests | M |
-| 40 | Module 3 — integer minor-unit money on Charge/Payment | high | C-folio | backend | M |
-| 41 | Module 3 — manager void + audit writers | high | C-folio | backend | M |
-| 42 | Module 3 — charge-to-room lookup by room/guest | high | C-folio | backend | M |
-| 43 | Module 3 — hard zero-balance checkout + invoice payload | high | C-folio | backend | M |
-| 44 | Module 3 — acceptance tests and exit gate | high | C-folio | tests | M |
-| 45 | Module 4 — season menu visibility + order snapshots | medium | D-pos | backend | M |
-| 46 | Module 4 — board check + charge-to-room / pay-now | high | D-pos | backend | L |
-| 47 | Module 4 — packed lunch + cashier shift | medium | D-pos | backend | M |
-| 48 | Module 4 — acceptance tests and exit gate | high | D-pos | tests | M |
-| 49 | Module 5 — item types, items, season day rates | high | E-rental | backend | M |
-| 50 | Module 5 — rent out, return, double-book, late day | high | E-rental | backend | L |
-| 51 | Module 5 — acceptance tests and exit gate | high | E-rental | tests | M |
-| 52 | Module 6 — service config + weekday/season slots | high | F-services | backend | M |
-| 53 | Module 6 — booking, capacity, staff conflict, cancel void | high | F-services | backend | L |
-| 54 | Module 6 — guided outing headcount close rules | high | F-services | backend | M |
-| 55 | Module 6 — acceptance tests and exit gate | high | F-services | tests | M |
-| 56 | Module 7 — trips, seats, driver/vehicle conflict | high | G-transport | backend | L |
-| 57 | Module 7 — reservation arrival creates pickup | high | G-transport | backend | M |
-| 58 | Module 7 — Lift status history + lift passes | high | G-transport | backend | L |
-| 59 | Module 7 — acceptance tests and exit gate | high | G-transport | tests | M |
-| 60 | Module 8 — weather points + MET hourly fetch | high | H-weather | backend | L |
-| 61 | Module 8 — limits evaluate → warnings on ops | high | H-weather | backend | L |
-| 62 | Module 8 — cancel for weather + avalanche + lobby API | high | H-weather | backend | L |
-| 63 | Module 8 — acceptance tests and exit gate | high | H-weather | tests | M |
-| 64 | Module 9 — Today dashboard aggregates API | high | I-dashboard | backend | L |
-| 65 | Module 9 — date-range reports + CSV + cent match | high | I-dashboard | backend | L |
-| 66 | Module 9 — exit gate and MVP modules complete | high | I-dashboard | docs | S |
+| — | (empty — Module 2–9 kanban 35–66 removed; restore later) | — | — | — | — |
 
 ## In Progress
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 70 | Laravel Stage C — pilot slice (auth login/me/logout + 1 module list) | high | A-core | backend | L |
+| 71 | Laravel Module 1 — central Saas + tenant Core (Inventory pattern) | high | A-core | backend | L |
+
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 70 | Laravel Stage C — pilot slice (auth login/me/logout + buildings) | high | A-core | backend | L | 2026-11-03 |
 | 34 | Fix domain ViewSets auth (hotel…reports) | high | A-core | backend | M | 2026-11-03 |
 | 68 | Laravel switch — Phase 0 Django/DRF audit | high | A-core | docs | L | 2026-11-03 |
 | 69 | Laravel foundation (Stage B) — backend-laravel | high | A-core | backend | L | 2026-11-03 |

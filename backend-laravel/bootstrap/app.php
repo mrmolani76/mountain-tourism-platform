@@ -24,6 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'resolve.tenant' => ResolveTenant::class,
             'staff.auth' => StaffSessionAuth::class,
+            // Inventory `auth:central` equivalent for SaaS session.
+            'saas.auth' => \App\Http\Middleware\SaasSessionAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

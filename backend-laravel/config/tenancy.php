@@ -1,19 +1,43 @@
 <?php
 
-// Tenancy configuration ported from Django `backend/tenancy/` (see
-// docs/LARAVEL_SWITCH_AUDIT.md §1 — DB-per-tenant, host → Domain registry).
+/**
+ * Tenancy configuration — InventorySystem-docker (stancl) shape adapted for Mountain Tourism.
+ * Runtime today uses App\Tenancy\* bridge (item 70 parity). After `composer install`,
+ * stancl/tenancy DomainTenantResolver can replace the bridge without changing host contract.
+ */
 
 return [
-    // Comma-separated central (landlord) hosts — these skip tenant resolution,
-    // mirroring TENANCY_CENTRAL_HOSTS / TENANCY_CENTRAL_PREFIX in Django.
-    'central_hosts' => array_filter(array_map(
-        'trim',
-        explode(',', (string) env('TENANCY_CENTRAL_HOSTS', 'localhost,127.0.0.1'))
-    )),
+    'tenant_model' => \App\Models\Tenant::class,
+    'domain_model' => \App\Models\Domain::class,
 
-    // Physical tenant databases must be provisioned by ops (same policy as
-    // Django: physical createdb is deliberate ops work, never app code).
-    // The `tenant` runtime connection is assembled from this template at
-    // request time by App\Http\Middleware\ResolveTenant.
+    'central_domains' => array_values(array_unique(array_filter(array_merge(
+        array_map('trim', explode(',', (string) env('TENANCY_CENTRAL_HOSTS', 'localhost,127.0.0.1'))),
+        [
+            env('CENTRAL_DOMAIN'),
+            env('CENTRAL_API_DOMAIN'),
+            env('SAAS_DOMAIN'),
+        ]
+    )))),
+
+    // Hostnames matching this pattern are always central (SaaS panel).
+    'central_host_pattern' => '/^saas\\./',
+
     'connection_name' => 'tenant',
+    'central_connection' => env('DB_CONNECTION', 'pgsql'),
+
+    'database' => [
+        'prefix' => env('TENANCY_DB_PREFIX', ''),
+        'suffix' => '',
+        // Physical DB create remains ops (same policy as Django).
+        'managers' => [
+            'pgsql' => 'Stancl\\Tenancy\\TenantDatabaseManagers\\PostgreSQLDatabaseManager',
+        ],
+    ],
+
+    'bootstrappers' => [
+        'Stancl\\Tenancy\\Bootstrappers\\DatabaseTenancyBootstrapper',
+        'Stancl\\Tenancy\\Bootstrappers\\CacheTenancyBootstrapper',
+        'Stancl\\Tenancy\\Bootstrappers\\FilesystemTenancyBootstrapper',
+        'Stancl\\Tenancy\\Bootstrappers\\QueueTenancyBootstrapper',
+    ],
 ];
