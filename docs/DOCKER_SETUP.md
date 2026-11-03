@@ -84,18 +84,38 @@ The SPA is a static build. It calls **same-origin** `/api`; the SPA nginx proxie
 stays on one origin. Do not point the SPA at `http://web:8000` from the browser;
 that hostname exists only inside the compose network.
 
-### Tenant hosts (optional)
+### Tenant hosts and staff login (dev E2E)
 
-Tenant routing is by Host header. For a local tenant on this machine:
+Staff login is a **tenant-host flow only**; `127.0.0.1` is a central host and will
+be rejected by `LoginView`. To log in end-to-end on this machine:
 
-1. Add to hosts file (`/etc/hosts`, or `C:\Windows\System32\drivers\etc\hosts` on Windows):
+1. Hosts file (`/etc/hosts`, or `C:\Windows\System32\drivers\etc\hosts` on Windows), append:
    `127.0.0.1 lab.local.mountain.local`
-2. Open `http://lab.local.mountain.local:3000/`
-3. `.local.mountain.local` is allowed in `ALLOWED_HOSTS` and is not a central host,
-   so Django takes the tenant path.
+2. Register the tenant on the central DB (once):
+   `docker compose -f docker-compose.dev.yml exec web python manage.py provision_tenant --name "Lab Complex" --slug lab`
+3. Create the physical tenant DB (once) and run migrations:
+   ```bash
+   docker compose -f docker-compose.dev.yml exec db psql -U mt_app -d mountain_tourism -c "CREATE DATABASE lab_local OWNER mt_app"
+   docker compose -f docker-compose.dev.yml exec web python manage.py shell
+   # >>> from modules.saas.models import Tenant
+   # >>> from tenancy.connections import ensure_tenant_connection
+   # >>> from django.core.management import call_command
+   # >>> t = Tenant.objects.get(slug='lab'); alias = ensure_tenant_connection(t)
+   # >>> call_command('migrate', database=alias, interactive=False)
+   ```
+4. Create an owner staff user in the tenant DB (once):
+   use `Staff.objects.using(alias).create(email=..., password=make_password(...), role=StaffRole.OWNER)` in the same shell
+5. Open `http://lab.local.mountain.local:3000/` and log in with that owner.
 
-Physical tenant DBs are not created automatically yet (provisioning is code-only;
-see `docs/HOSTING.md`). Until then, use the central app at `127.0.0.1`.
+Dev credentials for this machine's `lab` tenant were printed at creation time only
+(never committed). Recreate the user instead of recovering the password.
+
+The SPA nginx proxies `/api/` to `web:8000` and forwards the `Host` header, so Django
+takes the tenant path (`lab.local.mountain.local` is not in `TENANCY_CENTRAL_HOSTS`
+and is allowed by `.local.mountain.local` in `ALLOWED_HOSTS`). Tenant CSRF origin
+(`http://lab.local.mountain.local:3000`) is already in `DJANGO_CSRF_TRUSTED_ORIGINS`.
+
+Physical tenant DBs are created manually by ops (code-only policy in app code); see `docs/HOSTING.md`.
 
 ---
 

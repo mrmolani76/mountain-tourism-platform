@@ -38,7 +38,7 @@ services:
       DJANGO_SECRET_KEY: dev-only-docker-secret-change-me
       DJANGO_DEBUG: "True"
       DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,db,mtmtp_web,.docker.test,.local.mountain.local
-      DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000,http://lab.local.mountain.local:3000
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: mountain_tourism
       DB_USER: mt_app
