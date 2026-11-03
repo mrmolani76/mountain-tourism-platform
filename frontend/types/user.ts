@@ -68,7 +68,7 @@ export interface Role {
 }
 
 /**
- * Staff shape returned by the Django tenant API (`/api/auth/me/`).
+ * Staff shape returned by Laravel Module Core (`/api/auth/me`).
  * `role` is the human label, `role_code` is the stable code.
  */
 export interface StaffUser {

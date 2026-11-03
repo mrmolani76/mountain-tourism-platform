@@ -9,12 +9,17 @@ use Modules\Core\App\Http\Controllers\SeasonController;
 use Modules\Core\App\Http\Controllers\SettingsController;
 use Modules\Core\App\Http\Controllers\StaffController;
 
+// Trailing-slash aliases keep older Nuxt clients working (DRF used `/auth/login/`).
 Route::post('auth/login', [AuthController::class, 'login']);
+Route::post('auth/login/', [AuthController::class, 'login']);
 Route::post('auth/logout', [AuthController::class, 'logout']);
+Route::post('auth/logout/', [AuthController::class, 'logout']);
 
 Route::middleware('staff.auth')->group(function () {
     Route::get('auth/me', [AuthController::class, 'me']);
+    Route::get('auth/me/', [AuthController::class, 'me']);
     Route::post('auth/reset-password', [AuthController::class, 'resetPassword']);
+    Route::post('auth/reset-password/', [AuthController::class, 'resetPassword']);
 
     Route::get('buildings', [BuildingController::class, 'index']);
     Route::post('buildings', [BuildingController::class, 'store']);

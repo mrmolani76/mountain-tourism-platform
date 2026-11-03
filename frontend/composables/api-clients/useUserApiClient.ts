@@ -3,7 +3,7 @@ import type { LinkEntity } from '@/types/link-entity'
 import type { StaffSessionPayload, StaffUser, User } from '@/types/user'
 
 /**
- * Role permissions are UI hints only. Django decides every action on the server.
+ * Role permissions are UI hints only. Laravel API decides every action on the server.
  */
 const ROLE_PERMISSIONS: Record<string, Array<string>> = {
   owner: ['*'],
@@ -86,7 +86,10 @@ export const useUserApiClient = () => {
   const login = async (body: { email: string; password: string }) => {
     loading.value = true
 
-    const staff = await post<StaffUser>('/auth/login/', body)
+    // Cross-origin SPA → Laravel: seed XSRF-TOKEN first (same-origin nginx proxy skips).
+    await ensureLaravelCsrfCookie()
+
+    const staff = await post<StaffUser>('/auth/login', body)
 
     loading.value = false
     if (!staff)
@@ -99,13 +102,13 @@ export const useUserApiClient = () => {
   }
 
   const logout = async () => {
-    return await post<{ detail: string }>('/auth/logout/', {})
+    return await post<{ detail: string }>('/auth/logout', {})
   }
 
   const getUserDetails = async (): Promise<ApiResponse<StaffSessionPayload> | null> => {
     loading.value = true
 
-    const staff = await get<StaffUser>('/auth/me/')
+    const staff = await get<StaffUser>('/auth/me')
 
     loading.value = false
     if (!staff)

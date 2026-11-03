@@ -1,6 +1,6 @@
 # Mountain Tourism Nuxt SPA — development image
 # ssr: false; outputs to .output/public
-# Same-origin /api: nginx proxies /api → web:8000 (Django). Empty api base = same-origin.
+# Same-origin /api: nginx proxies /api → laravel:8000. Empty api base = same-origin.
 
 FROM node:22-alpine AS builder
 
@@ -8,7 +8,7 @@ FROM node:22-alpine AS builder
 ARG NUXT_PUBLIC_API_BASE_URL=""
 ARG NUXT_PUBLIC_ENABLE_REALTIME="false"
 ARG ENV=local
-ARG BACKEND_URL=http://web:8000
+ARG BACKEND_URL=http://laravel:8000
 ENV NUXT_PUBLIC_API_BASE_URL=$NUXT_PUBLIC_API_BASE_URL \
     NUXT_PUBLIC_ENABLE_REALTIME=$NUXT_PUBLIC_ENABLE_REALTIME \
     ENV=$ENV \

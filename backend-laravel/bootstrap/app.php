@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // SPA cookie session (Nuxt) — Sanctum stateful domains + CSRF.
+        $middleware->statefulApi();
+
         // Tenant resolution must run before any tenant auth/query.
         $middleware->api(prepend: [
             \Illuminate\Session\Middleware\StartSession::class,

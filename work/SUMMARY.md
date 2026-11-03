@@ -74,6 +74,8 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--71-login-frontend-laravel-connect.md` — item 71: Nuxt login ↔ Laravel Core auth, CORS/Sanctum, nginx/compose → laravel, DevPilotSeeder roles
+- 2026-11-03 — `work/changes/2026-11-03--71-eqms-complere-module-folder-structure.md` — eQMS Complere App/ module layout for Saas+Core
 - 2026-11-03 — `work/changes/2026-11-03--71-module1-saas-core-inventory-align.md` — item 71: keep Saas+Core only; Inventory central/tenant routes; DRF field parity; drop B–I Modules + todos 35–66
 - 2026-11-03 — `work/changes/2026-11-03--30-m1-audit-foundation.md` — item 30: AuditEvent + AuditService + migration `0006_add_audit_event`
 - 2026-11-03 — `work/changes/2026-11-03--modules-b-i-kanban-todos-34-66.md` — Module B–I (+auth) todos 34–66 in `work/todo/`

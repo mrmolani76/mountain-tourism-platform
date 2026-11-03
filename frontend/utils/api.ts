@@ -15,12 +15,29 @@ function readCookie(name: string): string | null {
 }
 
 /**
- * Central API client for the Django tenant API.
+ * Laravel sets encrypted `XSRF-TOKEN`; Django used `csrftoken`.
+ * Prefer Laravel header when present.
+ */
+function csrfHeaders(headers: Headers): void {
+  const xsrf = readCookie('XSRF-TOKEN')
+  if (xsrf) {
+    headers.set('X-XSRF-TOKEN', xsrf)
+
+    return
+  }
+
+  const django = readCookie('csrftoken')
+  if (django)
+    headers.set('X-CSRFToken', django)
+}
+
+/**
+ * Central API client for the Laravel tenant API (Module Core).
  *
- * - Base URL is `${apiBaseUrl}/api` (empty apiBaseUrl means same-origin `/api`).
- * - Session auth uses the `sessionid` cookie.
- * - Unsafe methods send `X-CSRFToken` from the Django `csrftoken` cookie.
- * - Errors use the backend envelope `{ success: false, error: { message } }`.
+ * - Base URL is `${apiBaseUrl}/api` (empty apiBaseUrl = same-origin `/api` via nginx).
+ * - Session auth uses cookies (`credentials: include`).
+ * - Unsafe methods send Laravel `X-XSRF-TOKEN` (or Django CSRF while DRF still live).
+ * - Errors use envelope `{ success: false, error: { message } }` or plain `{ detail }`.
  */
 export const $api = $fetch.create({
   onRequest({ options }) {
@@ -32,12 +49,8 @@ export const $api = $fetch.create({
     const method = (options.method || 'GET').toString().toUpperCase()
 
     if (UNSAFE_METHODS.has(method)) {
-      const token = readCookie('csrftoken')
-
-      if (token) {
-        options.headers = new Headers(options.headers || {})
-        options.headers.set('X-CSRFToken', token)
-      }
+      options.headers = new Headers(options.headers || {})
+      csrfHeaders(options.headers)
     }
   },
 
@@ -54,8 +67,8 @@ export const $api = $fetch.create({
 
     const status = response?.status
     const url = response?.url || ''
-    const isSessionProbe = url.includes('/auth/me/')
-    const isLogout = url.includes('/auth/logout/')
+    const isSessionProbe = url.includes('/auth/me')
+    const isLogout = url.includes('/auth/logout')
 
     if (status === 401) {
       unauthenticate()
@@ -76,3 +89,18 @@ export const $api = $fetch.create({
     throw body?.error ? body.error : body
   },
 })
+
+/**
+ * Hit Laravel Sanctum CSRF cookie endpoint before the first unsafe call
+ * when the SPA talks cross-origin to the API (not needed for same-origin nginx proxy).
+ */
+export async function ensureLaravelCsrfCookie(): Promise<void> {
+  const base = String(useRuntimeConfig().public.apiBaseUrl || '').replace(/\/$/, '')
+  if (!base)
+    return
+
+  await $fetch(`${base}/sanctum/csrf-cookie`, {
+    method: 'GET',
+    credentials: 'include',
+  })
+}

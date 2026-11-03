@@ -2,23 +2,37 @@
 
 namespace Database\Seeders;
 
-use App\Models\Staff;
 use App\Models\Tenant;
 use App\Support\Tenancy\TenantConnection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\App\Enums\StaffRole;
 
 /**
- * Dev seeders for the pilot slice (item 70). NOT for production.
- * Central registry row + physical dev tenant DB seeded with core Staff rows.
+ * Dev seeder for Module 1 login + buildings (NOT for production).
+ *
+ * Central: lab tenant + domains + saas super admin.
+ * Tenant DB: staff (PDF roles sample) + demo buildings.
+ *
+ * Staff login host must be a tenant hostname (e.g. lab.localhost), not saas.localhost.
  */
 class DevPilotSeeder extends Seeder
 {
     public function run(): void
     {
-        // --- central registry (default connection) ---
-        DB::connection(config('database.default'))->table('saas_tenant')->updateOrInsert(
+        $central = config('database.default');
+
+        DB::connection($central)->table('saas_user')->updateOrInsert(
+            ['email' => 'super@saas.test'],
+            [
+                'password' => Hash::make('password123'),
+                'is_active' => true,
+                'created_at' => now(),
+            ]
+        );
+
+        DB::connection($central)->table('saas_tenant')->updateOrInsert(
             ['slug' => 'lab'],
             [
                 'name' => 'Lab Complex',
@@ -31,33 +45,37 @@ class DevPilotSeeder extends Seeder
 
         $tenant = Tenant::query()->where('slug', 'lab')->firstOrFail();
 
-        DB::connection(config('database.default'))->table('saas_domain')->updateOrInsert(
-            ['hostname' => 'localhost'],
-            [
-                'tenant_id' => $tenant->getKey(),
-                'is_primary' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        );
+        foreach (['lab.localhost', 'localhost'] as $hostname) {
+            DB::connection($central)->table('saas_domain')->updateOrInsert(
+                ['hostname' => $hostname],
+                [
+                    'tenant_id' => $tenant->getKey(),
+                    'is_primary' => $hostname === 'lab.localhost',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
 
-        // --- tenant DB (dynamic connection) ---
         TenantConnection::useRegistryRow($tenant);
 
         $staffRows = [
-            ['email' => 'owner@lab.test', 'role' => Staff::ROLE_OWNER],
-            ['email' => 'manager@lab.test', 'role' => Staff::ROLE_MANAGER],
-            ['email' => 'desk@lab.test', 'role' => Staff::ROLE_FRONT_DESK],
+            ['email' => 'owner@lab.test', 'role' => StaffRole::OWNER],
+            ['email' => 'manager@lab.test', 'role' => StaffRole::MANAGER],
+            ['email' => 'desk@lab.test', 'role' => StaffRole::FRONT_DESK],
+            ['email' => 'cashier@lab.test', 'role' => StaffRole::CASHIER],
+            ['email' => 'rental@lab.test', 'role' => StaffRole::RENTAL_DESK],
+            ['email' => 'service@lab.test', 'role' => StaffRole::SERVICE_STAFF],
+            ['email' => 'transport@lab.test', 'role' => StaffRole::TRANSPORT_DESK],
+            ['email' => 'lift@lab.test', 'role' => StaffRole::LIFT_OPERATOR],
         ];
 
         foreach ($staffRows as $row) {
-            $email = $row['email'];
-            $role = $row['role'];
             DB::connection(config('tenancy.connection_name'))->table('core_staff')->updateOrInsert(
-                ['email' => $email],
+                ['email' => $row['email']],
                 [
                     'password' => Hash::make('password123'),
-                    'role' => $role,
+                    'role' => $row['role'],
                     'is_active' => true,
                     'created_at' => now(),
                 ]

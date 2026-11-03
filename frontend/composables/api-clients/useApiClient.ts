@@ -1,3 +1,10 @@
+function stripTrailingSlash(url: string): string {
+  if (!url || url === '/')
+    return url
+
+  return url.replace(/\/+$/, '')
+}
+
 export const useApiClient = () => {
   const get = async <T>(url: string, query?: Record<string, unknown>) => {
     try {
@@ -5,10 +12,10 @@ export const useApiClient = () => {
         ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
         : ''
 
-      return await $api<T>(`${url}${queryString}`)
+      return await $api<T>(`${stripTrailingSlash(url)}${queryString}`)
     }
     catch {
-      return null;
+      return null
     }
   }
 
@@ -16,7 +23,7 @@ export const useApiClient = () => {
     try {
       const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
 
-      return await $api<T>(url, {
+      return await $api<T>(stripTrailingSlash(url), {
         method: 'POST',
         body,
         headers: isFormData ? {} : { 'Content-Type': 'application/json' },
@@ -31,7 +38,7 @@ export const useApiClient = () => {
     try {
       const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
 
-      return await $api<T>(url, {
+      return await $api<T>(stripTrailingSlash(url), {
         method: 'PUT',
         body,
         headers: isFormData ? {} : { 'Content-Type': 'application/json' },
@@ -44,7 +51,7 @@ export const useApiClient = () => {
 
   const del = async <T>(url: string, body: any) => {
     try {
-      return await $api<T>(url, {
+      return await $api<T>(stripTrailingSlash(url), {
         method: 'DELETE',
         body,
         headers: { 'Content-Type': 'application/json' },
