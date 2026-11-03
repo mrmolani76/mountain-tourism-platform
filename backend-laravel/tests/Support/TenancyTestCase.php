@@ -45,6 +45,8 @@ abstract class TenancyTestCase extends TestCase
         $this->tenantPath = $dir.'/lab_local.sqlite';
         @unlink($this->centralPath);
         @unlink($this->tenantPath);
+        @touch($this->centralPath);
+        @touch($this->tenantPath);
 
         Config::set('database.default', 'sqlite');
         Config::set('tenancy.central_connection', 'sqlite');
@@ -232,7 +234,8 @@ abstract class TenancyTestCase extends TestCase
     /** Bind Host + activate tenant connection like middleware would. */
     protected function asTenantHost(string $host = 'lab.localhost'): static
     {
-        return $this->withServerVariables(['HTTP_HOST' => $host, 'SERVER_NAME' => $host]);
+        return $this->withServerVariables(['HTTP_HOST' => $host, 'SERVER_NAME' => $host])
+            ->withHeader('Host', $host);
     }
 
     protected function actingAsStaff(Staff $staff, string $host = 'lab.localhost'): static

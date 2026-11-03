@@ -24,7 +24,7 @@ class UpdateOutletRequest extends FormRequest
             'building_id' => [
                 'sometimes',
                 'integer',
-                Rule::exists('core_building', 'id')->connection($conn),
+                Rule::exists($conn.'.core_building', 'id'),
             ],
             'name' => ['sometimes', 'string', 'max:200'],
             'outlet_type' => ['sometimes', 'string', 'in:' . implode(',', array_keys(Outlet::TYPES))],

@@ -124,8 +124,7 @@ class TenantIsolationTest extends TenancyTestCase
     {
         // Lab session cookies against demo host must fail tenant bind.
         $response = $this->actingAsStaff($this->owner, 'lab.localhost')
-            ->withServerVariables(['HTTP_HOST' => 'demo.localhost', 'SERVER_NAME' => 'demo.localhost'])
-            ->getJson('/api/buildings');
+            ->getJson('http://demo.localhost/api/buildings');
 
         $this->assertTrue(in_array($response->status(), [401, 403, 404], true));
     }

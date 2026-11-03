@@ -26,7 +26,7 @@ class UpdateStaffRequest extends FormRequest
                 'sometimes',
                 'email',
                 'max:255',
-                Rule::unique('core_staff', 'email')->connection($conn)->ignore($staffId),
+                Rule::unique($conn.'.core_staff', 'email')->ignore($staffId),
             ],
             'password' => ['sometimes', 'string', 'min:8', 'max:128'],
             'role' => ['sometimes', 'string', 'in:' . implode(',', StaffRole::codes())],

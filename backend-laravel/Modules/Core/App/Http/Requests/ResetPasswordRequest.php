@@ -23,7 +23,7 @@ class ResetPasswordRequest extends FormRequest
             'staff_id' => [
                 'required',
                 'integer',
-                Rule::exists('core_staff', 'id')->connection($conn),
+                Rule::exists($conn.'.core_staff', 'id'),
             ],
             'new_password' => ['required', 'string', 'min:8', 'max:128'],
         ];

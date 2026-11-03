@@ -25,7 +25,7 @@ class StoreStaffRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('core_staff', 'email')->connection($conn),
+                Rule::unique($conn.'.core_staff', 'email'),
             ],
             'password' => ['required', 'string', 'min:8', 'max:128'],
             'role' => ['required', 'string', 'in:' . implode(',', StaffRole::codes())],

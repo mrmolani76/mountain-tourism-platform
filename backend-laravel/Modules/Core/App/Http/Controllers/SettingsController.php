@@ -28,7 +28,7 @@ class SettingsController extends Controller
             return $d;
         }
         $data = $request->validated();
-        $s = TenantSettings::on(config('tenancy.connection_name'))->query()->first();
+        $s = TenantSettings::on(config('tenancy.connection_name'))->first();
         if ($s === null) {
             $s = TenantSettings::on(config('tenancy.connection_name'))->create(array_merge([
                 'currency' => 'EUR',
@@ -54,7 +54,7 @@ class SettingsController extends Controller
 
     private function resolveSettings(): TenantSettings
     {
-        $s = TenantSettings::on(config('tenancy.connection_name'))->query()->first();
+        $s = TenantSettings::on(config('tenancy.connection_name'))->first();
         if ($s === null) {
             $s = TenantSettings::on(config('tenancy.connection_name'))->create([
                 'currency' => 'EUR',

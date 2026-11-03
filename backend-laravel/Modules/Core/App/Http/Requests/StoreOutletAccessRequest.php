@@ -23,14 +23,14 @@ class StoreOutletAccessRequest extends FormRequest
             'staff_id' => [
                 'required',
                 'integer',
-                Rule::exists('core_staff', 'id')->connection($conn),
+                Rule::exists($conn.'.core_staff', 'id'),
             ],
             'outlet_id' => [
                 'required',
                 'integer',
-                Rule::exists('core_outlet', 'id')->connection($conn),
-                Rule::unique('core_staff_outlet_access', 'outlet_id')
-                    ->connection($conn)
+                Rule::exists($conn.'.core_outlet', 'id'),
+                Rule::unique($conn.'.core_staff_outlet_access', 'outlet_id')
+                    
                     ->where(fn ($q) => $q->where('staff_id', (int) $this->input('staff_id'))),
             ],
         ];
