@@ -44,7 +44,8 @@ mv work/inprogress/NN-title.md work/todo/NN-title.md
 4. Move PLAN row **In Progress** → **Completed** (add Completed date).
 5. Write `work/changes/YYYY-MM-DD--NN-<desc>.md` (`change-report` skill). Prefer including the work ID in the filename.
 6. Refresh SUMMARY §1 and §4.
-7. Ask: **"Commit aur push karun?"** Do not commit until the user says yes.
+7. Notify: `bash scripts/todo-notify.sh NN` — emails the completion to anhali736@gmail.com via Gmail SMTP. Credentials live in `scripts/.notify.env` (gitignored, machine-local, chmod 600 — never commit). If the file is missing the script exits quietly and never blocks the flow.
+8. Ask: **"Commit aur push karun?"** Do not commit until the user says yes.
 
 ## PLAN.md rules
 - Three separate tables: Todo / In Progress / Completed.

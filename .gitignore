@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node / Nuxt
+node_modules/
+.nuxt/
+.output/
+.data/
+
+# Databases (tracked files stay tracked; new ones not added)
+*.sqlite3
+
+# Secrets / local env — never commit
+.env
+.env.*
+!.env.example
+scripts/.notify.env
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

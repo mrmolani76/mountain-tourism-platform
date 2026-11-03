@@ -78,7 +78,8 @@ mv work/inprogress/NN-title.md work/todo/NN-title.md
 5. **Required:** `change-report` → `work/changes/YYYY-MM-DD--NN-<desc>.md`
 6. SUMMARY §1 + §4
 7. MEMORY.md: move item to session completed notes
-8. Ask user: **"Commit aur push karun?"** — no git commit/push until yes
+8. Notify: `bash scripts/todo-notify.sh NN` — emails completion to anhali736@gmail.com (no-op if `scripts/.notify.env` is missing; never fails the flow)
+9. Ask user: **"Commit aur push karun?"** — no git commit/push until yes
 
 ---
 
