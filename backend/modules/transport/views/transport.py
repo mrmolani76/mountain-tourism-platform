@@ -3,6 +3,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.transport.permissions import IsTransportStaff
 from modules.transport.serializers import DriverSerializer, TripSerializer, VehicleSerializer
@@ -12,7 +13,7 @@ from tenancy.context import get_current_tenant
 class TripViewSet(viewsets.ModelViewSet):
     """Trip CRUD — one run of transport."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsTransportStaff]
     serializer_class = TripSerializer
 
@@ -24,7 +25,7 @@ class TripViewSet(viewsets.ModelViewSet):
 class VehicleViewSet(viewsets.ModelViewSet):
     """Vehicle CRUD."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsTransportStaff]
     serializer_class = VehicleSerializer
 
@@ -36,7 +37,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
 class DriverViewSet(viewsets.ModelViewSet):
     """Driver CRUD."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsTransportStaff]
     serializer_class = DriverSerializer
 

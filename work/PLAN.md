@@ -18,7 +18,6 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 34 | Fix domain ViewSets auth (hotel…reports) | high | A-core | backend | M |
 | 35 | Module 2 — HutBed, season prices, Reservation APIs | high | B-hotel | backend | L |
 | 36 | Module 2 — check-in opens Stay + Folio | high | B-hotel | backend | M |
 | 37 | Module 2 — nightly room + board posting job | high | B-hotel | backend | L |
@@ -61,6 +60,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 34 | Fix domain ViewSets auth (hotel…reports) | high | A-core | backend | M | 2026-11-03 |
 | 29 | Module 1 — freeze tenancy decision (DB-per-tenant) | high | A-core | docs | S | 2026-11-03 |
 | 30 | Module 1 — audit foundation (AuditEvent + service) | high | A-core | backend | M | 2026-11-03 |
 | 31 | Module 1 — edge authz tests (inactive tenant + SaaS 403) | high | A-core | tests | S | 2026-11-03 |

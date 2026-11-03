@@ -9,12 +9,13 @@
 - **Test suite runs now**: `docker compose -f docker-compose.dev.yml exec web python -m pytest -q` → 38 passed (first run after rewrite; scratch DBs `lab_test`/`other_test` required — CI must create + migrate them the same way).
 
 ## Next suggested pickups (kanban order)
-1. **34** — Domain ViewSets auth fix (hotel…reports) — audit’s critical defect
-2. Then **35→66** module-wise (WIP = 1); **SaaS tenant-create console last**
+1. **35** — Module 2 — HutBed, season prices, Reservation APIs (high, backend, L)
+2. Then **36→66** module-wise (WIP = 1); **SaaS tenant-create console last**
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **34** — Fix domain ViewSets auth (hotel…reports) — StaffSessionAuthentication on all 20 domain ViewSets; BUG-APP-005 resolved; suite 46 passed (high, 2026-11-03)
 - **33** — Module 1 exit gate —§20 DoD review; backend/API MVP skeleton CLOSED (audit writers + frontend deferred) (high, 2026-11-03)
 - **32** — Module 1 MVP policy defaults (§19 Q3–Q18) — docs/DECISIONS.md row; Q19 resolved (high, 2026-11-03)
 - **31** — Module 1 edge authz tests — deactivated tenant login 404 + staff→SaaS 403; full suite 40 passed (high, 2026-11-03)

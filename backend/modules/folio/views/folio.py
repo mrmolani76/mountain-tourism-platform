@@ -6,6 +6,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from modules.core.auth import StaffSessionAuthentication
 from modules.core.models import Staff
 from modules.core.permissions import IsTenantStaff
 from modules.folio.permissions import IsFolioManager, IsFolioStaff
@@ -27,7 +28,7 @@ from tenancy.context import get_current_tenant
 class FolioViewSet(viewsets.ModelViewSet):
     """Folio CRUD. Open/close folios; read charges+payments via nested endpoints."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsFolioStaff]
     queryset = None  # set per-request in get_queryset
     serializer_class = FolioSerializer
@@ -79,7 +80,7 @@ class FolioViewSet(viewsets.ModelViewSet):
 class ChargeViewSet(viewsets.ModelViewSet):
     """Charge CRUD. Create = post charge. POST /{id}/void/ = void (Rule 5)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsFolioStaff]
     serializer_class = ChargeSerializer
 
@@ -142,7 +143,7 @@ class ChargeViewSet(viewsets.ModelViewSet):
 class PaymentViewSet(viewsets.ModelViewSet):
     """Payment CRUD. Create = record payment. POST /{id}/void/ = void (Rule 5)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsFolioStaff]
     serializer_class = PaymentSerializer
 

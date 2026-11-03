@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.hotel.permissions import IsHotelManager, IsHotelStaff
 from modules.hotel.serializers import (
@@ -22,7 +23,7 @@ from tenancy.context import get_current_tenant
 class BoardPlanViewSet(viewsets.ModelViewSet):
     """Board plan CRUD (owner/manager)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsHotelStaff]
     serializer_class = BoardPlanSerializer
 
@@ -39,7 +40,7 @@ class BoardPlanViewSet(viewsets.ModelViewSet):
 class RoomTypeViewSet(viewsets.ModelViewSet):
     """Room type CRUD (owner/manager)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsHotelStaff]
     serializer_class = RoomTypeSerializer
 
@@ -56,7 +57,7 @@ class RoomTypeViewSet(viewsets.ModelViewSet):
 class RoomViewSet(viewsets.ModelViewSet):
     """Room CRUD (owner/manager)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsHotelStaff]
     serializer_class = RoomSerializer
 
@@ -73,7 +74,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 class StayViewSet(viewsets.ModelViewSet):
     """Stay CRUD. Check-in/check-out via custom actions."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsHotelStaff]
     serializer_class = StaySerializer
 

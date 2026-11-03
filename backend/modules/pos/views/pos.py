@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.pos.permissions import IsPosCashier, IsPosStaff
 from modules.pos.serializers import (
@@ -23,7 +24,7 @@ from tenancy.context import get_current_tenant
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     """Product category CRUD (owner/manager)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsPosStaff]
     serializer_class = ProductCategorySerializer
 
@@ -40,7 +41,7 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     """Product CRUD (owner/manager)."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsPosStaff]
     serializer_class = ProductSerializer
 
@@ -62,7 +63,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     """Order CRUD. Cashier/front desk can create orders."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsPosStaff]
     serializer_class = OrderSerializer
 
@@ -96,7 +97,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 class OrderLineViewSet(viewsets.ModelViewSet):
     """Order line CRUD. Add lines to open orders."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsPosStaff]
     serializer_class = OrderLineSerializer
 

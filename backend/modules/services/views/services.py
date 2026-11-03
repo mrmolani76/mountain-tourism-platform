@@ -3,6 +3,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.services.permissions import IsServicesStaff
 from modules.services.serializers import ServiceSerializer, SlotSerializer
@@ -12,7 +13,7 @@ from tenancy.context import get_current_tenant
 class ServiceViewSet(viewsets.ModelViewSet):
     """Service CRUD."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsServicesStaff]
     serializer_class = ServiceSerializer
 
@@ -24,7 +25,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class SlotViewSet(viewsets.ModelViewSet):
     """Slot CRUD — one time slot with capacity and staff."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsServicesStaff]
     serializer_class = SlotSerializer
 

@@ -9,6 +9,7 @@
 
 | ID | Title | Severity | Status | Verified |
 |----|-------|----------|--------|----------|
+| BUG-APP-005 | Domain ViewSets use empty authentication_classes (auth bypass risk) | high | VERIFIED | 2026-11-03 |
 | BUG-APP-004 | Staff login bad credentials → 403 instead of 401 | low | VERIFIED | 2026-11-03 |
 | BUG-APP-003 | Season overlap rejected same-kind only | medium | VERIFIED | 2026-11-03 |
 | BUG-APP-002 | All list endpoints 500 — pagination AttributeError | high | VERIFIED | 2026-11-03 |

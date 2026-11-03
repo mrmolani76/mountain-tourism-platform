@@ -3,6 +3,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.weather.permissions import IsWeatherStaff
 from modules.weather.serializers import WeatherLimitSerializer, WeatherWarningSerializer
@@ -12,7 +13,7 @@ from tenancy.context import get_current_tenant
 class WeatherLimitViewSet(viewsets.ModelViewSet):
     """Weather limit CRUD."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsWeatherStaff]
     serializer_class = WeatherLimitSerializer
 
@@ -24,7 +25,7 @@ class WeatherLimitViewSet(viewsets.ModelViewSet):
 class WeatherWarningViewSet(viewsets.ModelViewSet):
     """Weather warning CRUD."""
 
-    authentication_classes = []
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [IsAuthenticated, IsTenantStaff, IsWeatherStaff]
     serializer_class = WeatherWarningSerializer
 
