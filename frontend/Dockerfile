@@ -1,8 +1,18 @@
 # Mountain Tourism Nuxt SPA — development image
 # ssr: false; outputs to .output/public
-# Vite proxy /api → backend:8000 (Django tenant API)
+# Same-origin /api: nginx proxies /api → web:8000 (Django). Empty api base = same-origin.
 
 FROM node:22-alpine AS builder
+
+# Public runtime config baked into the static build (ssr: false).
+ARG NUXT_PUBLIC_API_BASE_URL=""
+ARG NUXT_PUBLIC_ENABLE_REALTIME="false"
+ARG ENV=local
+ARG BACKEND_URL=http://web:8000
+ENV NUXT_PUBLIC_API_BASE_URL=$NUXT_PUBLIC_API_BASE_URL \
+    NUXT_PUBLIC_ENABLE_REALTIME=$NUXT_PUBLIC_ENABLE_REALTIME \
+    ENV=$ENV \
+    BACKEND_URL=$BACKEND_URL
 
 # Install pnpm (project uses .npmrc with shamefully-hoist)
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -36,8 +46,9 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copy custom nginx config that proxies /api to the backend
 COPY docker/nginx-spa-proxy.conf /etc/nginx/conf.d/default.conf
 
-# Copy built output from builder stage
-COPY --from=builder /app/.output/public /usr/share/nginx/html
+# nitro.output.publicDir is overridden to `.output/` in nuxt.config.ts,
+# so the static site lands directly in /app/.output (not /app/.output/public).
+COPY --from=builder /app/.output /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -9,13 +9,12 @@ Refresh on every work / bug / change status update.
 ### Todo
 - (none)
 
-### Completed
-- **23** — Frontend SPA — copy into repo and wire to Django backend (high)
-
 ### In Progress
 - (none)
 
 ### Completed
+- **24** — Docker dev setup — inventory-style dev stack (compose, docs, scripts, verify) (high, 2026-11-03)
+- **23** — Frontend SPA — copy into repo and wire to Django backend (high, 2026-11-03)
 - **22** — remaining modules — rental, services, transport, weather, reports DRF APIs (2026-11-02)
 - **21** — pos module — Product, Order, OrderLine models + DRF APIs (2026-11-02)
 - **20** — hotel module — Room, Stay, BoardPlan models + DRF APIs (2026-11-02)
@@ -57,6 +56,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--24-docker-dev-setup.md` — Docker dev setup (item 24): compose/nginx/Dockerfile fixes, docs, scripts, stack verified
 - 2026-11-02 — `work/changes/2026-11-02--07-to-10-super-admin-vps-ci-seed.md` — items 07-10 (super admin, VPS, CI, seed)
 - 2026-11-02 — `work/changes/2026-11-02--16-backend-structure-gaps-fill.md` — gaps fill (item 16)
 - 2026-11-02 — `work/changes/2026-11-02--06-core-config-apis.md` — core config APIs (item 06) + BUG-TENANT-001

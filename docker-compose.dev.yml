@@ -1,6 +1,10 @@
 # Mountain Tourism Platform — backend dev stack (Docker).
-# Postgres 16 + Django API. Dev only; prod path is gunicorn on VPS (todo 08).
-# Ports 8010 (web) / 5433 (db host mapping) to avoid clashes on this machine.
+# Postgres 16 + Django API + Nuxt SPA (static build via nginx). Dev only;
+# prod path is gunicorn on VPS (item 08).
+# Ports: 8010 (web) / 5433 (db host mapping) / 3000 (spa) — loopback only.
+# Inventory stack on this machine uses 8080 / 3307 / 3001 / 3000(landing); do not collide.
+
+name: mtmtp
 
 services:
   db:
@@ -19,6 +23,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mtmtp_net
 
   web:
     build:
@@ -31,7 +37,8 @@ services:
     environment:
       DJANGO_SECRET_KEY: dev-only-docker-secret-change-me
       DJANGO_DEBUG: "True"
-      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,db,mtmtp_web,.docker.test
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,db,mtmtp_web,.docker.test,.local.mountain.local
+      DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: mountain_tourism
       DB_USER: mt_app
@@ -43,35 +50,44 @@ services:
       - "127.0.0.1:8010:8000"
     volumes:
       - ./backend:/app/backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - mtmtp_net
     command: >
       sh -c "python manage.py migrate --no-input &&
              python manage.py runserver 0.0.0.0:8000"
 
-# Nuxt SPA (development)
+# Nuxt SPA (static build via nginx; same-origin /api proxied to web)
   spa:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: production
+      args:
+        # Empty = SPA calls same-origin /api; nginx proxies to web:8000.
+        NUXT_PUBLIC_API_BASE_URL: ""
+        ENV: local
+        NUXT_PUBLIC_ENABLE_REALTIME: "false"
+        BACKEND_URL: http://web:8000
     container_name: mtmtp_spa
     ports:
-      - "127.0.0.1:3000:3000"
-    environment:
-      # Public config baked at build time (ssr:false)
-      NUXT_PUBLIC_API_BASE_URL: http://backend:8000
-      NUXT_PUBLIC_ENABLE_REALTIME: "false"
-      ENV: local
-      # Backend URL for vite proxy (same-origin within compose network)
-      BACKEND_URL: http://backend:8000
-      # Hosts file entry so `lab.local.mountain.local` resolves inside containers
-      # (matches ALLOWED_HOSTS .local.mountain.local entry)
-      DOCKER_HOSTS_ENTRY: "127.0.0.1 lab.local.mountain.local"
-    volumes:
-      - ./frontend:/app:ro
-      - /app/node_modules
+      - "127.0.0.1:3000:80"
+    depends_on:
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - mtmtp_net
-    depends_on:
-      - web
 
 networks:
   mtmtp_net:
