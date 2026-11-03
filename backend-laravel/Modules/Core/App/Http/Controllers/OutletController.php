@@ -3,35 +3,37 @@
 namespace Modules\Core\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
 use App\Support\Http\Envelope;
 use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\Outlet;
+use Modules\Core\App\Support\StaffAuthz;
 
 class OutletController extends Controller
 {
     use Paginates;
 
-    private function ensureOwner(): ?JsonResponse
-    {
-        if (! app('staff')->isOwner()) {
-            return Envelope::errorJson('error', 'You do not have permission to perform this action.', [], 403);
-        }
-        return null;
-    }
-
     public function index(Request $request): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        $staff = StaffAuthz::staff();
         $q = Outlet::on(config('tenancy.connection_name'))->orderBy('name');
+
+        // Owner sees all; others only assigned outlets (PDF outlet access).
+        if (! $staff->isOwner()) {
+            $ids = $staff->outletAccess()->pluck('outlet_id');
+            $q->whereIn('id', $ids);
+        }
+
         return $this->paginateQuery($q, $request, fn (Outlet $o) => $this->serialize($o));
     }
 
     public function store(Request $request): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) {
+            return $d;
+        }
+
         $data = $request->validate([
             'building_id' => ['required', 'integer'],
             'name' => ['required', 'string', 'max:200'],
@@ -39,19 +41,27 @@ class OutletController extends Controller
             'is_active' => ['sometimes', 'boolean'],
         ]);
         $o = Outlet::on(config('tenancy.connection_name'))->create($data);
+
         return response()->json($this->serialize($o), 201);
     }
 
     public function show(int $outlet): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
         $o = Outlet::on(config('tenancy.connection_name'))->findOrFail($outlet);
+
+        if ($d = StaffAuthz::denyUnlessOutletAccess((int) $o->getKey())) {
+            return $d;
+        }
+
         return response()->json($this->serialize($o));
     }
 
     public function update(Request $request, int $outlet): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) {
+            return $d;
+        }
+
         $o = Outlet::on(config('tenancy.connection_name'))->findOrFail($outlet);
         $data = $request->validate([
             'building_id' => ['sometimes', 'integer'],
@@ -60,13 +70,18 @@ class OutletController extends Controller
             'is_active' => ['sometimes', 'boolean'],
         ]);
         $o->fill($data)->save();
+
         return response()->json($this->serialize($o));
     }
 
     public function destroy(int $outlet): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) {
+            return $d;
+        }
+
         Outlet::on(config('tenancy.connection_name'))->findOrFail($outlet)->delete();
+
         return response()->json(null, 204);
     }
 

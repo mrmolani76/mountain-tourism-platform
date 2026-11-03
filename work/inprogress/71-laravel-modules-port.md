@@ -42,8 +42,9 @@ Client Laravel switch. Inventory = one central SaaS DB + per-tenant DBs. PDF Mod
 ## Acceptance Criteria (complete only when all ticked)
 - [x] Non–Module-1 Laravel Modules removed
 - [x] Central Saas + tenant Core layout wired (Inventory pattern)
-- [ ] Module 1 APIs Verified on setup machine (composer + migrate + smoke)
-- [ ] Change report + PLAN/SUMMARY
+- [x] Owner-on-create + StaffAuthz + Hotel stub removed (code gaps)
+- [ ] Module 1 APIs Verified on setup machine (composer + migrate + smoke + TENANT_ISOLATION_E2E)
+- [ ] Change report + PLAN/SUMMARY (partial reports exist; final closeout after verify)
 - [x] No machine setup runs on this agent host
 
 ## Files Likely Affected

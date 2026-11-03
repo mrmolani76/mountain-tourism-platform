@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Modules\Core\App\Http\Requests\LoginRequest;
 use Modules\Core\App\Models\Staff;
 use App\Support\Http\Envelope;
+use Modules\Core\App\Support\StaffAuthz;
 use App\Tenancy\TenantResolver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -70,10 +71,8 @@ class AuthController extends Controller
 
     public function resetPassword(Request $request): JsonResponse
     {
-        $staff = app('staff');
-
-        if (! $staff->canResetPasswords()) {
-            return Envelope::errorJson('error', 'You do not have permission to perform this action.', [], 403);
+        if ($denied = StaffAuthz::denyUnlessManagerPlus()) {
+            return $denied;
         }
 
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [

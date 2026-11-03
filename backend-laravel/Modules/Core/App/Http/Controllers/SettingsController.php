@@ -5,23 +5,16 @@ namespace Modules\Core\App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Support\Http\Envelope;
+use Modules\Core\App\Support\StaffAuthz;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\TenantSettings;
 
 class SettingsController extends Controller
 {
-    private function ensureOwner(): ?JsonResponse
-    {
-        if (! app('staff')->isOwner()) {
-            return Envelope::errorJson('error', 'You do not have permission to perform this action.', [], 403);
-        }
-        return null;
-    }
-
     public function show(): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         $s = TenantSettings::on(config('tenancy.connection_name'))->query()->first();
         if ($s === null) {
             $s = TenantSettings::on(config('tenancy.connection_name'))->create([
@@ -36,7 +29,7 @@ class SettingsController extends Controller
 
     public function update(Request $request): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         $data = $request->validate([
             'currency' => ['sometimes', 'string', 'max:8'],
             'timezone' => ['sometimes', 'string', 'max:64'],

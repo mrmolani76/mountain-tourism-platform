@@ -81,4 +81,17 @@ class Staff extends BaseModel
     {
         return $this->hasMany(StaffOutletAccess::class, 'staff_id');
     }
+
+    /** True when Owner (implicit all outlets) or an explicit access row exists. */
+    public function hasOutletAccess(int $outletId): bool
+    {
+        if ($this->isOwner()) {
+            return true;
+        }
+
+        return StaffOutletAccess::on(config('tenancy.connection_name'))
+            ->where('staff_id', $this->getKey())
+            ->where('outlet_id', $outletId)
+            ->exists();
+    }
 }

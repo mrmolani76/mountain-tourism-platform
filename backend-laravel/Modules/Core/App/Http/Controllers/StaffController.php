@@ -5,6 +5,7 @@ namespace Modules\Core\App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Support\Http\Envelope;
+use Modules\Core\App\Support\StaffAuthz;
 use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,24 +17,16 @@ class StaffController extends Controller
 {
     use Paginates;
 
-    private function ensureOwner(): ?JsonResponse
-    {
-        if (! app('staff')->isOwner()) {
-            return Envelope::errorJson('error', 'You do not have permission to perform this action.', [], 403);
-        }
-        return null;
-    }
-
     public function index(Request $request): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         $q = Staff::on(config('tenancy.connection_name'))->orderBy('email');
         return $this->paginateQuery($q, $request, fn (Staff $s) => $this->serialize($s));
     }
 
     public function store(Request $request): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         $data = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string', 'min:8'],
@@ -47,14 +40,14 @@ class StaffController extends Controller
 
     public function show(int $staff): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         $s = Staff::on(config('tenancy.connection_name'))->findOrFail($staff);
         return response()->json($this->serialize($s));
     }
 
     public function update(Request $request, int $staff): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         $s = Staff::on(config('tenancy.connection_name'))->findOrFail($staff);
         $data = $request->validate([
             'email' => ['sometimes', 'email'],
@@ -71,7 +64,7 @@ class StaffController extends Controller
 
     public function destroy(int $staff): JsonResponse
     {
-        if ($d = $this->ensureOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
         Staff::on(config('tenancy.connection_name'))->findOrFail($staff)->delete();
         return response()->json(null, 204);
     }

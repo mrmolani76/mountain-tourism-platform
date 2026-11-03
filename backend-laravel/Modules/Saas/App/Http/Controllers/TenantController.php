@@ -33,13 +33,15 @@ class TenantController extends Controller
             'name' => ['required', 'string', 'max:200'],
             'slug' => ['required', 'string', 'max:64', 'alpha_dash'],
             'base_domain' => ['nullable', 'string', 'max:200'],
-            'owner_email' => ['nullable', 'email'],
-            'owner_password' => ['nullable', 'string', 'min:8'],
+            'owner_email' => ['nullable', 'email', 'required_with:owner_password'],
+            'owner_password' => ['nullable', 'string', 'min:8', 'required_with:owner_email'],
         ]);
 
-        $tenant = $this->tenants->register($data);
+        $result = $this->tenants->register($data);
+        $payload = $this->serialize($result['tenant']);
+        $payload['owner_created'] = $result['owner_created'];
 
-        return response()->json($this->serialize($tenant), 201);
+        return response()->json($payload, 201);
     }
 
     public function show(int $tenant): JsonResponse

@@ -8,26 +8,16 @@ use Modules\Core\App\Http\Requests\StoreBuildingRequest;
 use Modules\Core\App\Http\Requests\UpdateBuildingRequest;
 use Modules\Core\App\Models\Building;
 use App\Support\Http\Envelope;
+use Modules\Core\App\Support\StaffAuthz;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class BuildingController extends Controller
 {
-    private function ensureOwner(): ?JsonResponse
-    {
-        $staff = app('staff');
-
-        if (! $staff->isOwner()) {
-            return Envelope::errorJson('error', 'You do not have permission to perform this action.', [], 403);
-        }
-
-        return null;
-    }
-
     public function index(Request $request): JsonResponse
     {
-        if ($denied = $this->ensureOwner()) {
+        if ($denied = StaffAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
@@ -71,7 +61,7 @@ class BuildingController extends Controller
 
     public function show(int $building): JsonResponse
     {
-        if ($denied = $this->ensureOwner()) {
+        if ($denied = StaffAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
@@ -86,7 +76,7 @@ class BuildingController extends Controller
 
     public function store(StoreBuildingRequest $request): JsonResponse
     {
-        if ($denied = $this->ensureOwner()) {
+        if ($denied = StaffAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
@@ -108,7 +98,7 @@ class BuildingController extends Controller
 
     public function update(UpdateBuildingRequest $request, int $building): JsonResponse
     {
-        if ($denied = $this->ensureOwner()) {
+        if ($denied = StaffAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
@@ -126,7 +116,7 @@ class BuildingController extends Controller
 
     public function destroy(int $building): \Illuminate\Http\Response
     {
-        if ($denied = $this->ensureOwner()) {
+        if ($denied = StaffAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
