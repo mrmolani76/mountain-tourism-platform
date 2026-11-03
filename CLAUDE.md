@@ -9,7 +9,7 @@
 - **Money** → Charge and Payment are append-only; void only (Rule 5)
 - **Tenant** → DB-per-tenant; no cross-tenant DB access (Rule 3)
 - **Scope** → `document/Mountain_MVP_Scope_v1.pdf` is the contract; out-of-scope needs written agreement
-- **Focus** → Backend/API first (`work/phases/`); no frontend work unless user asks
+- **Focus** → Write product/API **code** only. **No project setup** (Docker, Compose, VPS, CI, env, seed/dev stack, infra) unless the user explicitly asks in that message. Backend/API first (`work/phases/`); no frontend unless user asks
 - **Chat output** → Response Style table below. Chat = Hinglish, repo = English, no em-dash
 - **Engineering standards** → `.cursor/rules/nexro-engineering.mdc` + `.opencode/rules.md` (keep twins in sync)
 
@@ -52,7 +52,16 @@ Contract scope: `document/Mountain_MVP_Scope_v1.pdf`.
 | Tenancy | DB-per-tenant (one Postgres DB per complex); Host/`Domain` resolve; central `modules.saas` |
 | Money | Append-only charges and payments; voids only |
 
-**Current delivery focus: backend / API only.** Do not scaffold or build Nuxt unless the user explicitly asks. Phase plans: `work/phases/`.
+**Current delivery focus: product/API code only (backend first).**
+
+| Do | Do not (unless user explicitly asks) |
+|----|--------------------------------------|
+| Domain models, services, DRF APIs, permissions, migrations for features | Docker / Compose / nginx / Dockerfile |
+| Business rules (folio, voids, tenancy, capacity) | VPS, deploy scripts, CI/CD workflows |
+| Bug fixes in application code | Dev env / seed / stack "verify" setup |
+| Tests as code when the testing agent is asked | Package installs, env wiring, infra docs as the main task |
+
+Do not scaffold or build Nuxt unless the user explicitly asks. Phase plans: `work/phases/`. Prefer the next unfinished **module feature** over any setup task.
 
 Confirm frameworks from real project files when they exist. Do not invent another stack.
 

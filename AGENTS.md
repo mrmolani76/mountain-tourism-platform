@@ -53,4 +53,5 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 - **Frontend**: Nuxt + Vue + Vuetify in `frontend/`
 - **Tenancy**: `tenant_id` on every business table (shared DB MVP)
 - **Hard rule**: Charge/Payment never edit/delete — void with reason + user + timestamp
+- **No setup by default**: do not start Docker/Compose/VPS/CI/env/seed/infra work unless the user asks; write product/API code
 - **Git**: ask "Commit aur push karun?" — never commit alone
