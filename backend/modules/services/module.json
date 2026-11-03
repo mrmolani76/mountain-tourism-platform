@@ -1,7 +1,0 @@
-{
-  "name": "Services",
-  "alias": "services",
-  "description": "Bookable services and slots",
-  "central": false,
-  "priority": 7
-}

@@ -27,3 +27,5 @@ Record choices that differ from or extend the MVP PDF preferences.
 | 2026-11-03 | **Laravel port preserves current contracts**: response envelope `{success,data,error,meta}`, page-number pagination, appended-only money ops (PUT/PATCH/DELETE → 405), session-tenant-binding guard, Host→tenant DB-per-tenant resolution. Open conflicts deferred to client: money as integer minor units vs DECIMAL(12,2) implemented; `/api/v1` prefix vs existing paths (§22 master plan 2026-11-03). | Master plan principles 2–3: preserve approved behavior; audit as source of truth | Accepted |
 
 When adding a decision: append a row, never rewrite history silently.
+
+| 2026-11-03 | Django/DRF backend removed (`backend/`) — Laravel (`backend-laravel/`) is now the sole backend. Triggered by client directive "drf wala remove karo". CI Django quality gate + deploy.yml removed; Laravel quality gate remains. Django code preserved in git history (commit 8ff65ce and earlier). | accepted |

@@ -1,5 +1,0 @@
-# Mountain Tourism API — production dependencies (MVP Phase 1)
-# Mirrors backend/pyproject.toml [project.dependencies]; CI installs this file.
-Django>=5.0,<6.0
-djangorestframework>=3.14,<4
-psycopg2-binary>=2.9

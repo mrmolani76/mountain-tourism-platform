@@ -1,6 +1,0 @@
-# Mountain Tourism API — dev/CI dependencies
-# Mirrors backend/pyproject.toml [dependency-groups].dev; CI installs this file.
--r requirements.txt
-ruff>=0.4
-pytest>=8
-pytest-django>=4.8

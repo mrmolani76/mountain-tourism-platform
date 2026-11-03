@@ -1,7 +1,0 @@
-{
-  "name": "Hotel",
-  "alias": "hotel",
-  "description": "Stays, rooms, chalets, huts",
-  "central": false,
-  "priority": 3
-}

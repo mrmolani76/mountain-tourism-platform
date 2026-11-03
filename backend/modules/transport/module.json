@@ -1,7 +1,0 @@
-{
-  "name": "Transport",
-  "alias": "transport",
-  "description": "Trips, lifts, vehicles",
-  "central": false,
-  "priority": 8
-}
