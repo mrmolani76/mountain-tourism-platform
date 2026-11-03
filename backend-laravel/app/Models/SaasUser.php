@@ -2,6 +2,6 @@
 
 namespace App\Models;
 
-class SaasUser extends \Modules\Saas\Models\SaasUser
+class SaasUser extends \Modules\Saas\App\Models\SaasUser
 {
 }

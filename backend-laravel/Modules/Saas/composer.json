@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/saas",
+    "description": "Mountain Tourism Saas module",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Saas\\App\\": "App/",
+            "Modules\\Saas\\Database\\Factories\\": "Database/Factories/",
+            "Modules\\Saas\\Database\\Seeders\\": "Database/Seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Saas\\Tests\\": "tests/"
+        }
+    }
+}

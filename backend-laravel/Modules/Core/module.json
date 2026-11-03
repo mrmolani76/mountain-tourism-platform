@@ -1,12 +1,11 @@
 {
-  "name": "Core",
-  "alias": "core",
-  "description": "Mountain Tourism Module Core",
-  "keywords": [],
-  "priority": 0,
-  "providers": [
-    "Modules\\Core\\Providers\\CoreServiceProvider"
-  ],
-  "files": [],
-  "central": false
+    "name": "Core",
+    "alias": "core",
+    "description": "Mountain Tourism Module 1 — tenant core (auth, buildings, outlets, seasons, staff, settings, audit)",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Core\\App\\Providers\\CoreServiceProvider"
+    ],
+    "files": []
 }

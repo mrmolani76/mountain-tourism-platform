@@ -1,14 +1,7 @@
 <?php
 
 /**
- * Tenant API surface (Inventory `routes/tenant.php` pattern).
- *
- * Loaded only after Host resolves to a tenant DB (ResolveTenant middleware on api).
- * Module 1 tenant piece = Core (auth, buildings, outlets, seasons, staff, settings).
- * Later PDF modules B–I add more route files here / via their module providers.
+ * Reserved for Inventory-style extra tenant wiring.
+ * Module 1 tenant APIs are registered by Modules\Core\App\Providers\RouteServiceProvider
+ * (eQMS Complere pattern: each module owns routes/api.php).
  */
-
-$coreRoutes = base_path('Modules/Core/Routes/api.php');
-if (is_file($coreRoutes)) {
-    require $coreRoutes;
-}

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-/** @deprecated Prefer Modules\Core\Models\Staff */
-class Staff extends \Modules\Core\Models\Staff
+/** @deprecated Prefer Modules\Core\App\Models\Staff */
+class Staff extends \Modules\Core\App\Models\Staff
 {
 }

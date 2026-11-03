@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use Modules\Saas\Models\SaasUser;
+use Modules\Saas\App\Models\SaasUser;
 use App\Support\Http\Envelope;
 use Closure;
 use Illuminate\Http\Request;

@@ -2,6 +2,6 @@
 
 namespace App\Models;
 
-class Domain extends \Modules\Saas\Models\Domain
+class Domain extends \Modules\Saas\App\Models\Domain
 {
 }
