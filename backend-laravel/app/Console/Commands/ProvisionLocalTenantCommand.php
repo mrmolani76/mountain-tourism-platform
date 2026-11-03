@@ -25,7 +25,8 @@ class ProvisionLocalTenantCommand extends Command
                             {slug=lab : Tenant slug / url_prefix}
                             {--name= : Display name (default: "{slug} Complex")}
                             {--reset : Drop and recreate the tenant DB + re-seed staff}
-                            {--with-saas-admin : Ensure super@saas.test exists on central}';
+                            {--with-saas-admin : Ensure super@saas.test exists on central}
+                            {--host= : Override tenant hostname (default: {slug}.localhost)}';
 
     protected $description = 'Provision a local tenant DB + registry row + fixture staff (APP_ENV=local only)';
 
@@ -52,7 +53,7 @@ class ProvisionLocalTenantCommand extends Command
 
         $name = (string) ($this->option('name') ?: ucfirst($slug).' Complex');
         $dbName = $slug.'_local';
-        $hostname = $slug.'.localhost';
+        $hostname = (string) ($this->option('host') ?: $slug.'.localhost');
         $reset = (bool) $this->option('reset');
         $central = config('tenancy.central_connection', config('database.default'));
 

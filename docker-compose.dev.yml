@@ -38,8 +38,8 @@ services:
     environment:
       APP_ENV: local
       APP_DEBUG: "true"
-      APP_URL: http://lab.localhost:8010
-      FRONTEND_URL: http://lab.localhost:3000
+      APP_URL: http://mtmtp.local:8010
+      FRONTEND_URL: http://mtmtp.local:3000
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: "5432"
@@ -49,9 +49,9 @@ services:
       SESSION_DRIVER: database
       CACHE_STORE: database
       QUEUE_CONNECTION: database
-      TENANCY_CENTRAL_HOSTS: saas.localhost
+      TENANCY_CENTRAL_HOSTS: saas.mtmtp.local
       CENTRAL_DOMAIN: saas.localhost
-      SANCTUM_STATEFUL_DOMAINS: localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,lab.localhost,lab.localhost:3000,saas.localhost,saas.localhost:3000
+      SANCTUM_STATEFUL_DOMAINS: localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,mtmtp.local,mtmtp.local:3000,saas.mtmtp.local,saas.mtmtp.local:3000
     ports:
       - "127.0.0.1:8010:8000"
     volumes:
@@ -63,7 +63,7 @@ services:
       sh -c "composer install --no-interaction --prefer-dist --ignore-platform-reqs
       && php artisan key:generate --force
       && php artisan migrate --force
-      && php artisan tenants:provision-local lab --reset --with-saas-admin
+      && php artisan tenants:provision-local lab --reset --with-saas-admin --host=mtmtp.local
       && php artisan serve --host=0.0.0.0 --port=8000"
 
   spa:
