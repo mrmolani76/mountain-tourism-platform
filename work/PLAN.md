@@ -18,7 +18,6 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 70 | Laravel Stage C — pilot slice (auth login/me/logout + 1 module list) | high | A-core | backend | L |
 | 35 | Module 2 — HutBed, season prices, Reservation APIs | high | B-hotel | backend | L |
 | 36 | Module 2 — check-in opens Stay + Folio | high | B-hotel | backend | M |
 | 37 | Module 2 — nightly room + board posting job | high | B-hotel | backend | L |
@@ -56,6 +55,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 70 | Laravel Stage C — pilot slice (auth login/me/logout + 1 module list) | high | A-core | backend | L |
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |

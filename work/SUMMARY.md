@@ -18,7 +18,7 @@ Refresh on every work / bug / change status update.
 - Full list: `work/PLAN.md` Todo table + `work/todo/README-all-modules-todos.md`
 
 ### In Progress
-- (none)
+- **70** — Laravel Stage C — pilot slice: auth login/me/logout + buildings (high)
 
 ### Completed
 - **69** — Laravel foundation Stage B: backend-laravel/ (Laravel 13.39/PHP 8.5), pgsql 18.6 connected, envelope macros, health endpoint live, CI quality job (high, 2026-11-03)

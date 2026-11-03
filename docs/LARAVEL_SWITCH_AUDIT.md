@@ -41,16 +41,16 @@ Pagination: page-number, `page_size=20`, `?page_size` ≤ 100; meta = `{page, pa
 ### Core — `/api/`
 | # | Endpoint | Method | Auth | Permission | Side effects | Laravel target | Status |
 |---|---|---|---|---|---|---|---|
-| 8 | api/health/ | GET | public | AllowAny | — | TBD | Not started |
+| 8 | api/health/ | GET | public | AllowAny | — | Verified (item 70) | Verified (item 70) |
 | 9 | api/ | GET | public (root links) | AllowAny | — | TBD | Not started |
-| 10 | api/auth/login/ | POST | public | AllowAny | session staff_id + tenant binding + CSRF token | TBD | Not started |
-| 11 | api/auth/logout/ | POST | public | AllowAny | session flush | TBD | Not started |
-| 12 | api/auth/me/ | GET | session | IsTenantStaff | — | TBD | Not started |
-| 13 | api/auth/reset-password/ | POST | session | CanResetStaffPassword (owner/manager) | password policy write | TBD | Not started |
+| 10 | api/auth/login/ | POST | public | AllowAny | session staff_id + tenant binding + CSRF token | Verified (item 70) | Verified (item 70) |
+| 11 | api/auth/logout/ | POST | public | AllowAny | session flush | Verified (item 70) | Verified (item 70) |
+| 12 | api/auth/me/ | GET | session | IsTenantStaff | — | Verified (item 70) | Verified (item 70) |
+| 13 | api/auth/reset-password/ | POST | session | CanResetStaffPassword (owner/manager) | password policy write | Verified (item 70) | Verified (item 70) |
 | 14 | api/settings/ | GET/PATCH | session | IsOwner | tenant config write | TBD | Not started |
 | 15 | api/staff/ | GET/POST/PATCH/DELETE | session | IsOwner | staff CRUD | TBD | Not started |
 | 16 | api/outlet-access/ | GET/POST/DELETE | session | IsOwner | access matrix | TBD | Not started |
-| 17 | api/buildings/ | GET/POST/PATCH/DELETE | session | IsOwner | config CRUD | TBD | Not started |
+| 17 | api/buildings/ | GET/POST/PATCH/DELETE | session | IsOwner | config CRUD | Verified (item 70) | Verified (item 70) |
 | 18 | api/outlets/ | GET/POST/PATCH/DELETE | session | IsOwner | config CRUD | TBD | Not started |
 | 19 | api/seasons/ | GET/POST/PATCH/DELETE | session | IsOwner | overlap validation | TBD | Not started |
 

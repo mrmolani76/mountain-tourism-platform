@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Middleware\ResolveTenant;
+use App\Http\Middleware\StaffSessionAuth;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,10 +16,70 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Tenant resolution must run before any tenant auth/query.
+        $middleware->api(prepend: [
+            \Illuminate\Session\Middleware\StartSession::class,
+            ResolveTenant::class,
+        ]);
+        $middleware->alias([
+            'resolve.tenant' => ResolveTenant::class,
+            'staff.auth' => StaffSessionAuth::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // DRF parity: serializer validation failures are HTTP 400, never 422.
+        $exceptions->render(function (ValidationException $e, Request $request) {
+            if (! ($request->is('api/*') || $request->expectsJson())) {
+                return null;
+            }
+
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'error' => [
+                    'code' => 'error',
+                    'message' => 'Validation failed.',
+                    'details' => $e->errors() === [] ? new \stdClass() : $e->errors(),
+                ],
+                'meta' => new \stdClass(),
+            ], 400);
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, Request $request) {
+            if (! ($request->is('api/*') || $request->expectsJson())) {
+                return null;
+            }
+
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'error' => [
+                    'code' => 'error',
+                    'message' => 'Not found.',
+                    'details' => new \stdClass(),
+                ],
+                'meta' => new \stdClass(),
+            ], 404);
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, Request $request) {
+            if (! ($request->is('api/*') || $request->expectsJson())) {
+                return null;
+            }
+
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'error' => [
+                    'code' => 'error',
+                    'message' => 'Method "' . $request->method() . '" not allowed.',
+                    'details' => new \stdClass(),
+                ],
+                'meta' => new \stdClass(),
+            ], 405);
+        });
     })->create();
