@@ -7,7 +7,7 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **29–33** — Module 1 closeout (tenancy freeze → audit → edge tests → policy → exit)
+- **30–33** — Module 1 closeout (audit → edge tests → policy → exit)
 - **34** — Fix domain ViewSets auth (hotel…reports)
 - **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
 - **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
@@ -23,6 +23,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **29** — Module 1 tenancy decision frozen (DB-per-tenant + Host/Domain) (high, 2026-11-03)
 - **28** — Module 1 verification — first full test run, 38 green (high, 2026-11-03)
 - **27** — Project audit complete report (post items 18–26) (high, 2026-11-03)
 - **26** — Tenant dev setup — physical DB, migrate, owner seed, E2E login verify (high, 2026-11-03)
@@ -78,6 +79,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-03 — `work/changes/2026-11-03--module1-closeout-todos-29-33.md` — Module 1 closeout todos 29–33; `phases/01-todos/` removed → `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — full project audit (item 27); report at `work/audits/2026-11-03-project-audit.md`
 - 2026-11-03 — `work/changes/2026-11-03--code-first-no-setup-rule.md` — standing rule: product/API code only; no Docker/VPS/CI/env setup unless user asks
+- 2026-11-03 — `work/changes/2026-11-03--29-m1-tenancy-decision-freeze.md` — item 29: MVP tenancy freeze (docs-only)
 - 2026-11-03 — `work/changes/2026-11-03--28-module1-test-run-fixes.md` — item 28: full test suite first run, 38 green; BUG-APP-002/003/004 fixed; isolation acceptance green
 - 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — item 27: full project audit
 - 2026-11-03 — `work/changes/2026-11-03--26-tenant-dev-setup-e2e-login.md` — tenant dev setup (item 26): lab_local DB, migrated, owner seeded, E2E staff login verified via SPA proxy

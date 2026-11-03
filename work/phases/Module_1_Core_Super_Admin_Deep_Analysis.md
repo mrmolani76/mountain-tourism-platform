@@ -133,6 +133,8 @@ These statements are not identical architecture descriptions.
 
 **Required decision:** Confirm whether DB-per-tenant is an accepted implementation alternative to the PDF's shared-table `tenant_id` approach, and confirm how the “no subdomains in the MVP” requirement relates to the current host-based routing. Do not change the architecture or add/remove tenant identifiers until this is resolved with the project owner/client.
 
+**Resolved 2026-11-03 (item 29, MVP freeze):** DB-per-tenant + Host/`Domain` routing is the accepted and implemented MVP isolation story (see `docs/DECISIONS.md` 2026-11-02 Accepted rows + 2026-11-03 Module 1 freeze row). It supersedes the PDF's shared-table `tenant_id` wording for MVP; business rows carry no `tenant_id`; isolation is the active DB connection (`tenancy/` + `DATABASE_ROUTERS`), enforced per request by `TenantResolveMiddleware`. No purchased subdomain is required: host routing works on a shared VPS hostname/sslip.io or IP:port, and the `Domain` registry maps host → tenant; staff login binds the session to the issuing tenant (BUG-TENANT-001). No architecture rewrite is planned for MVP.
+
 ### 3.3 Current repository architecture according to the audit
 
 The audit reports the following current direction:
@@ -862,8 +864,8 @@ The test must run automatically in the test suite. Manual UI checks alone do not
 
 The supplied PDF and audit have some details that need explicit agreement:
 
-1. Does the client approve the current DB-per-tenant implementation even though the PDF Core Concepts says every table carries `tenant_id`?
-2. How should “tenant known from login, no subdomains in MVP” align with the audit's central/tenant host routing?
+1. Does the client approve the current DB-per-tenant implementation even though the PDF Core Concepts says every table carries `tenant_id`?  **RESOLVED (2026-11-03, MVP freeze, item 29)** — see `docs/DECISIONS.md` (2026-11-02 Accepted + 2026-11-03 freeze row). DB-per-tenant is the MVP isolation story; no `tenant_id` columns; active-connection isolation.
+2. How should “tenant known from login, no subdomains in MVP” align with the audit's central/tenant host routing?  **RESOLVED (2026-11-03, MVP freeze, item 29)** — host routing satisfies "tenant from login": no subdomain purchase needed (shared VPS hostname/sslip.io or IP:port); `Domain` registry maps host → tenant; staff session is bound to the issuing tenant. Frontend never sends `tenant_id`; the host decides.
 3. What exact complex fields are mandatory at creation (name, contact, country, address, timezone, etc.)?
 4. Is a newly created complex active immediately or does Super Admin activate it separately?
 5. What should a deactivated tenant's Owner/staff see when trying to log in?

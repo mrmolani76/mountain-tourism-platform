@@ -20,5 +20,6 @@ Record choices that differ from or extend the MVP PDF preferences.
 | 2026-11-02 | API surface = **DRF ViewSets + DefaultRouter**; auth = APIView; thin views → services | User: DRF-aligned | Accepted |
 | 2026-11-02 | **SSO out of scope** (no SAML/ADFS/OAuth2/MFA) | User: leave SSO | Accepted |
 | 2026-11-02 | Domain code under **`backend/modules/`** (Complere `Modules/{Name}` mirror), not flat `apps/` | User: module-wise like eQMS | Accepted |
+| 2026-11-03 | **Module 1 tenancy freeze (MVP): DB-per-tenant + Host/`Domain` routing is the settled isolation story** | Closes Module_1 §19 Q1–Q2: reuses the 2026-11-02 Accepted DB-per-tenant decision; MVP needs no purchased subdomain (host routing works on shared VPS hostname/sslip.io or IP:port; `Domain` registry maps host → tenant; staff login binds session to issuing tenant, BUG-TENANT-001). No `tenant_id` columns; isolation via active connection | Accepted |
 
 When adding a decision: append a row, never rewrite history silently.
