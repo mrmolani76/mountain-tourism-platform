@@ -2,6 +2,8 @@
 
 namespace Modules\Core\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use Modules\Core\App\Http\Requests\StoreBuildingRequest;
 use Modules\Core\App\Http\Requests\UpdateBuildingRequest;
 use Modules\Core\App\Models\Building;
@@ -10,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BuildingController
+class BuildingController extends Controller
 {
     private function ensureOwner(): ?JsonResponse
     {

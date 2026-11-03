@@ -2,13 +2,15 @@
 
 namespace Modules\Core\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use App\Support\Http\Envelope;
 use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\StaffOutletAccess;
 
-class OutletAccessController
+class OutletAccessController extends Controller
 {
     use Paginates;
 

@@ -2,9 +2,9 @@
 
 namespace Modules\Core\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Outlet extends Model
+class Outlet extends BaseModel
 {
     public const UPDATED_AT = null;
 

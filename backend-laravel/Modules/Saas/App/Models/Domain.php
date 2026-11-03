@@ -2,9 +2,9 @@
 
 namespace Modules\Saas\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Domain extends Model
+class Domain extends BaseModel
 {
     public const UPDATED_AT = null;
 

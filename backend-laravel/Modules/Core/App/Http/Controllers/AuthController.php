@@ -2,6 +2,8 @@
 
 namespace Modules\Core\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use Modules\Core\App\Http\Requests\LoginRequest;
 use Modules\Core\App\Models\Staff;
 use App\Support\Http\Envelope;
@@ -10,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController
+class AuthController extends Controller
 {
     public function login(LoginRequest $request): JsonResponse
     {

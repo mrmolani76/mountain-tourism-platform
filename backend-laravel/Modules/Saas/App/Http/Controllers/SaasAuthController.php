@@ -2,13 +2,15 @@
 
 namespace Modules\Saas\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Modules\Saas\App\Models\SaasUser;
 
-class SaasAuthController
+class SaasAuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {

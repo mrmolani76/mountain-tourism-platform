@@ -2,10 +2,10 @@
 
 namespace Modules\Core\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Modules\Core\App\Enums\StaffRole;
 
-class Staff extends Model
+class Staff extends BaseModel
 {
     public const UPDATED_AT = null;
 

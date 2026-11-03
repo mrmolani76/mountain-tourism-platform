@@ -2,12 +2,14 @@
 
 namespace Modules\Core\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\TenantSettings;
 
-class SettingsController
+class SettingsController extends Controller
 {
     private function ensureOwner(): ?JsonResponse
     {

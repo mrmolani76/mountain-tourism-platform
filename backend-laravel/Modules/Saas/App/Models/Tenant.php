@@ -2,9 +2,9 @@
 
 namespace Modules\Saas\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Tenant extends Model
+class Tenant extends BaseModel
 {
     protected $connection;
 

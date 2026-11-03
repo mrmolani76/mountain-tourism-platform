@@ -2,9 +2,9 @@
 
 namespace Modules\Core\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Building extends Model
+class Building extends BaseModel
 {
     /** PDF §2 / DRF BuildingType */
     public const TYPES = [

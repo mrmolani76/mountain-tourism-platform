@@ -2,10 +2,10 @@
 
 namespace Modules\Core\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
 /** DRF parity: kind + dates only (no name). */
-class Season extends Model
+class Season extends BaseModel
 {
     protected $connection = 'tenant';
 

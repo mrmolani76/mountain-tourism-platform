@@ -2,6 +2,8 @@
 
 namespace Modules\Core\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use App\Support\Http\Envelope;
 use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
@@ -10,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Modules\Core\App\Enums\StaffRole;
 use Modules\Core\App\Models\Staff;
 
-class StaffController
+class StaffController extends Controller
 {
     use Paginates;
 

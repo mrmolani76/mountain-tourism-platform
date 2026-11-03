@@ -2,6 +2,8 @@
 
 namespace Modules\Saas\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+
 use App\Support\Http\Envelope;
 use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
@@ -10,7 +12,7 @@ use Modules\Saas\App\Models\Domain;
 use Modules\Saas\App\Models\Tenant;
 use Modules\Saas\App\Services\TenantService;
 
-class TenantController
+class TenantController extends Controller
 {
     use Paginates;
 
