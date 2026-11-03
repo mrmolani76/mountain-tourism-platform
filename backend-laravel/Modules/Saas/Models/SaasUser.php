@@ -4,12 +4,26 @@ namespace Modules\Saas\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Modules\Saas\Enums\SaasRole;
+
 /**
  * Central super-admin (Inventory SaasUser + central guard).
+ * PDF §3 Super admin — create complexes / owners, activate or deactivate.
  */
 class SaasUser extends Authenticatable
 {
     public const UPDATED_AT = null;
+
+    /** MVP: every saas_user is Super Admin (SaasRole::SUPER_ADMIN). */
+    public function roleCode(): string
+    {
+        return SaasRole::SUPER_ADMIN;
+    }
+
+    public function roleDisplay(): string
+    {
+        return SaasRole::LABELS[SaasRole::SUPER_ADMIN];
+    }
 
     protected $connection;
 

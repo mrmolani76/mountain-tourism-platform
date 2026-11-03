@@ -4,12 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-// Tenant Core config tables — DRF migrations 0005 + 0006 parity (Module 1).
+/**
+ * Tenant Core config — outlets, seasons, settings, outlet access, audit.
+ * Modules/Core/Database/migrations/tenant/ (eQMS layout).
+ */
 return new class extends Migration
 {
     public function up(): void
     {
-        Schema::connection('tenant')->create('core_outlet', function (Blueprint $table) {
+        Schema::create('core_outlet', function (Blueprint $table) {
             $table->id();
             $table->foreignId('building_id')->nullable()->constrained('core_building')->nullOnDelete();
             $table->string('name', 200);
@@ -18,7 +21,7 @@ return new class extends Migration
             $table->dateTime('created_at');
         });
 
-        Schema::connection('tenant')->create('core_season', function (Blueprint $table) {
+        Schema::create('core_season', function (Blueprint $table) {
             $table->id();
             $table->string('kind', 16);
             $table->date('starts_on');
@@ -28,7 +31,7 @@ return new class extends Migration
             $table->dateTime('updated_at');
         });
 
-        Schema::connection('tenant')->create('core_tenant_settings', function (Blueprint $table) {
+        Schema::create('core_tenant_settings', function (Blueprint $table) {
             $table->id();
             $table->string('currency', 8)->default('EUR');
             $table->json('tax_rates')->nullable();
@@ -38,7 +41,7 @@ return new class extends Migration
             $table->dateTime('updated_at');
         });
 
-        Schema::connection('tenant')->create('core_staff_outlet_access', function (Blueprint $table) {
+        Schema::create('core_staff_outlet_access', function (Blueprint $table) {
             $table->id();
             $table->foreignId('staff_id')->constrained('core_staff')->cascadeOnDelete();
             $table->foreignId('outlet_id')->constrained('core_outlet')->cascadeOnDelete();
@@ -46,7 +49,7 @@ return new class extends Migration
             $table->unique(['staff_id', 'outlet_id']);
         });
 
-        Schema::connection('tenant')->create('core_audit_event', function (Blueprint $table) {
+        Schema::create('core_audit_event', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('actor_staff_id')->nullable();
             $table->string('action', 16);
@@ -66,10 +69,10 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::connection('tenant')->dropIfExists('core_audit_event');
-        Schema::connection('tenant')->dropIfExists('core_staff_outlet_access');
-        Schema::connection('tenant')->dropIfExists('core_tenant_settings');
-        Schema::connection('tenant')->dropIfExists('core_season');
-        Schema::connection('tenant')->dropIfExists('core_outlet');
+        Schema::dropIfExists('core_audit_event');
+        Schema::dropIfExists('core_staff_outlet_access');
+        Schema::dropIfExists('core_tenant_settings');
+        Schema::dropIfExists('core_season');
+        Schema::dropIfExists('core_outlet');
     }
 };

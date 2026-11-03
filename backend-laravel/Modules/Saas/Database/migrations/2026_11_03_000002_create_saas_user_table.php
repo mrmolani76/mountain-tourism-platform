@@ -4,7 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-// Central SaaS super-admin users (DRF saas_user).
+/**
+ * Central Super Admin users — Modules/Saas.
+ * Run: php artisan migrate
+ */
 return new class extends Migration
 {
     public function up(): void

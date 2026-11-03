@@ -7,6 +7,7 @@ use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\Enums\StaffRole;
 use Modules\Core\Models\Staff;
 
 class StaffController
@@ -34,7 +35,7 @@ class StaffController
         $data = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', 'string'],
+            'role' => ['required', 'string', 'in:' . implode(',', StaffRole::codes())],
             'is_active' => ['sometimes', 'boolean'],
         ]);
         $data['password'] = Hash::make($data['password']);
@@ -56,7 +57,7 @@ class StaffController
         $data = $request->validate([
             'email' => ['sometimes', 'email'],
             'password' => ['sometimes', 'string', 'min:8'],
-            'role' => ['sometimes', 'string'],
+            'role' => ['sometimes', 'string', 'in:' . implode(',', StaffRole::codes())],
             'is_active' => ['sometimes', 'boolean'],
         ]);
         if (isset($data['password'])) {

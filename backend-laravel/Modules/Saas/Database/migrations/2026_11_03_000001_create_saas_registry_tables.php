@@ -4,7 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-// Central registry — mirrors Django saas migration 0001 (audit §3: saas_tenant).
+/**
+ * Central (landlord) — Modules/Saas (eQMS: central registry on landlord DB).
+ * Run: php artisan migrate
+ */
 return new class extends Migration
 {
     public function up(): void

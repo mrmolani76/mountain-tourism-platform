@@ -40,4 +40,17 @@ return [
         'Stancl\\Tenancy\\Bootstrappers\\FilesystemTenancyBootstrapper',
         'Stancl\\Tenancy\\Bootstrappers\\QueueTenancyBootstrapper',
     ],
+
+    /**
+     * eQMS Complere pattern: tenant migrations are module-wise under
+     * Modules/{Name}/Database/migrations/tenant/ (+ optional root tenant path).
+     */
+    'migration_parameters' => [
+        '--force' => true,
+        '--path' => array_values(array_filter(array_merge(
+            glob(database_path('migrations/tenant')) ?: [],
+            glob(base_path('Modules/*/Database/migrations/tenant')) ?: [],
+        ))),
+        '--realpath' => true,
+    ],
 ];
