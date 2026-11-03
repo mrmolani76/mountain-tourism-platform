@@ -2,12 +2,11 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** product/API **code** only. No Docker/VPS/CI/env/setup unless user asks. Backend first; frontend deferred.
+**Focus:** Laravel backend switch (client 2026-11-03). Phase 0 audit done (item 68); Stage B foundation next (item 69; backend-laravel/ separate directory). All modules represented as Markdown TODOs until backend work resumes.
 
 ## 1. Work
 
 ### Todo
-- **67** — GitHub Actions CI/CD Improvement — CI/CD best practices; quality checks, ruff fix, deploy guard (high, 2026-11-03)
 - **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
 - **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
 - **45–48** — Module 4 POS (season menu → board/folio → packed/shift → exit)
@@ -22,6 +21,9 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **69** — Laravel foundation Stage B: backend-laravel/ (Laravel 13.39/PHP 8.5), pgsql 18.6 connected, envelope macros, health endpoint live, CI quality job (high, 2026-11-03)
+- **68** — Laravel switch Phase 0 — Django/DRF audit: 45-endpoint API inventory, schema + auth matrix, risks; master plan saved (high, 2026-11-03)
+- **67** — GitHub Actions CI/CD improvement — quality-only CI, Laravel-ready deploy guard, ruff 0 errors (high, 2026-11-03)
 - **29** — Module 1 tenancy decision frozen (DB-per-tenant + Host/Domain) (high, 2026-11-03)
 - **30** — Module 1 audit foundation — AuditEvent + AuditService.record(), migration `0006_add_audit_event`, `manage.py check` clean (high, 2026-11-03)
 - **31** — Module 1 edge authz tests — deactivated tenant login 404 + staff→SaaS 403; full suite 40 passed (high, 2026-11-03)

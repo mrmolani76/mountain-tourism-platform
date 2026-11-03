@@ -84,3 +84,73 @@ jobs:
       - name: Skip notice (no backend scaffold)
         if: steps.backend.outputs.present != 'true'
         run: echo "CI testing job skipped (no backend yet). Scaffold backend, then this job enforces lint+config checks."
+
+  laravel:
+    name: Laravel quality checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect Laravel scaffold
+        id: laravel
+        run: |
+          if [ -f backend-laravel/artisan ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "Laravel scaffold found — running quality checks"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "backend-laravel/artisan missing — skip until Stage B (item 69)."
+          fi
+
+      - name: Verify PHP available on runner
+        if: steps.laravel.outputs.present == 'true'
+        run: |
+          if ! command -v php >/dev/null 2>&1; then
+            echo "::error::PHP CLI not available on runner — Laravel checks cannot run"
+            exit 1
+          fi
+          php -v
+
+      - name: Composer validate
+        if: steps.laravel.outputs.present == 'true'
+        working-directory: backend-laravel
+        run: |
+          if ! command -v composer >/dev/null 2>&1; then
+            echo "::error::composer not available on runner"
+            exit 1
+          fi
+          composer validate
+
+      - name: Dependency install (prod, for boot check)
+        if: steps.laravel.outputs.present == 'true'
+        working-directory: backend-laravel
+        run: |
+          composer install --no-interaction --prefer-dist
+          composer check-platform-reqs
+
+      - name: PHP syntax validation (app + routes + database)
+        if: steps.laravel.outputs.present == 'true'
+        working-directory: backend-laravel
+        run: |
+          ERR=0
+          while IFS= read -r -d '' f; do
+            php -l "$f" || ERR=1
+          done < <(find app routes database config -name '*.php' -print0)
+          [ "$ERR" -eq 0 ] || { echo "::error::PHP syntax errors found"; exit 1; }
+
+      - name: Application boot check (NO tests run)
+        if: steps.laravel.outputs.present == 'true'
+        working-directory: backend-laravel
+        run: php artisan --version
+
+      - name: Test-suite guard
+        if: steps.laravel.outputs.present == 'true'
+        working-directory: backend-laravel
+        run: |
+          # Master plan §16: CI must never execute automated test suites.
+          # Guard = presence check only of test files; running them is forbidden here.
+          [ -d tests ] || { echo "::error::tests/ missing — tests must remain in the repository"; exit 1; }
+          echo "tests/ present, NOT executed in CI (local/manual verification only)."

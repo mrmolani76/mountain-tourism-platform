@@ -16,6 +16,8 @@
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **69** — Laravel foundation Stage B complete (app+pgsql+envelope+health+CI) (high, 2026-11-03)
+- **68** — Laravel switch Phase 0 Django/DRF audit (45 endpoints, schema, auth matrix, risks) (high, 2026-11-03) — Laravel switch Phase 0 Django/DRF audit (45 endpoints, schema, auth matrix, risks) (high, 2026-11-03)
 - **34** — Fix domain ViewSets auth (hotel…reports) — StaffSessionAuthentication on all 20 domain ViewSets; BUG-APP-005 resolved; suite 46 passed (high, 2026-11-03)
 - **33** — Module 1 exit gate —§20 DoD review; backend/API MVP skeleton CLOSED (audit writers + frontend deferred) (high, 2026-11-03)
 - **32** — Module 1 MVP policy defaults (§19 Q3–Q18) — docs/DECISIONS.md row; Q19 resolved (high, 2026-11-03)
