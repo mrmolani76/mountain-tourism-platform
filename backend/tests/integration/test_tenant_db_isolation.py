@@ -18,7 +18,10 @@ from tenancy import connections, context
 @override_settings(
     TENANCY_CENTRAL_HOSTS=('saas.test',),
     TENANCY_CENTRAL_PREFIX='saas.',
-    ALLOWED_HOSTS=('lab.test', 'other.test', 'a.test', 'b.test', 'saas.test', 'testserver', 'localhost', '127.0.0.1', 'unknown.test'),
+    ALLOWED_HOSTS=(
+        'lab.test', 'other.test', 'a.test', 'b.test', 'saas.test',
+        'testserver', 'localhost', '127.0.0.1', 'unknown.test',
+    ),
 )
 class TenantDbIsolationTests(TestCase):
     databases = {'default', 'tenant_1', 'tenant_2'}

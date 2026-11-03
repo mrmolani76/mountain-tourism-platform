@@ -15,7 +15,7 @@ from modules.core.auth import (
     SESSION_TENANT_SLUG,
     StaffSessionAuthentication,
 )
-from modules.core.models import Building, Outlet, Season, Staff, StaffOutletAccess, TenantSettings
+from modules.core.models import Building, Outlet, Season, Staff, StaffOutletAccess
 from modules.core.permissions import CanResetStaffPassword, IsOwner, IsTenantStaff
 from modules.core.serializers import (
     BuildingSerializer,

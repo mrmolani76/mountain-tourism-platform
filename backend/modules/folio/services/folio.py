@@ -6,7 +6,6 @@ from django.utils import timezone
 
 from modules.core.models import Staff
 from modules.folio.models import Charge, Folio, Payment
-from modules.folio.permissions import IsFolioManager
 
 
 def open_folio(*, guest_name: str, stay_reference: str = '', currency: str = 'EUR') -> Folio:
@@ -98,7 +97,8 @@ def void_charge(*, charge: Charge, reason: str, voided_by: int) -> Charge:
     charge.voided_at = timezone.now()
     charge.voided_reason = reason
     charge.voided_by = voided_by
-    charge.save(update_fields=['is_voided', 'voided_at', 'voided_reason', 'voided_by', 'updated_at'])
+    charge.save(update_fields=['is_voided', 'voided_at', 'voided_reason',
+                              'voided_by', 'updated_at'])
     charge.folio.total_amount = charge.folio.compute_total()
     charge.folio.save(update_fields=['total_amount', 'updated_at'])
     return charge
@@ -113,7 +113,8 @@ def void_payment(*, payment: Payment, reason: str, voided_by: int) -> Payment:
     payment.voided_at = timezone.now()
     payment.voided_reason = reason
     payment.voided_by = voided_by
-    payment.save(update_fields=['is_voided', 'voided_at', 'voided_reason', 'voided_by', 'updated_at'])
+    payment.save(update_fields=['is_voided', 'voided_at', 'voided_reason',
+                             'voided_by', 'updated_at'])
     payment.folio.total_amount = payment.folio.compute_total()
     payment.folio.save(update_fields=['total_amount', 'updated_at'])
     return payment

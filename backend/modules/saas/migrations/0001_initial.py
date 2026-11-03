@@ -1,7 +1,7 @@
 # Generated for DB-per-tenant central registry (code only — not applied in this work item).
 
-from django.db import migrations, models
 import django.db.models.deletion
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):

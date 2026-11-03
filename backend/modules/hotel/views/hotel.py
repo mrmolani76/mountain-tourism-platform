@@ -1,6 +1,6 @@
 """Hotel ViewSets — rooms, stays, board plans (Module B)."""
 
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +17,6 @@ from modules.hotel.serializers import (
     StaySerializer,
 )
 from modules.hotel.services import check_in_stay, check_out_stay
-from tenancy.context import get_current_tenant
 
 
 class BoardPlanViewSet(viewsets.ModelViewSet):

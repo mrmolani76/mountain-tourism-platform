@@ -7,6 +7,7 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
+- **67** — GitHub Actions CI/CD Improvement — CI/CD best practices; quality checks, ruff fix, deploy guard (high, 2026-11-03)
 - **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
 - **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
 - **45–48** — Module 4 POS (season menu → board/folio → packed/shift → exit)

@@ -1,5 +1,5 @@
 """DRF views for modules.transport (tenant DB)."""
 
-from modules.transport.views.transport import TripViewSet, VehicleViewSet, DriverViewSet
+from modules.transport.views.transport import DriverViewSet, TripViewSet, VehicleViewSet
 
 __all__ = ['TripViewSet', 'VehicleViewSet', 'DriverViewSet']

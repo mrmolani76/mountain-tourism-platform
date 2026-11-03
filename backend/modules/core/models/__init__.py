@@ -3,7 +3,7 @@ from .building import Building, BuildingType
 from .outlet import Outlet, OutletType
 from .season import Season, SeasonKind
 from .settings import TenantSettings, Units
-from .staff import Staff, StaffRole, StaffOutletAccess
+from .staff import Staff, StaffOutletAccess, StaffRole
 
 __all__ = [
     'AuditEvent',

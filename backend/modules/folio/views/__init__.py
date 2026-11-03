@@ -1,8 +1,8 @@
 """DRF views for modules.folio (tenant DB)."""
 
 from modules.folio.views.folio import (
-    FolioViewSet,
     ChargeViewSet,
+    FolioViewSet,
     PaymentViewSet,
 )
 

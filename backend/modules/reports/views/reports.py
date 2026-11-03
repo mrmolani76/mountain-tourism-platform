@@ -7,7 +7,6 @@ from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.reports.permissions import IsReportsStaff
 from modules.reports.serializers import ReportSerializer
-from tenancy.context import get_current_tenant
 
 
 class ReportViewSet(viewsets.ModelViewSet):

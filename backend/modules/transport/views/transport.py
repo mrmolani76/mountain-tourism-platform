@@ -7,7 +7,6 @@ from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.transport.permissions import IsTransportStaff
 from modules.transport.serializers import DriverSerializer, TripSerializer, VehicleSerializer
-from tenancy.context import get_current_tenant
 
 
 class TripViewSet(viewsets.ModelViewSet):

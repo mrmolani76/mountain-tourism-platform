@@ -28,7 +28,7 @@ def add_order_line(*, order: Order, product, quantity: int, unit_price, tax_amou
         tax_amount=tax_amount,
     )
     order.total_amount = sum(
-        l.line_total for l in order.lines.filter(is_voided=False)
+        line.line_total for line in order.lines.filter(is_voided=False)
     )
     order.save(update_fields=['total_amount', 'updated_at'])
     return line

@@ -2,8 +2,8 @@
 # Written for DB-per-tenant tenant DBs; applied when tenant DBs are provisioned.
 
 import django.db.models.deletion
-from django.db import migrations, models
 import django.utils.timezone
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):

@@ -12,7 +12,6 @@ from modules.core.models import Staff, StaffRole
 from modules.saas.models import Domain, Tenant
 from tenancy import connections, context
 
-
 OTHER_TENANT_HOST = {'HTTP_HOST': 'other.test'}
 
 

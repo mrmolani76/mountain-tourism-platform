@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from modules.core.auth import StaffSessionAuthentication
-from modules.core.models import Staff
 from modules.core.permissions import IsTenantStaff
 from modules.folio.permissions import IsFolioManager, IsFolioStaff
 from modules.folio.serializers import (
@@ -21,7 +20,14 @@ from modules.folio.serializers import (
     PaymentSerializer,
     PaymentVoidSerializer,
 )
-from modules.folio.services import close_folio, open_folio, post_charge, record_payment, void_charge, void_payment
+from modules.folio.services import (
+    close_folio,
+    open_folio,
+    post_charge,
+    record_payment,
+    void_charge,
+    void_payment,
+)
 from tenancy.context import get_current_tenant
 
 

@@ -5,7 +5,6 @@ One row per money/domain-changing action: charge, payment, void, ...
 Written via AuditService.record(...) from services — never directly from views.
 """
 
-import json
 from django.db import models
 
 

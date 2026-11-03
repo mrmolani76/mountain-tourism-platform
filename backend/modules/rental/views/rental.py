@@ -7,7 +7,6 @@ from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.rental.permissions import IsRentalStaff
 from modules.rental.serializers import RentalSerializer
-from tenancy.context import get_current_tenant
 
 
 class RentalViewSet(viewsets.ModelViewSet):

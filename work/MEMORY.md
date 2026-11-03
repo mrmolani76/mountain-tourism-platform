@@ -10,6 +10,7 @@
 
 ## Next suggested pickups (kanban order)
 1. **35** — Module 2 — HutBed, season prices, Reservation APIs (high, backend, L)
+2. **67** — GitHub Actions CI/CD Improvement — CI/CD best practices (high, devops)
 2. Then **36→66** module-wise (WIP = 1); **SaaS tenant-create console last**
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).

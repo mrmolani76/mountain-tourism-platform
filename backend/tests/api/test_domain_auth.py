@@ -100,8 +100,8 @@ class DomainAuthTests(TestCase):
                 response = self.client.get(url, **self.tenant_host)
                 self.assertEqual(
                     response.status_code, 200,
-                    f'{name} {url} should return 200 for front desk staff, got {response.status_code}'
-                )
+                    f'{name} {url} should return 200 for front desk staff, '
+                    f'got {response.status_code}')
 
     # --- manager-only write denied for front desk → 403 ---------------------
 

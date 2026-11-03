@@ -9,7 +9,8 @@ class RoomType(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=255, blank=True, default='')
-    capacity = models.PositiveIntegerField(default=1, help_text='Number of guests this room type sleeps.')
+    capacity = models.PositiveIntegerField(default=1,
+                                      help_text='Number of guests this room type sleeps.')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

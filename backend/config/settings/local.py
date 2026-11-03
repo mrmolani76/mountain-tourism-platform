@@ -1,9 +1,9 @@
 """
 Local development settings.
 """
-from .base import *  # noqa: F401,F403
-
 import os
+
+from .base import *  # noqa: F401,F403
 
 DEBUG = True
 

@@ -1,7 +1,6 @@
 """Stay services — check-in/check-out."""
 
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 
 from modules.hotel.models import Stay
 

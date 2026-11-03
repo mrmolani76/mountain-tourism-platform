@@ -61,6 +61,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
 | 34 | Fix domain ViewSets auth (hotel…reports) | high | A-core | backend | M | 2026-11-03 |
+| 67 | GitHub Actions CI/CD Improvement | high | A-core | CI/CD | L | 2026-11-03 |
 | 29 | Module 1 — freeze tenancy decision (DB-per-tenant) | high | A-core | docs | S | 2026-11-03 |
 | 30 | Module 1 — audit foundation (AuditEvent + service) | high | A-core | backend | M | 2026-11-03 |
 | 31 | Module 1 — edge authz tests (inactive tenant + SaaS 403) | high | A-core | tests | S | 2026-11-03 |

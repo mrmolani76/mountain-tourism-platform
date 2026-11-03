@@ -27,6 +27,11 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = [
+    "modules/*/migrations/*.py",
+    "tenancy/*.py",
+    "config/settings/prod.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

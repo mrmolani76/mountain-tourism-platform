@@ -15,7 +15,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'id', 'outlet', 'outlet_name', 'staff', 'staff_email', 'folio',
             'status', 'total_amount', 'created_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'outlet_name', 'staff_email', 'total_amount', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'outlet_name', 'staff_email', 'total_amount',
+                    'created_at', 'updated_at']
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):

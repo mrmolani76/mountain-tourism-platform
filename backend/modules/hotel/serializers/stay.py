@@ -17,7 +17,8 @@ class StaySerializer(serializers.ModelSerializer):
             'status', 'board_plan', 'board_plan_code', 'folio', 'folio_id',
             'created_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'room_number', 'board_plan_code', 'folio_id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'room_number', 'board_plan_code', 'folio_id',
+                    'created_at', 'updated_at']
 
 
 class StayCreateSerializer(serializers.ModelSerializer):

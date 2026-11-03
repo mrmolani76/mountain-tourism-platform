@@ -7,7 +7,6 @@ from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.weather.permissions import IsWeatherStaff
 from modules.weather.serializers import WeatherLimitSerializer, WeatherWarningSerializer
-from tenancy.context import get_current_tenant
 
 
 class WeatherLimitViewSet(viewsets.ModelViewSet):

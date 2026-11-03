@@ -18,7 +18,6 @@ from modules.pos.serializers import (
     ProductSerializer,
 )
 from modules.pos.services import add_order_line, place_order
-from tenancy.context import get_current_tenant
 
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):

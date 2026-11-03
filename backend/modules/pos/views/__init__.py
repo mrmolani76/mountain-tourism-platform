@@ -1,10 +1,10 @@
 """DRF views for modules.pos (tenant DB)."""
 
 from modules.pos.views.pos import (
+    OrderLineViewSet,
+    OrderViewSet,
     ProductCategoryViewSet,
     ProductViewSet,
-    OrderViewSet,
-    OrderLineViewSet,
 )
 
 __all__ = ['ProductCategoryViewSet', 'ProductViewSet', 'OrderViewSet', 'OrderLineViewSet']

@@ -7,7 +7,6 @@ from modules.core.auth import StaffSessionAuthentication
 from modules.core.permissions import IsTenantStaff
 from modules.services.permissions import IsServicesStaff
 from modules.services.serializers import ServiceSerializer, SlotSerializer
-from tenancy.context import get_current_tenant
 
 
 class ServiceViewSet(viewsets.ModelViewSet):

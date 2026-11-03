@@ -4,9 +4,7 @@ Called from domain services (folio, hotel, pos, …) after a money/domain change
 Records are append-only: actor, action, entity (+ old/new values), reason, context.
 """
 
-from typing import Any, Dict, Optional
-
-from django.utils import timezone
+from typing import Optional
 
 from modules.core.models.audit import AuditEvent
 
