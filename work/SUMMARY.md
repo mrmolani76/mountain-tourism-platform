@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **27** — Project audit complete report (post items 18–26) (high, 2026-11-03)
 - **26** — Tenant dev setup — physical DB, migrate, owner seed, E2E login verify (high, 2026-11-03)
 - **25** — Fix BUG-APP-001 — prod SPA blank screen (register Nuxt modules) (high, 2026-11-03)
 - **24** — Docker dev setup — inventory-style dev stack (compose, docs, scripts, verify) (high, 2026-11-03)
@@ -59,6 +60,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — full project audit (item 27); report at `work/audits/2026-11-03-project-audit.md`
 - 2026-11-03 — `work/changes/2026-11-03--code-first-no-setup-rule.md` — standing rule: product/API code only; no Docker/VPS/CI/env setup unless user asks
 - 2026-11-03 — `work/changes/2026-11-03--26-tenant-dev-setup-e2e-login.md` — tenant dev setup (item 26): lab_local DB, migrated, owner seeded, E2E staff login verified via SPA proxy
 - 2026-11-03 — `work/changes/2026-11-03--25-spa-nuxt-modules-blank-screen.md` — BUG-APP-001: prod SPA blank screen fix (Nuxt modules + i18n wired); login page verified

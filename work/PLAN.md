@@ -8,11 +8,11 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | Phase | File | Status |
 |-------|------|--------|
-| 1 Foundation | `work/phases/01-foundation.md` + `01-todos/A-*.md` | Active — Module A todos 02–10 |
-| 2 Hotel and folio | `work/phases/02-hotel-and-folio.md` | Planned |
-| 3 POS, rental, services | `work/phases/03-pos-rental-services.md` | Planned |
-| 4 Transport, lifts, weather | `work/phases/04-transport-lifts-weather.md` | Planned |
-| 5 Dashboard and handover | `work/phases/05-dashboard-and-handover.md` | Planned |
+| 1 Foundation | `work/phases/01-foundation.md` + `01-todos/A-*.md` | Mostly done (kanban 02–10 completed); deepen acceptance still open |
+| 2 Hotel and folio | `work/phases/02-hotel-and-folio.md` | In progress (CRUD shell; PDF done-when not met) |
+| 3 POS, rental, services | `work/phases/03-pos-rental-services.md` | CRUD shell only |
+| 4 Transport, lifts, weather | `work/phases/04-transport-lifts-weather.md` | Partial (no Lift models) |
+| 5 Dashboard and handover | `work/phases/05-dashboard-and-handover.md` | Planned (report stub) |
 
 ## Todo
 
@@ -28,6 +28,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 27 | Project audit complete report (post items 18–26) | high | docs | docs | M | 2026-11-03 |
 | 26 | Tenant dev setup — physical DB, migrate, owner seed, E2E login verify | high | infra | devops | M | 2026-11-03 |
 | 25 | Fix BUG-APP-001 — prod SPA blank screen (register Nuxt modules) | high | infra | frontend | S | 2026-11-03 |
 | 24 | Docker dev setup — inventory-style dev stack (compose, docs, scripts, verify) | high | infra | devops | M | 2026-11-03 |

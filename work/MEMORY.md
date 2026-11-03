@@ -4,29 +4,29 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **Backend / API only** (Django + DRF). No Nuxt until user says so.
-- **Tenancy = DB-per-tenant**; domain in `backend/modules/` (Complere-style). No SSO.
-- Phase 1: next todos **06**, **07**.
-- **Docker dev stack done (item 24)**: `./start.sh` / `./stop.sh` / `./status.sh`; SPA :3000 → `/api` → `web:8000`; db :5433; API :8010. Guide: `docs/DOCKER_SETUP.md`. Inventory stack untouched.
-- **BUG-APP-001 fixed (item 25)**: `nuxt.config.ts` now registers `@vueuse/nuxt`, `@nuxtjs/i18n`, `@nuxtjs/device`, `@pinia/nuxt` + `i18n` config; login page renders, no console errors.
-- **E2E staff login done (item 26)**: tenant `lab` at `http://lab.local.mountain.local:3000/` (hosts entry), DB `lab_local`, owner login `admin@gmail.com` (user-chosen password, dev-only, not stored in repo). Login + /auth/me/ verified 200 via SPA proxy.
+- **Product/API code only** (Django + DRF). No Docker/VPS/CI/env/setup unless user asks. Frontend deferred unless user opens it.
+- **Tenancy = DB-per-tenant**; domain in `backend/modules/`. No SSO.
+- **Latest audit**: `work/audits/2026-11-03-project-audit.md` (item 27). Pilot not ready.
+- Critical finding: domain ViewSets (hotel…reports) use `authentication_classes = []` — fix next as bug + coding item.
 
 ## Blocked / waiting on user
 - (none)
 
 ## Recently completed (this week)
+- **27** — Full project audit report (2026-11-03)
 - **26** — Tenant dev setup; staff login E2E verified
 - **25** — BUG-APP-001 prod SPA blank screen fix
-- **24** — Docker dev setup (inventory-style), verified on this machine
+- **24** — Docker dev setup (inventory-style), verified
 - **23** — Frontend SPA copy + Django wiring
-- **12** — EQMS-style `modules/` layout
-- **11** — DB-per-tenant backend layout (DRF), code only
-- **01–05** — foundation items
+- **18–22** — DRF settings + folio/hotel/pos + remaining modules CRUD
+- **01–17** — foundation, tenancy, auth, core config, docs
 
 ## Next suggested pickups
-1. **06** — Buildings, outlets, seasons APIs (tenant DB models)
-2. **07** — Super admin provision (wire to registry; setup still separate)
-3. Later: ops setup for createdb + migrate_tenants execute path
+1. Bug + fix: restore `StaffSessionAuthentication` on domain ViewSets
+2. Module B/C depth: check-in → Folio, nightly posting, integer money, void actor = user
+3. Tests: folio void/checkout + board posting + keep isolation green
+4. Later: Reservation/HutBed, POS charge-to-folio, rental conflict, lifts, weather voids
+5. Frontend desks only when user asks
 
 ## Do not forget
 - Folder = status; WIP = 1
