@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components/VForm'
-import { useUserApiClient } from '@/composables/api-clients/useUserApiClient'
+import { useAuthService } from '@/composables/auth/useAuthService'
 import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -13,8 +13,8 @@ definePageMeta({
 })
 
 const { t } = useI18n()
-const { login } = useUserApiClient()
-const store = authStore()
+const { login } = useAuthService()
+const store = useAuthStore()
 const route = useRoute()
 
 useHead({

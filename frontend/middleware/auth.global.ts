@@ -1,5 +1,6 @@
 export default defineNuxtRouteMiddleware(async to => {
-  const store = authStore()
+  // EQMS name: useAuthStore (alias of authStore)
+  const store = useAuthStore()
 
   // Pure public pages can render without probing the session. Guest-only pages
   // (login) still probe, so a live session bounces the user back to the app.

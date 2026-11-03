@@ -1,12 +1,17 @@
 import { defineStore } from 'pinia'
+import { useAuthService } from '@/composables/auth/useAuthService'
 
+/**
+ * Tenant staff session store.
+ * EQMS name alias: `useAuthStore` (same store id `auth`).
+ */
 export const authStore = defineStore('auth', () => {
-  const { getUserDetails, logout } = useUserApiClient()
+  const { getUserDetails, logout } = useAuthService()
   const user: Ref<User | undefined> = ref()
   const authenticated = ref<boolean | undefined>()
   const userImage: Ref<string> = ref('')
   const userPermissions: Ref<Array<string>> = ref([])
-  const loginDialog = ref(false);
+  const loginDialog = ref(false)
 
   async function saveUser() {
     const response = await getUserDetails()
@@ -43,11 +48,11 @@ export const authStore = defineStore('auth', () => {
   }
 
   function openLoginDialog() {
-    loginDialog.value = true;
+    loginDialog.value = true
   }
 
   function closeLoginDialog() {
-    loginDialog.value = false;
+    loginDialog.value = false
   }
 
   const getUser = computed(() => user.value as User)
@@ -72,3 +77,6 @@ export const authStore = defineStore('auth', () => {
     logDialogState,
   }
 })
+
+/** eQMS qualitycenter-spa naming. */
+export const useAuthStore = authStore

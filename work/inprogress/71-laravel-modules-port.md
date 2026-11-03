@@ -34,6 +34,7 @@ Code only on this machine (no composer / docker / migrate). B–I modules deferr
 - DRF field parity for Module 1 models (hostname, latitude/longitude, Season without name, AuditEvent action/entity_*)
 - Providers registered; `saas.auth` alias wired
 - Django `backend/` kept until cutover
+- SPA HTTP/auth matches eQMS qualitycenter-spa (`API` + `useAuthService` + host helpers + docs)
 
 ## Why
 Client Laravel switch. Inventory = one central SaaS DB + per-tenant DBs. PDF Module A = Core + super admin. One central SaaS module; remaining PDF areas are later tenant modules.

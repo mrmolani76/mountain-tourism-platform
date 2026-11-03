@@ -1,30 +1,31 @@
 <script lang="ts" setup>
-const nuxtApp = useNuxtApp();
-const { login } = useUserApiClient()
-const { t } = useI18n();
-const { saveUser } = authStore();
+const nuxtApp = useNuxtApp()
+const { login } = useAuthService()
+const { t } = useI18n()
+const store = useAuthStore()
+const { saveUser } = store
 
-const refForm = ref();
+const refForm = ref()
 const isDialogVisible = ref(false)
 
 const formData = ref<AuthCredentials>({
-  email: authStore().getUser.email,
+  email: store.getUser?.email || '',
   password: '',
-});
+})
 
-watch(() => authStore().logDialogState, () => {
-  isDialogVisible.value = authStore().logDialogState;
-  if (authStore().logDialogState)
-    formData.value.password = '';
-});
+watch(() => store.logDialogState, () => {
+  isDialogVisible.value = store.logDialogState
+  if (store.logDialogState)
+    formData.value.password = ''
+})
 
 const submitForm = async () => {
   const response = await login(formData.value)
 
   if (response?.status) {
-    await saveUser();
-    nuxtApp.$toast.success(t('login_successful'));
-    authStore().closeLoginDialog();
+    await saveUser()
+    nuxtApp.$toast.success(t('login_successful'))
+    store.closeLoginDialog()
   }
 }
 </script>

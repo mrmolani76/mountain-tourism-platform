@@ -1,9 +1,17 @@
+/**
+ * Legacy `$api` helper.
+ *
+ * Prefer `API` from `@/composables/core/useApi` (eQMS qualitycenter-spa pattern)
+ * or `useApiClient` / domain services. Kept so older call sites compile.
+ *
+ * New code: `import { API } from '@/composables/core/useApi'`.
+ */
+
+import { API } from '@/composables/core/useApi'
+import { resolveApiOrigin } from '@/utils/tenantHost'
+
 const UNSAFE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])
 
-/**
- * Read a cookie without Nuxt composables.
- * The app runs as an SPA, so `document` is always available at request time.
- */
 function readCookie(name: string): string | null {
   if (typeof document === 'undefined')
     return null
@@ -14,10 +22,6 @@ function readCookie(name: string): string | null {
   return match ? decodeURIComponent(match.slice(prefix.length)) : null
 }
 
-/**
- * Laravel sets encrypted `XSRF-TOKEN`; Django used `csrftoken`.
- * Prefer Laravel header when present.
- */
 function csrfHeaders(headers: Headers): void {
   const xsrf = readCookie('XSRF-TOKEN')
   if (xsrf) {
@@ -31,19 +35,14 @@ function csrfHeaders(headers: Headers): void {
     headers.set('X-CSRFToken', django)
 }
 
-/**
- * Central API client for the Laravel tenant API (Module Core).
- *
- * - Base URL is `${apiBaseUrl}/api` (empty apiBaseUrl = same-origin `/api` via nginx).
- * - Session auth uses cookies (`credentials: include`).
- * - Unsafe methods send Laravel `X-XSRF-TOKEN` (or Django CSRF while DRF still live).
- * - Errors use envelope `{ success: false, error: { message } }` or plain `{ detail }`.
- */
 export const $api = $fetch.create({
-  onRequest({ options }) {
-    const base = String(useRuntimeConfig().public.apiBaseUrl || '').replace(/\/$/, '')
+  async onRequest({ options }) {
+    // Seed Sanctum CSRF the same way `API` does (cached inside MountainApi).
+    await ensureLaravelCsrfCookie()
 
-    options.baseURL = `${base}/api`
+    const origin = resolveApiOrigin()
+
+    options.baseURL = `${origin}/api`
     options.credentials = 'include'
 
     const method = (options.method || 'GET').toString().toUpperCase()
@@ -56,7 +55,7 @@ export const $api = $fetch.create({
 
   onResponseError({ response }) {
     const router = useRouter()
-    const { unauthenticate } = authStore()
+    const { unauthenticate, openLoginDialog } = authStore()
     const { $toast } = useNuxtApp()
 
     const body = (response?._data || {}) as Record<string, any>
@@ -73,8 +72,10 @@ export const $api = $fetch.create({
     if (status === 401) {
       unauthenticate()
 
-      if (!isSessionProbe && !isLogout)
+      if (!isSessionProbe && !isLogout) {
         $toast.error(message)
+        openLoginDialog()
+      }
 
       if (router.currentRoute.value.path !== '/login')
         router.push('/login')
@@ -91,16 +92,20 @@ export const $api = $fetch.create({
 })
 
 /**
- * Hit Laravel Sanctum CSRF cookie endpoint before the first unsafe call
- * when the SPA talks cross-origin to the API (not needed for same-origin nginx proxy).
+ * Laravel Sanctum CSRF cookie (EQMS: `axios.get(.../sanctum/csrf-cookie)`).
+ * No-op when XSRF-TOKEN already present. Always uses current host origin.
  */
 export async function ensureLaravelCsrfCookie(): Promise<void> {
-  const base = String(useRuntimeConfig().public.apiBaseUrl || '').replace(/\/$/, '')
-  if (!base)
+  if (readCookie('XSRF-TOKEN'))
     return
 
-  await $fetch(`${base}/sanctum/csrf-cookie`, {
+  const origin = resolveApiOrigin()
+
+  await $fetch(`${origin}/sanctum/csrf-cookie`, {
     method: 'GET',
     credentials: 'include',
   })
 }
+
+/** Re-export for callers that want the EQMS singleton by name. */
+export { API }

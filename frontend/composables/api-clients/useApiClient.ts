@@ -1,3 +1,5 @@
+import { API } from '@/composables/core/useApi'
+
 function stripTrailingSlash(url: string): string {
   if (!url || url === '/')
     return url
@@ -5,61 +7,34 @@ function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, '')
 }
 
+function normalizePath(url: string): string {
+  return stripTrailingSlash(url.replace(/^\//, ''))
+}
+
+/**
+ * Thin domain-agnostic HTTP helpers over the shared `API` singleton
+ * (eQMS: pages → domain services → `API` from `composables/core/useApi`).
+ */
 export const useApiClient = () => {
   const get = async <T>(url: string, query?: Record<string, unknown>) => {
-    try {
-      const queryString = query
-        ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
-        : ''
+    const path = normalizePath(url)
+    const withQuery = query
+      ? `${path}?${new URLSearchParams(query as Record<string, string>).toString()}`
+      : path
 
-      return await $api<T>(`${stripTrailingSlash(url)}${queryString}`)
-    }
-    catch {
-      return null
-    }
+    return await API.get<T>(withQuery)
   }
 
-  const post = async <T>(url: string, body: any) => {
-    try {
-      const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
-
-      return await $api<T>(stripTrailingSlash(url), {
-        method: 'POST',
-        body,
-        headers: isFormData ? {} : { 'Content-Type': 'application/json' },
-      })
-    }
-    catch {
-      return null
-    }
+  const post = async <T>(url: string, body: any = {}) => {
+    return await API.post<T>(normalizePath(url), body ?? {})
   }
 
-  const put = async <T>(url: string, body: any) => {
-    try {
-      const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
-
-      return await $api<T>(stripTrailingSlash(url), {
-        method: 'PUT',
-        body,
-        headers: isFormData ? {} : { 'Content-Type': 'application/json' },
-      })
-    }
-    catch {
-      return null
-    }
+  const put = async <T>(url: string, body: any = {}) => {
+    return await API.put<T>(normalizePath(url), body ?? {})
   }
 
-  const del = async <T>(url: string, body: any) => {
-    try {
-      return await $api<T>(stripTrailingSlash(url), {
-        method: 'DELETE',
-        body,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
-    catch {
-      return null
-    }
+  const del = async <T>(url: string, body: any = {}) => {
+    return await API.delete<T>(normalizePath(url), body ?? {})
   }
 
   return { get, post, put, del }
