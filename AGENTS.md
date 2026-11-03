@@ -24,7 +24,7 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 
 | Skill | Trigger |
 |-------|---------|
-| `django-best-practices` | Django / DRF / `backend/**/*.py` |
+| `laravel-best-practices` | Laravel / `backend-laravel/**` PHP |
 | `nuxt-vuetify-best-practices` | Nuxt / Vue / Vuetify / `frontend/**` |
 | `coding-agent` | implement, build, fix bug, refactor |
 | `testing-agent` | write tests, test plan (do not run by default) |
@@ -49,9 +49,9 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 
 ## Key Project Facts
 - **Product**: Mountain tourism complex SaaS (MVP scope PDF in `document/`)
-- **Backend**: Django + DRF in `backend/`
+- **Backend**: Laravel + Modules in `backend-laravel/`
 - **Frontend**: Nuxt + Vue + Vuetify in `frontend/`
-- **Tenancy**: `tenant_id` on every business table (shared DB MVP)
+- **Tenancy**: DB-per-tenant (Host/`Domain` resolve; central Saas registry)
 - **Hard rule**: Charge/Payment never edit/delete — void with reason + user + timestamp
 - **No setup by default**: do not start Docker/Compose/VPS/CI/env/seed/infra work unless the user asks; write product/API code
 - **Git**: ask "Commit aur push karun?" — never commit alone

@@ -1,5 +1,5 @@
 ---
-description: Testing Agent — author Django/API/frontend tests and plans. Do not run tests by default. Activate testing-agent skill.
+description: Testing Agent — author Laravel/API/frontend tests and plans. Do not run tests by default. Activate testing-agent skill.
 alwaysApply: false
 ---
 

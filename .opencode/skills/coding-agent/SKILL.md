@@ -6,7 +6,7 @@ description: >-
   "fix this bug", "coding agent", or "write the code". Makes real source edits.
   Code-only mode: do NOT run tests, builds, linters, formatters, Docker, migrations,
   package installs, or deploys unless the user explicitly overrides in the same message.
-  Project-specific for Mountain Tourism Django + Nuxt/Vuetify.
+  Project-specific for Mountain Tourism Laravel + Nuxt/Vuetify.
 ---
 
 # Coding Agent (Mountain Tourism Platform)
@@ -16,7 +16,8 @@ description: >-
 **Do not** run tests, builds, linters, Docker, migrations, or installs unless the user overrides.
 
 Source of truth: `CLAUDE.md` + `AGENTS.md`.  
-Backend patterns: `django-best-practices`. Frontend: `nuxt-vuetify-best-practices`.  
+Backend patterns: `laravel-best-practices` (`backend-laravel/`).  
+Frontend: `nuxt-vuetify-best-practices`.  
 Security review without coding → `security-code-review`.
 
 ---
@@ -25,9 +26,10 @@ Security review without coding → `security-code-review`.
 
 | Layer | This repo |
 |-------|-----------|
-| Backend | `backend/` — Django + DRF |
+| Backend | `backend-laravel/` — Laravel + nwidart Modules |
 | Frontend | `frontend/` — Nuxt, Vue, Vuetify |
-| Tenancy | Shared DB, `tenant_id` on every business row |
+| Tenancy | DB-per-tenant; Saas module + Host/Domain resolve |
+| Layout | Domain modules under `backend-laravel/Modules/` (EQMS/Complere-style) |
 | Money | Charge/Payment append-only; void only |
 | Domain | Tenant, Building, Outlet, Season, Stay, Folio, Charge, Payment, Service, Slot, Rental, Trip, Lift |
 | Scope | `document/Mountain_MVP_Scope_v1.pdf` |
@@ -64,7 +66,7 @@ CLARIFY → INSPECT → PLAN → EDIT → SUMMARIZE
 
 ## 4. Hard refusals (default mode)
 
-- Do not run pytest, npm test, Docker, migrate, collectstatic, or installs.
+- Do not run phpunit, pest, npm test, Docker, migrate, or installs.
 - Do not commit/push.
 - Do not weaken tests to hide broken app code.
 - Do not implement out-of-scope MVP features without asking.

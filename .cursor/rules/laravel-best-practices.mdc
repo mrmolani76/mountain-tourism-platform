@@ -1,0 +1,14 @@
+---
+description: Laravel best practices — backend-laravel PHP/Modules. Activate laravel-best-practices skill.
+alwaysApply: false
+---
+
+# Laravel Best Practices
+
+When writing or reviewing PHP under `backend-laravel/`, Modules, Eloquent, Form Requests, policies, jobs, migrations, or Laravel API code:
+
+1. **MUST read and follow** `.cursor/skills/laravel-best-practices/SKILL.md`.
+2. Load only the relevant files under `.cursor/skills/laravel-best-practices/rules/`.
+3. Follow `CLAUDE.md` (tenant isolation, money append-only, domain names, AuthZ on server).
+4. Prefer existing `backend-laravel/` patterns over introducing a second style.
+5. For implementation work, also follow `coding-agent`. For security-only review, use `security-code-review`.

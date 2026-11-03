@@ -5,7 +5,7 @@ description: >-
   authz audit, secret exposure check, or when the user says "security review",
   "code review", "audit this", or "find vulnerabilities". Review-only: never
   modify application code to fix findings. Redact all secrets in output.
-  Mountain Tourism Django + Nuxt multi-tenant SaaS.
+  Mountain Tourism Laravel + Nuxt multi-tenant SaaS.
 ---
 
 # Security / Code Review Agent

@@ -1,14 +1,37 @@
 ---
 name: laravel-best-practices
-description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. This includes creating or modifying controllers, models, migrations, form requests, policies, jobs, scheduled commands, service classes, and Eloquent queries. Triggers for N+1 and query performance issues, caching strategies, authorization and security patterns, validation, error handling, queue and job configuration, route definitions, and architectural decisions. Also use for Laravel code reviews and refactoring existing Laravel code to follow best practices. Covers any task involving Laravel backend PHP code patterns."
+description: >-
+  Laravel best practices for the Mountain Tourism backend-laravel (Modules,
+  Eloquent, Form Requests, policies, jobs, migrations, API controllers).
+  Use when writing or reviewing PHP under backend-laravel/, Modules/, models,
+  controllers, services, migrations, validation, queues, or Laravel tests.
+  Also for N+1, caching, authz/security, routing, and Laravel refactors.
+  Source adapted from EQMS/Complere laravel-best-practices.
 license: MIT
 metadata:
   author: laravel
+  adapted-from: eQMS/complere
 ---
 
 # Laravel Best Practices
 
-Best practices for Laravel, prioritized by impact. Each rule teaches what to do and why. For exact API syntax, verify with `search-docs`.
+Best practices for Laravel, prioritized by impact. Each rule teaches what to do and why.
+For exact API syntax, verify against the installed Laravel version in `backend-laravel/composer.json`.
+
+Source of truth for product rules: `CLAUDE.md`.
+Detailed Laravel notes: `rules/`.
+
+## Project defaults (Mountain Tourism)
+
+- Code lives under `backend-laravel/` (nwidart Modules: Core, Saas, domain modules)
+- Business logic in services / actions, not fat controllers
+- Form Requests at the API boundary; policies/gates for AuthZ
+- Tenant: DB-per-tenant; never query another tenant connection from tenant APIs
+- Permissions checked on the server (role + outlet access)
+- Migrations: append-only; never edit a shipped migration
+- Charge/Payment: create + void only; no update/delete of money rows
+- Prefer domain names from CLAUDE.md vocabulary
+- Consistency with existing `backend-laravel/` patterns beats a “cleaner” new style
 
 ## Consistency First
 
@@ -183,8 +206,8 @@ Check sibling files, related controllers, models, or tests for established patte
 
 ## How to Apply
 
-Always use a sub-agent to read rule files and explore this skill's content.
-
 1. Identify the file type and select relevant sections (e.g., migration → §16, controller → §1, §3, §5, §6, §10)
 2. Check sibling files for existing patterns — follow those first per Consistency First
-3. Verify API syntax with `search-docs` for the installed Laravel version
+3. Read only the needed `rules/*.md` files (progressive disclosure)
+4. Verify API syntax for the Laravel version pinned in `backend-laravel/composer.json`
+5. Enforce CLAUDE.md non-negotiables (tenant isolation, money append-only, AuthZ on server)

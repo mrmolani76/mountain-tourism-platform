@@ -1,5 +1,5 @@
 ---
-description: Project rules. Source of truth is CLAUDE.md (Django/Nuxt stack, tenant isolation, money append-only, MVP scope, work tracking).
+description: Project rules. Source of truth is CLAUDE.md (Laravel/Nuxt stack, tenant isolation, money append-only, MVP scope, work tracking).
 alwaysApply: true
 ---
 

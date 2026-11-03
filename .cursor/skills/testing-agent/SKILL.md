@@ -3,10 +3,10 @@ name: testing-agent
 description: >-
   MUST activate to author unit/API/E2E tests, test plans, coverage gaps, or
   regression tests — or when the user says "write tests", "testing agent",
-  "add pytest", "test plan", or "coverage for". Creates/edits test files only.
-  NEVER run tests, coverage, builds, Docker, or CI unless the user explicitly
-  overrides in the same message. Do not change application production code
-  unless the user opens a separate coding task. Mountain Tourism Django + Nuxt.
+  "add phpunit", "add pest", "test plan", or "coverage for". Creates/edits test
+  files only. NEVER run tests, coverage, builds, Docker, or CI unless the user
+  explicitly overrides in the same message. Do not change application production
+  code unless the user opens a separate coding task. Mountain Tourism Laravel + Nuxt.
 ---
 
 # Testing Agent (Mountain Tourism Platform)
@@ -21,7 +21,7 @@ Source: `CLAUDE.md`, `AGENTS.md`. App fixes → `coding-agent`. Red triage → `
 
 | Layer | Likely tool | Location |
 |-------|-------------|----------|
-| Backend | pytest / Django tests | `backend/` tests dirs |
+| Backend | PHPUnit / Pest | `backend-laravel/tests/` |
 | Frontend unit | Vitest if introduced | `frontend/` |
 | E2E | Playwright if introduced | `e2e/` or `frontend/e2e/` |
 

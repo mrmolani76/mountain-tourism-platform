@@ -45,18 +45,18 @@ Contract scope: `document/Mountain_MVP_Scope_v1.pdf`.
 
 | Layer | Choice |
 |-------|--------|
-| Backend | Python, Django, Django REST Framework |
+| Backend | PHP, Laravel, nwidart Modules |
 | Frontend | Nuxt, Vue.js, Vuetify (**deferred** until user opens frontend focus) |
-| Layout | `backend/` (Django API) first; `frontend/` later |
+| Layout | `backend-laravel/` (Laravel API) first; `frontend/` later |
 | Auth (MVP) | Email + password; owners/managers reset staff passwords; no email sending in MVP |
-| Tenancy | DB-per-tenant (one Postgres DB per complex); Host/`Domain` resolve; central `modules.saas` |
+| Tenancy | DB-per-tenant (one Postgres DB per complex); Host/`Domain` resolve; central Saas module |
 | Money | Append-only charges and payments; voids only |
 
 **Current delivery focus: product/API code only (backend first).**
 
 | Do | Do not (unless user explicitly asks) |
 |----|--------------------------------------|
-| Domain models, services, DRF APIs, permissions, migrations for features | Docker / Compose / nginx / Dockerfile |
+| Domain models, services, API controllers, policies, migrations for features | Docker / Compose / nginx / Dockerfile |
 | Business rules (folio, voids, tenancy, capacity) | VPS, deploy scripts, CI/CD workflows |
 | Bug fixes in application code | Dev env / seed / stack "verify" setup |
 | Tests as code when the testing agent is asked | Package installs, env wiring, infra docs as the main task |
@@ -108,17 +108,17 @@ Drivers do not log in in MVP (printed passenger list).
 
 ## Architecture Expectations
 
-### Backend (`backend/`)
-- Thin views/viewsets → services for business logic
+### Backend (`backend-laravel/`)
+- Thin controllers → services / actions for business logic
 - Models use the domain names above
-- Serializers / DRF for API validation at the boundary
-- Permissions and tenant scoping on every tenant-owned endpoint
+- Form Requests (and API Resources) for validation / shaping at the boundary
+- Policies / gates and tenant connection scoping on every tenant-owned endpoint
 - Migrations append-only: never edit a shipped migration; add a new one
 
 Layout:
-- `tenancy/` platform; `modules.saas` central; domain apps `core`, `hotel`, `folio`, `pos`, `rental`, `services_app`, `transport`, `weather`, `reports`
-- DRF ViewSets + routers; thin views → services
-- `tests/` with unit + API tests
+- Tenancy helpers + Saas module (central); Core and domain modules under `Modules/`
+- API routes + controllers; thin controllers → services
+- `tests/` with unit + feature/API tests
 - Audit for every charge, payment, and void
 
 ### Frontend (`frontend/`)
@@ -146,7 +146,7 @@ Build only what the MVP scope lists. If asked for out-of-scope work, say so and 
 Each complex uses its own database. Activate the tenant connection from Host/`Domain`; never query another tenant's DB from tenant APIs. Automated tests must prove two complexes cannot see each other's data. Super admin (`SaasUser` on central host) is the only cross-tenant operator surface.
 
 ### Rule 4 — No drive-by deps
-Do not add new Python/npm packages without explicit user approval.
+Do not add new PHP Composer or npm packages without explicit user approval.
 
 ### Rule 5 — Money is append-only
 A charge or payment is never edited or deleted. Void it with reason, user, and timestamp. Weather cancellation is a void with reason `weather`. Manager role for voids where scope requires it.
@@ -240,7 +240,7 @@ Skills live in `.cursor/skills/` and are mirrored to `.opencode/skills/` and `.c
 
 | Skill | When |
 |-------|------|
-| `django-best-practices` | Backend Python/Django/DRF work |
+| `laravel-best-practices` | Backend Laravel / `backend-laravel/**` PHP work |
 | `nuxt-vuetify-best-practices` | Frontend Nuxt/Vue/Vuetify work |
 | `coding-agent` | Implement / fix / refactor (code-only default) |
 | `testing-agent` | Author tests (do not run by default) |

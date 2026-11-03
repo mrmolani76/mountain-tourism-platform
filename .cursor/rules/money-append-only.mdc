@@ -1,6 +1,6 @@
 ---
 description: Money hard rule — Charge and Payment are append-only; void only with reason, user, timestamp
-globs: backend/**/*.{py},frontend/**/*.{vue,ts,js}
+globs: backend-laravel/**/*.{php},frontend/**/*.{vue,ts,js}
 alwaysApply: false
 ---
 

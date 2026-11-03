@@ -6,9 +6,9 @@
 **Mountain Tourism Complex Platform** — multi-tenant SaaS for mountain complexes (hotel, F&B, rental, spa, lifts, transport, weather). One guest folio across outlets.
 
 ### Stack
-- **Backend**: Django + Django REST Framework (`backend/`)
+- **Backend**: Laravel + nwidart Modules (`backend-laravel/`)
 - **Frontend**: Nuxt + Vue.js + Vuetify (`frontend/`)
-- **Tenancy**: shared DB, `tenant_id` on every business table (MVP)
+- **Tenancy**: DB-per-tenant; Host/`Domain` resolve; central Saas registry
 - **Money**: Charge/Payment append-only; void with reason + user + timestamp
 - **Scope contract**: `document/Mountain_MVP_Scope_v1.pdf`
 
@@ -40,7 +40,7 @@ Skills: `.opencode/skills/<name>/SKILL.md`. Cursor mirrors: `.cursor/skills/`. C
 | `devops-agent` | Docker/CI/deploy config — config-only default |
 | `testing-agent` | Author tests — do not run by default |
 | `security-code-review` | Review only |
-| `django-best-practices` | Backend Python/Django |
+| `laravel-best-practices` | Backend Laravel / `backend-laravel/**` |
 | `nuxt-vuetify-best-practices` | Frontend Nuxt/Vue/Vuetify |
 | `work-tracker` | Kanban under `work/` — folder=status; pickup before edits; PLAN+SUMMARY sync; `scripts/check-work-kanban.sh` |
 | `change-report` | After any change |
