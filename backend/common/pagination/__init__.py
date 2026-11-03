@@ -22,8 +22,8 @@ class StandardResultsSetPagination(PageNumberPagination):
             'meta': {
                 'page': self.page.number,
                 'page_size': self.page_size,
-                'total_pages': self.paginator.num_pages,
-                'total_count': self.paginator.count,
+                'total_pages': self.page.paginator.num_pages,
+                'total_count': self.page.paginator.count,
                 'has_next': self.page.has_next(),
                 'has_previous': self.page.has_previous(),
             },

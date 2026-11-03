@@ -28,6 +28,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 28 | Module 1 verification — run DB-per-tenant suite, fix failures | high | A-core | tests | L | 2026-11-03 |
 | 27 | Project audit complete report (post items 18–26) | high | docs | docs | M | 2026-11-03 |
 | 26 | Tenant dev setup — physical DB, migrate, owner seed, E2E login verify | high | infra | devops | M | 2026-11-03 |
 | 25 | Fix BUG-APP-001 — prod SPA blank screen (register Nuxt modules) | high | infra | frontend | S | 2026-11-03 |

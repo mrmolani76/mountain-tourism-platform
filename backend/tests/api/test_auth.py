@@ -3,18 +3,14 @@ Auth API tests — tenant host, DRF session auth.
 Code written for DB-per-tenant; not executed in this work item (code-only).
 """
 
-from types import SimpleNamespace
 
-from django.conf import settings
 from django.contrib.auth.hashers import make_password
-from django.db import connections as db_connections
 from django.test import TestCase, override_settings
 from rest_framework.test import APIClient
 
 from modules.core.models import Staff, StaffRole
 from modules.saas.models import Domain, Tenant
 from tenancy import connections, context
-from tenancy.connections import tenant_alias
 
 
 OTHER_TENANT_HOST = {'HTTP_HOST': 'other.test'}
@@ -23,42 +19,15 @@ OTHER_TENANT_HOST = {'HTTP_HOST': 'other.test'}
 @override_settings(
     TENANCY_CENTRAL_HOSTS=('saas.test',),
     TENANCY_CENTRAL_PREFIX='saas.',
+    ALLOWED_HOSTS=('lab.test', 'other.test', 'saas.test', 'testserver', 'localhost', '127.0.0.1'),
 )
 class AuthTests(TestCase):
     databases = {'default', 'tenant_1', 'tenant_2'}
 
-    # Aliases used by this class (tenant pks are deterministic in the test DB:
-    # each test's transaction rollback reuses pk 1 and 2).
-    TENANT_ALIASES = ((1, 'lab_test'), (2, 'other_test'))
-
-    @classmethod
-    def setUpClass(cls):
-        # Register the tenant aliases this class needs before Django's class
-        # init machinery (literal READ of settings + alias TEST.MIRROR check)
-        # runs. Aliases created here later get a live cursor via the TestCase
-        # transaction wrapper; aliases left stale by other test classes get
-        # their db_name re-pointed but the underlying sqlite file is shared.
-        for pk, db_name in cls.TENANT_ALIASES:
-            alias = tenant_alias(pk)
-            if alias in db_connections.databases:
-                # Re-point to this class's db_name (shared sqlite file).
-                cfg = db_connections.databases[alias]
-                cfg['NAME'] = db_name
-                sc = settings.DATABASES.get(alias, cfg)
-                sc['NAME'] = db_name
-            else:
-                connections.ensure_tenant_connection(
-                    SimpleNamespace(pk=pk, db_name=db_name)
-                )
-            tc = settings.DATABASES[alias].setdefault('TEST', {})
-            tc.setdefault('MIRROR', None)
-            tcfg = db_connections.databases.setdefault(alias, {})
-            tcfg.setdefault('TEST', {}).setdefault('MIRROR', None)
-        super().setUpClass()
-
     def setUp(self):
         self.client = APIClient()
         self.tenant = Tenant.objects.create(
+            id=1,
             name='Test Complex',
             slug='lab',
             db_name='lab_test',
@@ -105,6 +74,7 @@ class AuthTests(TestCase):
 
         # Second tenant + a colliding staff pk for cross-host replay tests.
         self.other_tenant = Tenant.objects.create(
+            id=2,
             name='Other Complex',
             slug='other',
             db_name='other_test',
@@ -252,7 +222,11 @@ class AuthTests(TestCase):
 
     def test_unbound_session_rejected(self):
         # Simulate a legacy session that predates the tenant binding.
-        self.client.force_login(self.owner)
+        context.set_current_tenant(self.tenant, alias=self.alias)
+        try:
+            self.client.force_login(self.owner)
+        finally:
+            context.clear_current_tenant()
         s = self.client.session
         s.pop('staff_tenant_id', None)
         s.pop('staff_tenant_slug', None)

@@ -29,7 +29,9 @@ def validate_season_overlap(
     """
     if ends_on < starts_on:
         raise ValidationError({'ends_on': 'ends_on must be on or after starts_on.'})
-    existing = Season.objects.filter(kind=kind)
+    # MVP rule (documented above): dates must not overlap ANY other season,
+    # across kinds. Do not filter by kind.
+    existing = Season.objects.all()
     if exclude_id is not None:
         existing = existing.exclude(pk=exclude_id)
     for season in existing:

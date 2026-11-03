@@ -66,7 +66,9 @@ class ApiRootView(APIView):
 
 
 class LoginView(APIView):
-    authentication_classes = []
+    # StaffSessionAuthentication defines authenticate_header, so DRF returns 401
+    # (not 403) when credentials fail. AllowAny still lets guests through.
+    authentication_classes = [StaffSessionAuthentication]
     permission_classes = [AllowAny]
 
     def post(self, request):

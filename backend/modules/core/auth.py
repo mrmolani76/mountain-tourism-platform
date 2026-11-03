@@ -20,6 +20,10 @@ class StaffSessionAuthentication(BaseAuthentication):
     mismatched binding) are rejected before the Staff row is loaded.
     """
 
+    def authenticate_header(self, request):
+        # DRF returns 401 (not 403) for AuthenticationFailed when a header is present.
+        return 'Session realm="api"'
+
     def authenticate(self, request):
         if getattr(request, 'is_central', False):
             return None

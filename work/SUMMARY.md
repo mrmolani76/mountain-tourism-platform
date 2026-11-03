@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **28** — Module 1 verification — first full test run, 38 green (high, 2026-11-03)
 - **27** — Project audit complete report (post items 18–26) (high, 2026-11-03)
 - **26** — Tenant dev setup — physical DB, migrate, owner seed, E2E login verify (high, 2026-11-03)
 - **25** — Fix BUG-APP-001 — prod SPA blank screen (register Nuxt modules) (high, 2026-11-03)
@@ -47,6 +48,9 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Verified
+- **BUG-APP-004** — Staff login bad credentials 403 → 401 (low, 2026-11-03)
+- **BUG-APP-003** — Season overlap same-kind only (medium, 2026-11-03)
+- **BUG-APP-002** — All list endpoints 500 — pagination AttributeError (high, 2026-11-03)
 - **BUG-APP-001** — Prod SPA blank screen — Nuxt modules not registered (high, 2026-11-03)
 - **BUG-TENANT-001** — Cross-host session identity swap risk (medium, 2026-11-02)
 - **BUG-ENV-001** — Tenant DB template clone missing OPTIONS key (high, 2026-11-02)
@@ -62,6 +66,8 @@ Refresh on every work / bug / change status update.
 ## 4. Changes
 - 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — full project audit (item 27); report at `work/audits/2026-11-03-project-audit.md`
 - 2026-11-03 — `work/changes/2026-11-03--code-first-no-setup-rule.md` — standing rule: product/API code only; no Docker/VPS/CI/env setup unless user asks
+- 2026-11-03 — `work/changes/2026-11-03--28-module1-test-run-fixes.md` — item 28: full test suite first run, 38 green; BUG-APP-002/003/004 fixed; isolation acceptance green
+- 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — item 27: full project audit
 - 2026-11-03 — `work/changes/2026-11-03--26-tenant-dev-setup-e2e-login.md` — tenant dev setup (item 26): lab_local DB, migrated, owner seeded, E2E staff login verified via SPA proxy
 - 2026-11-03 — `work/changes/2026-11-03--25-spa-nuxt-modules-blank-screen.md` — BUG-APP-001: prod SPA blank screen fix (Nuxt modules + i18n wired); login page verified
 - 2026-11-03 — `work/changes/2026-11-03--24-docker-dev-setup.md` — Docker dev setup (item 24): compose/nginx/Dockerfile fixes, docs, scripts, stack verified

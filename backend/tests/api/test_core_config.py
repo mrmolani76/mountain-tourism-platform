@@ -19,21 +19,22 @@ from tenancy import connections, context
 @override_settings(
     TENANCY_CENTRAL_HOSTS=('saas.test',),
     TENANCY_CENTRAL_PREFIX='saas.',
+    ALLOWED_HOSTS=('lab.test', 'other.test', 'saas.test', 'testserver', 'localhost', '127.0.0.1'),
 )
 class CoreConfigTests(TestCase):
     """Code-only suite: needs provisioned + migrated tenant DBs on setup machine."""
 
-    databases = {'default'}
+    databases = {'default', 'tenant_1', 'tenant_2'}
 
     def setUp(self):
         self.client = APIClient()
 
         self.tenant = Tenant.objects.create(
-            name='Test Complex', slug='lab', db_name='lab_test', is_active=True
+            id=1, name='Test Complex', slug='lab', db_name='lab_test', is_active=True
         )
         Domain.objects.create(tenant=self.tenant, hostname='lab.test', is_primary=True)
         other = Tenant.objects.create(
-            name='Other Complex', slug='other', db_name='other_test', is_active=True
+            id=2, name='Other Complex', slug='other', db_name='other_test', is_active=True
         )
         Domain.objects.create(tenant=other, hostname='other.test', is_primary=True)
 
@@ -134,7 +135,7 @@ class CoreConfigTests(TestCase):
 
         listing = self.client.get('/api/buildings/', **self.tenant_host)
         self.assertEqual(listing.status_code, 200)
-        names = {row['name'] for row in listing.data}
+        names = {row['name'] for row in listing.data['data']}
         self.assertEqual(names, {'Main Hotel', 'Mountain Hut'})
 
     def test_building_patch(self):
@@ -221,9 +222,13 @@ class CoreConfigTests(TestCase):
 
     def test_season_overlap_rejected(self):
         self.client.force_authenticate(user=self.owner)
-        Season.objects.create(
-            kind='winter', starts_on=date(2026, 12, 1), ends_on=date(2027, 4, 15)
-        )
+        context.set_current_tenant(self.tenant, alias=self.alias)
+        try:
+            Season.objects.create(
+                kind='winter', starts_on=date(2026, 12, 1), ends_on=date(2027, 4, 15)
+            )
+        finally:
+            context.clear_current_tenant()
         response = self.client.post(
             '/api/seasons/',
             {'kind': 'summer', 'starts_on': '2027-04-01', 'ends_on': '2027-10-31'},

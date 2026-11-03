@@ -6,13 +6,17 @@
 ## Current focus
 - **Product/API code only** (Django + DRF). No Docker/VPS/CI/env/setup unless user asks. Frontend deferred unless user opens it.
 - **Tenancy = DB-per-tenant**; domain in `backend/modules/`. No SSO.
-- **Latest audit**: `work/audits/2026-11-03-project-audit.md` (item 27). Pilot not ready.
-- Critical finding: domain ViewSets (hotel…reports) use `authentication_classes = []` — fix next as bug + coding item.
+- **Test suite runs now**: `docker compose -f docker-compose.dev.yml exec web python -m pytest -q` → 38 passed (first run after rewrite; scratch DBs `lab_test`/`other_test` required — CI must create + migrate them the same way).
 
-## Blocked / waiting on user
-- (none)
+## Next suggested pickups
+1. Decision list for client (Module_1 §19, 19 questions) — DB-per-tenant vs PDF `tenant_id`, "no subdomains" vs host routing, deactivation policy
+2. Module B/C depth: check-in → Folio, nightly posting, integer money, void actor = user
+3. Domain modules (hotel…reports) auth defect from audit: `authentication_classes = []` — fix as bug + coding item
+4. Later: Reservation/HutBed, POS charge-to-folio, rental conflict, lifts, weather voids
+5. Frontend desks only when user asks
 
 ## Recently completed (this week)
+- **28** — Module 1 verification; first full test run, 38 green; BUG-APP-002/003/004 (pagination 500, season cross-kind overlap, login 401)
 - **27** — Full project audit report (2026-11-03)
 - **26** — Tenant dev setup; staff login E2E verified
 - **25** — BUG-APP-001 prod SPA blank screen fix
@@ -21,12 +25,8 @@
 - **18–22** — DRF settings + folio/hotel/pos + remaining modules CRUD
 - **01–17** — foundation, tenancy, auth, core config, docs
 
-## Next suggested pickups
-1. Bug + fix: restore `StaffSessionAuthentication` on domain ViewSets
-2. Module B/C depth: check-in → Folio, nightly posting, integer money, void actor = user
-3. Tests: folio void/checkout + board posting + keep isolation green
-4. Later: Reservation/HutBed, POS charge-to-folio, rental conflict, lifts, weather voids
-5. Frontend desks only when user asks
+## Blocked / waiting on user
+- (none)
 
 ## Do not forget
 - Folder = status; WIP = 1
