@@ -8,7 +8,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | Phase | File | Status |
 |-------|------|--------|
-| 1 Foundation | `work/phases/01-foundation.md` + `01-todos/A-*.md` | Mostly done (kanban 02–10 completed); deepen acceptance still open |
+| 1 Foundation | `work/phases/01-foundation.md` + `Module_1_*.md` | Closeout open (kanban **29–33**); 02–10 + 28 done |
 | 2 Hotel and folio | `work/phases/02-hotel-and-folio.md` | In progress (CRUD shell; PDF done-when not met) |
 | 3 POS, rental, services | `work/phases/03-pos-rental-services.md` | CRUD shell only |
 | 4 Transport, lifts, weather | `work/phases/04-transport-lifts-weather.md` | Partial (no Lift models) |
@@ -18,6 +18,11 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred).
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 29 | Module 1 — freeze tenancy decision (DB-per-tenant) | high | A-core | docs | S |
+| 30 | Module 1 — audit foundation (AuditEvent + service) | high | A-core | backend | M |
+| 31 | Module 1 — edge authz tests (inactive tenant + SaaS 403) | high | A-core | tests | S |
+| 32 | Module 1 — MVP policy defaults for open questions | medium | A-core | docs | S |
+| 33 | Module 1 — exit gate and mark complete | high | A-core | docs | S |
 
 ## In Progress
 

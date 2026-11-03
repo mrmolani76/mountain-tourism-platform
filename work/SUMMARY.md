@@ -7,7 +7,11 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- (none)
+- **29** — Module 1 — freeze tenancy decision (DB-per-tenant) (high, docs, S)
+- **30** — Module 1 — audit foundation (AuditEvent + service) (high, backend, M)
+- **31** — Module 1 — edge authz tests (inactive tenant + SaaS 403) (high, tests, S)
+- **32** — Module 1 — MVP policy defaults for open questions (medium, docs, S)
+- **33** — Module 1 — exit gate and mark complete (high, docs, S)
 
 ### In Progress
 - (none)
@@ -64,6 +68,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-03 — `work/changes/2026-11-03--module1-closeout-todos-29-33.md` — Module 1 closeout todos 29–33; `phases/01-todos/` removed → `work/todo/`
 - 2026-11-03 — `work/changes/2026-11-03--27-project-audit-complete-report.md` — full project audit (item 27); report at `work/audits/2026-11-03-project-audit.md`
 - 2026-11-03 — `work/changes/2026-11-03--code-first-no-setup-rule.md` — standing rule: product/API code only; no Docker/VPS/CI/env setup unless user asks
 - 2026-11-03 — `work/changes/2026-11-03--28-module1-test-run-fixes.md` — item 28: full test suite first run, 38 green; BUG-APP-002/003/004 fixed; isolation acceptance green

@@ -6,7 +6,7 @@
 - **Modules in this phase**: **A only** (complete description below)
 - **Depends on**: none
 - **Kanban**: `work/todo/` 02–10
-- **Module todo list (design)**: [`01-todos/A-core-and-super-admin.md`](01-todos/A-core-and-super-admin.md)
+- **Module todo list (design, historical)**: [`work/todo/A-core-and-super-admin.md`](../todo/A-core-and-super-admin.md)
 - **Focus**: backend / API only (Django + DRF). UI deferred.
 - **Deep doc**: [`docs/modules/A-core-and-super-admin.md`](../../docs/modules/A-core-and-super-admin.md)
 
@@ -93,7 +93,7 @@ Rooms, folio, POS, rental, services, transport, lifts, weather, dashboard, Nuxt 
 
 #### Work packages (kanban)
 
-Full checkbox design: [`01-todos/A-core-and-super-admin.md`](01-todos/A-core-and-super-admin.md)
+Full checkbox design (historical): [`work/todo/A-core-and-super-admin.md`](../todo/A-core-and-super-admin.md)
 
 | ID | Package | Kanban file |
 |----|---------|-------------|

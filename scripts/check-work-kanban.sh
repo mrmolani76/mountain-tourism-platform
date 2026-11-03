@@ -21,7 +21,12 @@ check_dir() {
   local f st id
   shopt -s nullglob
   for f in "$dir"/*.md; do
-    [[ "$(basename "$f")" == .* ]] && continue
+    base="$(basename "$f")"
+    [[ "$base" == .* ]] && continue
+    # Only NN-title.md kanban items (skip design/README notes in the same folder)
+    if [[ ! "$base" =~ ^[0-9]+- ]]; then
+      continue
+    fi
     st="$(status_of "$f" || true)"
     id="$(id_of "$f")"
     if [[ -z "$st" ]]; then

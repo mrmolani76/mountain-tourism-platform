@@ -17,18 +17,19 @@ Har phase MD ke andar **us phase ke saare modules** full describe hain (purpose,
 
 Short cross-links also live under [`docs/modules/`](../../docs/modules/).
 
-## Kanban + module todo lists
+## Kanban
 
-- Phase 1 module todo **design**: [`01-todos/`](01-todos/) (Module A checklist)
-- Phase 1 executable items: `work/todo/` IDs **02–10**
-- Later phases: add `0N-todos/` + seed `work/todo/` when that phase starts
+- Executable work only under `work/todo/` → `inprogress/` → `completed/` (`NN-title.md`)
+- Module deep specs live in `work/phases/Module_*.md` (not a separate phase todos folder)
+- Historical Module A checklist: `work/todo/A-core-and-super-admin.md`
+- Remaining Module 1 closeout: kanban **29–33**
 - `milestone: N` on every work item
 
 ## Flow
 
 ```text
 PDF §8 milestone
-    → work/phases/0N-*.md  (modules complete inside)
+    → work/phases/0N-*.md + Module_*_Deep_Analysis.md
     → work/todo/NN-*.md    (executable backend tasks)
     → modules.* implementation
 ```

@@ -49,4 +49,4 @@ Deploy workflow later: `SSH` key and host only in GitHub Secrets — never in th
 
 - `work/todo/03-m1-django-drf-scaffold.md` — makes CI actually run tests
 - `work/todo/09-m1-github-actions-api.md` — full CI + deploy
-- Checklist: `work/phases/01-todos/A-core-and-super-admin.md` → TODO-09
+- Checklist: `work/todo/A-core-and-super-admin.md` → TODO-09 (historical; item 09 completed)

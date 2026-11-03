@@ -4,8 +4,9 @@
 - **Module**: A — Core and super admin
 - **PDF**: §5A, §3, §4
 - **Focus**: backend / API only (Django + DRF)
-- **Phase doc**: [`../01-foundation.md`](../01-foundation.md)
-- **Module doc**: [`../../../docs/modules/A-core-and-super-admin.md`](../../../docs/modules/A-core-and-super-admin.md)
+- **Phase doc**: [`../phases/01-foundation.md`](../phases/01-foundation.md)
+- **Module doc**: [`../../docs/modules/A-core-and-super-admin.md`](../../docs/modules/A-core-and-super-admin.md)
+- **Note**: Historical design for kanban 02–10 (completed). Active Module 1 closeout = `29`–`33` in this folder.
 - **Done when**: two tenants cannot see each other’s data (automated test)
 
 Status legend: `[ ]` pending · `[~]` in progress · `[x]` done
