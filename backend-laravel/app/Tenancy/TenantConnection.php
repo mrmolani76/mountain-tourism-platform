@@ -23,4 +23,20 @@ class TenantConnection
         DB::purge(config('tenancy.connection_name'));
         DB::reconnect(config('tenancy.connection_name'));
     }
+
+    /**
+     * Point the tenant connection at a central registry row's `db_name`.
+     */
+    public static function useRegistryRow(object $tenant): void
+    {
+        $dbName = (string) (method_exists($tenant, 'getAttribute')
+            ? $tenant->getAttribute('db_name')
+            : ($tenant->db_name ?? ''));
+
+        if ($dbName === '') {
+            throw new \InvalidArgumentException('Tenant registry row has empty db_name.');
+        }
+
+        self::activate($dbName);
+    }
 }

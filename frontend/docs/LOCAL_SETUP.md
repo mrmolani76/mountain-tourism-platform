@@ -90,7 +90,26 @@ If login “succeeds” but refresh logs out: cookie `SameSite` / wrong Host / A
 
 ---
 
+## Provision / reset local tenant
+
+eQMS uses `complere/resetLocalDatabase.sh`. Mountain equivalent:
+
+```bash
+# from repo root (setup machine)
+./scripts/reset-local-tenant.sh lab --reset
+```
+
+Artisan only:
+
+```bash
+cd backend-laravel
+php artisan tenants:provision-local lab --reset --with-saas-admin
+```
+
+Creates DB `lab_local`, domain `lab.localhost`, fixture staff (`owner@lab.test` / `password123`).
+
 ## Related docs
 
+- Login smoke checklist: [`LOGIN_TEST_CHECKLIST.md`](./LOGIN_TEST_CHECKLIST.md)
 - Deep API/auth map: [`EQMS_SPA_API_AUTH.md`](./EQMS_SPA_API_AUTH.md)
 - Backend Module 1 work item: `work/inprogress/71-laravel-modules-port.md`

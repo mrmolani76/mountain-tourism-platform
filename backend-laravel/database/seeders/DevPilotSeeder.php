@@ -36,7 +36,8 @@ class DevPilotSeeder extends Seeder
             ['slug' => 'lab'],
             [
                 'name' => 'Lab Complex',
-                'db_name' => 'mountain_tenant_lab',
+                // eQMS local shape: "{url_prefix}_{APP_ENV}" → lab_local
+                'db_name' => 'lab_local',
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
