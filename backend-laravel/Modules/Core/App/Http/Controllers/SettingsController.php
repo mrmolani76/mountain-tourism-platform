@@ -3,18 +3,57 @@
 namespace Modules\Core\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
-use App\Support\Http\Envelope;
-use Modules\Core\App\Support\StaffAuthz;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Modules\Core\App\Http\Requests\UpdateSettingsRequest;
+use Modules\Core\App\Models\AuditEvent;
 use Modules\Core\App\Models\TenantSettings;
+use Modules\Core\App\Support\CoreAudit;
+use Modules\Core\App\Support\StaffAuthz;
 
 class SettingsController extends Controller
 {
     public function show(): JsonResponse
     {
-        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
+        if ($d = StaffAuthz::denyUnlessOwner()) {
+            return $d;
+        }
+        $s = $this->resolveSettings();
+
+        return response()->json($this->serialize($s));
+    }
+
+    public function update(UpdateSettingsRequest $request): JsonResponse
+    {
+        if ($d = StaffAuthz::denyUnlessOwner()) {
+            return $d;
+        }
+        $data = $request->validated();
+        $s = TenantSettings::on(config('tenancy.connection_name'))->query()->first();
+        if ($s === null) {
+            $s = TenantSettings::on(config('tenancy.connection_name'))->create(array_merge([
+                'currency' => 'EUR',
+                'timezone' => 'Europe/Zurich',
+                'units' => 'metric',
+                'tax_rates' => [],
+            ], $data));
+            CoreAudit::record(AuditEvent::ACTION_CREATE, 'settings', (int) $s->getKey(), newValues: $this->serialize($s));
+        } else {
+            $old = $this->serialize($s);
+            $s->fill($data)->save();
+            CoreAudit::record(
+                AuditEvent::ACTION_UPDATE,
+                'settings',
+                (int) $s->getKey(),
+                oldValues: $old,
+                newValues: $this->serialize($s),
+            );
+        }
+
+        return response()->json($this->serialize($s));
+    }
+
+    private function resolveSettings(): TenantSettings
+    {
         $s = TenantSettings::on(config('tenancy.connection_name'))->query()->first();
         if ($s === null) {
             $s = TenantSettings::on(config('tenancy.connection_name'))->create([
@@ -24,27 +63,8 @@ class SettingsController extends Controller
                 'tax_rates' => [],
             ]);
         }
-        return response()->json($this->serialize($s));
-    }
 
-    public function update(Request $request): JsonResponse
-    {
-        if ($d = StaffAuthz::denyUnlessOwner()) return $d;
-        $data = $request->validate([
-            'currency' => ['sometimes', 'string', 'max:8'],
-            'timezone' => ['sometimes', 'string', 'max:64'],
-            'units' => ['sometimes', 'in:metric,imperial'],
-            'tax_rates' => ['sometimes', 'array'],
-        ]);
-        $s = TenantSettings::on(config('tenancy.connection_name'))->query()->first();
-        if ($s === null) {
-            $s = TenantSettings::on(config('tenancy.connection_name'))->create(array_merge([
-                'currency' => 'EUR', 'timezone' => 'Europe/Zurich', 'units' => 'metric', 'tax_rates' => [],
-            ], $data));
-        } else {
-            $s->fill($data)->save();
-        }
-        return response()->json($this->serialize($s));
+        return $s;
     }
 
     private function serialize(TenantSettings $s): array

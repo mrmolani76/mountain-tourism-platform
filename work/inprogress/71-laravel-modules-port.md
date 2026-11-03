@@ -43,9 +43,13 @@ Client Laravel switch. Inventory = one central SaaS DB + per-tenant DBs. PDF Mod
 - [x] Non–Module-1 Laravel Modules removed
 - [x] Central Saas + tenant Core layout wired (Inventory pattern)
 - [x] Owner-on-create + StaffAuthz + Hotel stub removed (code gaps)
+- [x] Core Form Requests + Outlet TYPES (16) + Audit write wiring + foundation seeder command
 - [ ] Module 1 APIs Verified on setup machine (composer + migrate + smoke + TENANT_ISOLATION_E2E)
 - [ ] Change report + PLAN/SUMMARY (partial reports exist; final closeout after verify)
 - [x] No machine setup runs on this agent host
+
+## Notes / Follow-ups
+- 2026-11-03 Core parity pass: Form Requests, CoreAudit on Core mutations + login, `auth/me` outlet_ids, `core:seed-foundation`, Outlet::TYPES from Django.
 
 ## Files Likely Affected
 - `backend-laravel/Modules/{Saas,Core}/**`

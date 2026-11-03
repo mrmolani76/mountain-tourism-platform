@@ -3,11 +3,14 @@
 namespace Modules\Core\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Support\Http\Envelope;
 use App\Support\Http\Paginates;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\App\Http\Requests\StoreOutletRequest;
+use Modules\Core\App\Http\Requests\UpdateOutletRequest;
+use Modules\Core\App\Models\AuditEvent;
 use Modules\Core\App\Models\Outlet;
+use Modules\Core\App\Support\CoreAudit;
 use Modules\Core\App\Support\StaffAuthz;
 
 class OutletController extends Controller
@@ -19,7 +22,6 @@ class OutletController extends Controller
         $staff = StaffAuthz::staff();
         $q = Outlet::on(config('tenancy.connection_name'))->orderBy('name');
 
-        // Owner sees all; others only assigned outlets (PDF outlet access).
         if (! $staff->isOwner()) {
             $ids = $staff->outletAccess()->pluck('outlet_id');
             $q->whereIn('id', $ids);
@@ -28,19 +30,20 @@ class OutletController extends Controller
         return $this->paginateQuery($q, $request, fn (Outlet $o) => $this->serialize($o));
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreOutletRequest $request): JsonResponse
     {
         if ($d = StaffAuthz::denyUnlessOwner()) {
             return $d;
         }
 
-        $data = $request->validate([
-            'building_id' => ['required', 'integer'],
-            'name' => ['required', 'string', 'max:200'],
-            'outlet_type' => ['required', 'string', 'max:32'],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
+        $data = $request->validated();
+        if (! array_key_exists('is_active', $data)) {
+            $data['is_active'] = true;
+        }
+
         $o = Outlet::on(config('tenancy.connection_name'))->create($data);
+
+        CoreAudit::record(AuditEvent::ACTION_CREATE, 'outlet', (int) $o->getKey(), newValues: $this->serialize($o));
 
         return response()->json($this->serialize($o), 201);
     }
@@ -56,20 +59,23 @@ class OutletController extends Controller
         return response()->json($this->serialize($o));
     }
 
-    public function update(Request $request, int $outlet): JsonResponse
+    public function update(UpdateOutletRequest $request, int $outlet): JsonResponse
     {
         if ($d = StaffAuthz::denyUnlessOwner()) {
             return $d;
         }
 
         $o = Outlet::on(config('tenancy.connection_name'))->findOrFail($outlet);
-        $data = $request->validate([
-            'building_id' => ['sometimes', 'integer'],
-            'name' => ['sometimes', 'string', 'max:200'],
-            'outlet_type' => ['sometimes', 'string', 'max:32'],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
-        $o->fill($data)->save();
+        $old = $this->serialize($o);
+        $o->fill($request->validated())->save();
+
+        CoreAudit::record(
+            AuditEvent::ACTION_UPDATE,
+            'outlet',
+            (int) $o->getKey(),
+            oldValues: $old,
+            newValues: $this->serialize($o),
+        );
 
         return response()->json($this->serialize($o));
     }
@@ -80,7 +86,12 @@ class OutletController extends Controller
             return $d;
         }
 
-        Outlet::on(config('tenancy.connection_name'))->findOrFail($outlet)->delete();
+        $o = Outlet::on(config('tenancy.connection_name'))->findOrFail($outlet);
+        $old = $this->serialize($o);
+        $id = (int) $o->getKey();
+        $o->delete();
+
+        CoreAudit::record(AuditEvent::ACTION_UPDATE, 'outlet', $id, oldValues: $old, reason: 'deleted');
 
         return response()->json(null, 204);
     }

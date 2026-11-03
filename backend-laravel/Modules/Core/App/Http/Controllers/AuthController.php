@@ -3,15 +3,17 @@
 namespace Modules\Core\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
-use Modules\Core\App\Http\Requests\LoginRequest;
-use Modules\Core\App\Models\Staff;
 use App\Support\Http\Envelope;
-use Modules\Core\App\Support\StaffAuthz;
-use App\Tenancy\TenantResolver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\App\Http\Requests\LoginRequest;
+use Modules\Core\App\Http\Requests\ResetPasswordRequest;
+use Modules\Core\App\Models\AuditEvent;
+use Modules\Core\App\Models\Outlet;
+use Modules\Core\App\Models\Staff;
+use Modules\Core\App\Support\CoreAudit;
+use Modules\Core\App\Support\StaffAuthz;
 
 class AuthController extends Controller
 {
@@ -20,7 +22,6 @@ class AuthController extends Controller
         $validated = $request->validated();
         $tenant = app()->bound('tenant') ? app('tenant') : null;
 
-        // Registry always hit the central connection first.
         $staff = Staff::on(config('tenancy.connection_name'))
             ->where('email', $validated['email'])
             ->first();
@@ -34,7 +35,6 @@ class AuthController extends Controller
         }
 
         if ($tenant === null) {
-            // Staff login is a tenant-host flow only (BUG-TENANT-001).
             return Envelope::errorJson('error', 'Staff login requires a tenant host.', [], 401);
         }
 
@@ -48,7 +48,9 @@ class AuthController extends Controller
         $request->session()->put('staff_tenant_id', $tenant->getKey());
         $request->session()->put('staff_tenant_slug', $tenant->getAttribute('slug'));
 
-        // DRF parity: last_login is never updated on login.
+        // Bind staff early so CoreAudit can attribute the login row.
+        app()->instance('staff', $staff);
+        CoreAudit::record(AuditEvent::ACTION_LOGIN, 'staff', (int) $staff->getKey());
 
         return response()->json($this->mePayload($staff, $tenant), 200);
     }
@@ -69,36 +71,40 @@ class AuthController extends Controller
         return response()->json($this->mePayload($staff, $tenant), 200);
     }
 
-    public function resetPassword(Request $request): JsonResponse
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         if ($denied = StaffAuthz::denyUnlessManagerPlus()) {
             return $denied;
         }
 
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'staff_id' => ['required', 'integer'],
-            'new_password' => ['required', 'string', 'min:8', 'max:128'],
-        ]);
-
-        if ($validator->fails()) {
-            return Envelope::errorJson('error', 'Validation failed.', $validator->errors()->toArray(), 400);
-        }
-
         $target = Staff::on(config('tenancy.connection_name'))
-            ->find((int) $request->input('staff_id'));
+            ->find((int) $request->validated('staff_id'));
 
         if ($target === null) {
             return Envelope::errorJson('error', 'Staff not found.', [], 404);
         }
 
-        $target->setAttribute('password', Hash::make($request->input('new_password')));
+        $target->setAttribute('password', Hash::make($request->validated('new_password')));
         $target->save();
+
+        CoreAudit::record(
+            AuditEvent::ACTION_UPDATE,
+            'staff',
+            (int) $target->getKey(),
+            reason: 'password_reset',
+            newValues: ['id' => $target->getKey(), 'email' => $target->email],
+        );
 
         return response()->json(['detail' => 'Password reset.'], 200);
     }
 
     private function mePayload(Staff $staff, object $tenant): array
     {
+        $allOutlets = $staff->isOwner();
+        $outletIds = $allOutlets
+            ? Outlet::on(config('tenancy.connection_name'))->orderBy('id')->pluck('id')->map(fn ($id) => (int) $id)->all()
+            : $staff->outletAccess()->orderBy('outlet_id')->pluck('outlet_id')->map(fn ($id) => (int) $id)->all();
+
         return [
             'id' => $staff->getKey(),
             'email' => $staff->getAttribute('email'),
@@ -106,6 +112,8 @@ class AuthController extends Controller
             'role_code' => $staff->getAttribute('role'),
             'is_active' => (bool) $staff->getAttribute('is_active'),
             'tenant_slug' => $tenant->getAttribute('slug'),
+            'all_outlets' => $allOutlets,
+            'outlet_ids' => $outletIds,
         ];
     }
 }

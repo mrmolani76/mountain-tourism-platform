@@ -27,6 +27,12 @@ class CoreServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Modules\Core\App\Console\SeedFoundationCommand::class,
+            ]);
+        }
     }
 
     protected function registerConfig(): void

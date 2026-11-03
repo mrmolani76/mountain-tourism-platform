@@ -4,14 +4,15 @@ namespace Modules\Core\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
-use Modules\Core\App\Http\Requests\StoreBuildingRequest;
-use Modules\Core\App\Http\Requests\UpdateBuildingRequest;
-use Modules\Core\App\Models\Building;
 use App\Support\Http\Envelope;
-use Modules\Core\App\Support\StaffAuthz;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Modules\Core\App\Http\Requests\StoreBuildingRequest;
+use Modules\Core\App\Http\Requests\UpdateBuildingRequest;
+use Modules\Core\App\Models\AuditEvent;
+use Modules\Core\App\Models\Building;
+use Modules\Core\App\Support\CoreAudit;
+use Modules\Core\App\Support\StaffAuthz;
 
 class BuildingController extends Controller
 {
@@ -92,8 +93,15 @@ class BuildingController extends Controller
             $model->setAttribute('is_active', true);
         }
         $model->save();
+        $fresh = $model->fresh();
+        CoreAudit::record(
+            AuditEvent::ACTION_CREATE,
+            'building',
+            (int) $fresh->getKey(),
+            newValues: $this->serialize($fresh),
+        );
 
-        return response()->json($this->serialize($model->fresh()), 201);
+        return response()->json($this->serialize($fresh), 201);
     }
 
     public function update(UpdateBuildingRequest $request, int $building): JsonResponse
@@ -108,13 +116,22 @@ class BuildingController extends Controller
             return Envelope::errorJson('error', 'Not found.', [], 404);
         }
 
+        $old = $this->serialize($model);
         $model->fill($request->validated());
         $model->save();
+        $fresh = $model->fresh();
+        CoreAudit::record(
+            AuditEvent::ACTION_UPDATE,
+            'building',
+            (int) $fresh->getKey(),
+            oldValues: $old,
+            newValues: $this->serialize($fresh),
+        );
 
-        return response()->json($this->serialize($model->fresh()), 200);
+        return response()->json($this->serialize($fresh), 200);
     }
 
-    public function destroy(int $building): \Illuminate\Http\Response
+    public function destroy(int $building): JsonResponse|\Illuminate\Http\Response
     {
         if ($denied = StaffAuthz::denyUnlessOwner()) {
             return $denied;
@@ -126,7 +143,10 @@ class BuildingController extends Controller
             return Envelope::errorJson('error', 'Not found.', [], 404);
         }
 
+        $old = $this->serialize($model);
+        $id = (int) $model->getKey();
         $model->delete();
+        CoreAudit::record(AuditEvent::ACTION_UPDATE, 'building', $id, oldValues: $old, reason: 'deleted');
 
         return response()->noContent();
     }
