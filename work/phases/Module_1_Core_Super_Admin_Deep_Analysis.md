@@ -882,7 +882,7 @@ The supplied PDF and audit have some details that need explicit agreement:
 16. Which currencies and unit defaults should a newly created tenant receive?
 17. Who can view the financial audit log?
 18. What is the retention policy for audit logs?
-19. Which approved tenant-isolation strategy should be treated as the source of truth for future developers?
+19. Which approved tenant-isolation strategy should be treated as the source of truth for future developers?  **RESOLVED (2026-11-03, MVP freeze, item 29)** — DB-per-tenant + active-connection isolation; see `docs/DECISIONS.md`.
 
 ## 20. Definition of Done
 
@@ -903,6 +903,30 @@ Module 1 should not be marked complete until:
 - Automated isolation test proves two complexes on the same server cannot see each other's data.
 - No tenant operation can cross into another tenant through identifier, host, header or API manipulation.
 - The Super Admin and tenant Owner scopes remain separate.
+
+## Module 1 exit status — 2026-11-03 (items 28–33)
+
+Honest review against §20 Definition of Done:
+
+| # | DoD criterion | Status | Evidence |
+|---|---------------|--------|----------|
+| 1 | Staff login with email + password | DONE | test_login_success; E2E lab tenant login 200 (item 26) |
+| 2 | Owners/Managers reset staff passwords, no email | DONE | test_password_reset_by_owner/manager |
+| 3 | Super Admin creates complex + Owner account | DONE | register_complex + TenantViewSet create; test_register_tenant_registry_only |
+| 4 | Super Admin activates/deactivates complex | DONE | test_deactivate_tenant |
+| 5 | Building management: type, altitude, map position | DONE | Building model/API; test_building_* |
+| 6 | Outlets created inside buildings | DONE | Outlet model/API; test_outlet_crud_by_owner |
+| 7 | Staff accounts: roles + outlet access | DONE | Staff model; StaffOutletAccess; tests pass |
+| 8 | Season records support dates | DONE | Season model/API; test_season_* |
+| 9 | Tenant settings: currency, tax, timezone, units | DONE | TenantSettings; test_settings_* |
+| 10 | Financial audit log records charge/payment/void | PARTIAL | AuditEvent + AuditService.record() foundation (item 30); folio charge/payment/void writers deferred to Module C items 40–41 |
+| 11 | API permission checks enforce roles + outlet access | DONE | test_buildings_denied_for_manager, settings/staff denied tests |
+| 12 | Tenant-isolation architecture documented + implemented | DONE | DECISIONS.md; TenantResolveMiddleware; DATABASE_ROUTERS |
+| 13 | Automated isolation test (two complexes on one server) | DONE | test_tenant_db_isolation (tenant A ≠ tenant B data) |
+| 14 | No cross-tenant via id/host/header/API | DONE | test_cross_host_session_replay/pk_collision_rejected |
+| 15 | Super Admin and tenant Owner scopes separate | DONE | distinct SaaS vs tenant views/auth; test_staff_session_rejected_by_saas_endpoint |
+
+**Module 1 backend/API MVP skeleton: CLOSED.** Remaining: folio charge/payment/void audit writers (Module C, items 40–41), frontend screens (deferred until user opens frontend), physical tenant DB provisioning (ops/setup, not app code).
 
 ## 21. Source References
 

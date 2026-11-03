@@ -7,7 +7,6 @@ Refresh on every work / bug / change status update.
 ## 1. Work
 
 ### Todo
-- **31–33** — Module 1 closeout (edge tests → policy → exit)
 - **34** — Fix domain ViewSets auth (hotel…reports)
 - **35–39** — Module 2 Hotel (reservation → check-in/folio → nightly → calendar → exit)
 - **40–44** — Module 3 Folio (cents → void/audit → lookup → checkout → exit)
@@ -25,6 +24,9 @@ Refresh on every work / bug / change status update.
 ### Completed
 - **29** — Module 1 tenancy decision frozen (DB-per-tenant + Host/Domain) (high, 2026-11-03)
 - **30** — Module 1 audit foundation — AuditEvent + AuditService.record(), migration `0006_add_audit_event`, `manage.py check` clean (high, 2026-11-03)
+- **31** — Module 1 edge authz tests — deactivated tenant login 404 + staff→SaaS 403; full suite 40 passed (high, 2026-11-03)
+- **32** — Module 1 MVP policy defaults (…19 Q3–Q18) — docs/DECISIONS.md row; Q19 resolved (high, 2026-11-03)
+- **33** — Module 1 exit gate — §20 DoD review; backend/API MVP skeleton CLOSED (audit writers + frontend deferred) (high, 2026-11-03)
 - **28** — Module 1 verification — first full test run, 38 green (high, 2026-11-03)
 - **27** — Project audit complete report (post items 18–26) (high, 2026-11-03)
 - **26** — Tenant dev setup — physical DB, migrate, owner seed, E2E login verify (high, 2026-11-03)

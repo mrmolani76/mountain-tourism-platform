@@ -134,6 +134,34 @@ class AuthTests(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
+    # --- Item 31: edge authz -------------------------------------------
+
+    def test_deactivated_tenant_login_denied(self):
+        # Deactivated tenant host → middleware refuses before the view.
+        self.tenant.is_active = False
+        self.tenant.save(update_fields=['is_active'])
+        response = self.client.post(
+            '/api/auth/login/',
+            {'email': self.owner.email, 'password': 'ownerpass'},
+            format='json',
+            **self.tenant_host,
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_staff_session_rejected_by_saas_endpoint(self):
+        # Staff login sets no saas_user_id → SaaS views reject staff (403),
+        # keeping super-admin and tenant staff scopes separate.
+        self.client.post(
+            '/api/auth/login/',
+            {'email': self.owner.email, 'password': 'ownerpass'},
+            format='json',
+            **self.tenant_host,
+        )
+        response = self.client.get(
+            '/api/saas/auth/me/', **{'HTTP_HOST': 'saas.test'}
+        )
+        self.assertEqual(response.status_code, 403)
+
     def test_me_returns_staff(self):
         self.client.force_authenticate(user=self.owner)
         response = self.client.get('/api/auth/me/', **self.tenant_host)
