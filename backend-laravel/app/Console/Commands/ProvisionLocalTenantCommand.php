@@ -78,7 +78,7 @@ class ProvisionLocalTenantCommand extends Command
                 $slug,
                 $dbName,
                 $hostname,
-                "http://{$hostname}:3000/login  owner@{$slug}.test / password123",
+                "http://{$hostname}:3002/login  owner@{$slug}.test / password123",
             ]]
         );
 

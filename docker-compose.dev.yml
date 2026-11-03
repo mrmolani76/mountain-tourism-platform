@@ -1,7 +1,7 @@
 # Mountain Tourism Platform — Laravel API + Nuxt SPA (Docker).
-# Ports: 8010 (API) / 5433 (Postgres) / 3000 (SPA) — loopback only.
-# Staff login host example: http://lab.localhost:3000 (Host header → tenant).
-# SaaS host example: http://saas.localhost:3000 (central only).
+# Ports: 8020 (API) / 5434 (Postgres) / 3002 (SPA) — loopback only.
+# Staff login host example: http://lab.localhost:3002 (Host header → tenant).
+# SaaS host example: http://saas.localhost:3002 (central only).
 #
 # This machine may not run compose; setup machine: docker compose -f docker-compose.dev.yml up -d --build
 
@@ -16,7 +16,7 @@ services:
       POSTGRES_USER: mt_app
       POSTGRES_PASSWORD: devpass
     ports:
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:5434:5432"
     volumes:
       - mtmtp_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -38,8 +38,8 @@ services:
     environment:
       APP_ENV: local
       APP_DEBUG: "true"
-      APP_URL: http://lab.localhost:8010
-      FRONTEND_URL: http://lab.localhost:3000
+      APP_URL: http://lab.localhost:8020
+      FRONTEND_URL: http://lab.localhost:3002
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: "5432"
@@ -51,11 +51,12 @@ services:
       QUEUE_CONNECTION: database
       TENANCY_CENTRAL_HOSTS: saas.localhost
       CENTRAL_DOMAIN: saas.localhost
-      SANCTUM_STATEFUL_DOMAINS: localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,lab.localhost,lab.localhost:3000,saas.localhost,saas.localhost:3000
+      SANCTUM_STATEFUL_DOMAINS: localhost,localhost:3000,localhost:3002,127.0.0.1,127.0.0.1:3000,127.0.0.1:3002,lab.localhost,lab.localhost:3000,lab.localhost:3002,saas.localhost,saas.localhost:3000,saas.localhost:3002
     ports:
-      - "127.0.0.1:8010:8000"
+      - "127.0.0.1:8020:8000"
     volumes:
       - ./backend-laravel:/app
+      - ./backend-laravel/.env.docker:/app/.env
     networks:
       - mtmtp_net
     command: >
@@ -77,7 +78,7 @@ services:
         BACKEND_URL: http://laravel:8000
     container_name: mtmtp_spa
     ports:
-      - "127.0.0.1:3000:80"
+      - "127.0.0.1:3002:80"
     depends_on:
       - laravel
     networks:
