@@ -33,9 +33,13 @@ export const useApiClient = () => {
     return await API.put<T>(normalizePath(url), body ?? {})
   }
 
+  const patch = async <T>(url: string, body: any = {}) => {
+    return await API.patch<T>(normalizePath(url), body ?? {})
+  }
+
   const del = async <T>(url: string, body: any = {}) => {
     return await API.delete<T>(normalizePath(url), body ?? {})
   }
 
-  return { get, post, put, del }
+  return { get, post, put, patch, del }
 }

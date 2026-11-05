@@ -2,17 +2,19 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Laravel Module 1 only — Inventory pattern: **central Saas** + **tenant Core**. Item **71**. Modules B–I deferred. PDF: `document/Mountain_MVP_Scope_v1.pdf` §5.A.
+**Focus:** Laravel Module 2 — Hotel, chalets and huts + minimal folio contract. Item **72**. Module 1 (items 71) complete. PDF: `document/Mountain_MVP_Scope_v1.pdf` §5.B.
 
 ## 1. Work
 
 ### Todo
-- (empty) Module 2–9 kanban 35–66 removed; restore after Laravel Module 1 Verified. See `work/todo/README-all-modules-todos.md`.
+- (empty) Module 3–9 kanban not restored yet. See `work/todo/README-all-modules-todos.md`.
 
 ### In Progress
-- **71** — Laravel Module 1 — central Saas + tenant Core (Inventory pattern) (high)
+- **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Modules generated with `module:make --api`; `config/modules.php` pins the `App/` layout. Code + tests written, routes and command verified; migrations and `php artisan test` still pending.
 
 ### Completed
+- **73** — Full platform DB schema design (Modules A to I) (high, 2026-11-05): `docs/DATABASE_SCHEMA.md` covers central SaaS + tenant Modules A to I, invariants, indexes, migration order, open questions.
+- **71** — Laravel Module 1 — central Saas + tenant Core (Inventory pattern) (high, 2026-11-04)
 - **70** — Laravel Stage C — pilot slice auth + buildings (high, 2026-11-03)
 - **69** — Laravel foundation Stage B: backend-laravel/ (Laravel 13.39/PHP 8.5), pgsql 18.6 connected, envelope macros, health endpoint live, CI quality job (high, 2026-11-03)
 - **68** — Laravel switch Phase 0 — Django/DRF audit: 45-endpoint API inventory, schema + auth matrix, risks; master plan saved (high, 2026-11-03)

@@ -1,4 +1,4 @@
-import type { VerticalNavItems } from '@layouts/types'
+import type { NavLink, VerticalNavItems } from '@layouts/types'
 
 export interface AppModuleInfo {
   key: string
@@ -10,8 +10,8 @@ export interface AppModuleInfo {
 }
 
 /**
- * Mountain tourism modules backed by the Django tenant API.
- * Screens are placeholders until each module UI is implemented.
+ * Mountain tourism modules that have live backend APIs.
+ * Only implemented modules are listed, so the menu never links to empty screens.
  */
 export const appModules: Array<AppModuleInfo> = [
   {
@@ -27,62 +27,59 @@ export const appModules: Array<AppModuleInfo> = [
     title: 'Folio & Billing',
     icon: 'tabler-receipt',
     description: 'Guest folios, charges and payments. Money is append-only.',
-    endpoint: '/api/folio/',
+    endpoint: '/api/folios/{folio}',
     features: ['Open and close folios', 'Post charges and record payments', 'Void with reason, never edit'],
-  },
-  {
-    key: 'pos',
-    title: 'POS',
-    icon: 'tabler-shopping-cart',
-    description: 'Restaurant, hut kitchen and shop orders.',
-    endpoint: '/api/pos/',
-    features: ['Product categories and products', 'Open orders and order lines', 'Charge an order to a folio'],
-  },
-  {
-    key: 'rental',
-    title: 'Rental',
-    icon: 'tabler-bike',
-    description: 'Ski and equipment rental with deposits and damage fees.',
-    endpoint: '/api/rental/',
-    features: ['Rent out and return items', 'Deposits and damage fees', 'Link rental charges to a folio'],
-  },
-  {
-    key: 'services',
-    title: 'Services',
-    icon: 'tabler-spa',
-    description: 'Ski school, guided hikes, spa and other bookable services.',
-    endpoint: '/api/services/',
-    features: ['Service catalogue and prices', 'Time slots with capacity', 'Staff assignment per slot'],
-  },
-  {
-    key: 'transport',
-    title: 'Transport',
-    icon: 'tabler-bus',
-    description: 'Shuttles, taxis and pickups between buildings.',
-    endpoint: '/api/transport/',
-    features: ['Vehicles and drivers', 'Scheduled trips', 'Passenger counts'],
-  },
-  {
-    key: 'weather',
-    title: 'Weather',
-    icon: 'tabler-cloud-snow',
-    description: 'Weather limits and warnings for lifts and outdoor areas.',
-    endpoint: '/api/weather/',
-    features: ['Limits per weather type', 'Active warnings', 'Resolve warnings when conditions clear'],
-  },
-  {
-    key: 'reports',
-    title: 'Reports',
-    icon: 'tabler-chart-bar',
-    description: 'Revenue, occupancy and operational reports.',
-    endpoint: '/api/reports/',
-    features: ['Folio and revenue summaries', 'Occupancy reports', 'Rental and transport reports'],
   },
 ]
 
 export function getAppModule(key: string): AppModuleInfo | undefined {
   return appModules.find(module => module.key === key)
 }
+
+/** Hotel screens, grouped under the Hotel menu. */
+export const hotelNavigation: Array<NavLink> = [
+  {
+    title: 'Overview',
+    to: { path: '/modules/hotel' },
+    icon: { icon: 'tabler-layout-grid' },
+  },
+  {
+    title: 'Room types',
+    to: { path: '/modules/hotel/room-types' },
+  },
+  {
+    title: 'Rooms and chalets',
+    to: { path: '/modules/hotel/rooms' },
+  },
+  {
+    title: 'Hut dormitories',
+    to: { path: '/modules/hotel/hut-dormitories' },
+  },
+  {
+    title: 'Hut beds',
+    to: { path: '/modules/hotel/hut-beds' },
+  },
+  {
+    title: 'Season prices',
+    to: { path: '/modules/hotel/season-prices' },
+  },
+  {
+    title: 'Board plans',
+    to: { path: '/modules/hotel/board-plans' },
+  },
+  {
+    title: 'Reservations',
+    to: { path: '/modules/hotel/reservations' },
+  },
+  {
+    title: 'Stays',
+    to: { path: '/modules/hotel/stays' },
+  },
+  {
+    title: 'Availability',
+    to: { path: '/modules/hotel/availability' },
+  },
+]
 
 /**
  * Menu links use route objects, not route names.
@@ -97,11 +94,17 @@ export const appNavigation: VerticalNavItems = [
   {
     heading: 'Operations',
   },
-  ...appModules.map(module => ({
-    title: module.title,
-    to: { path: `/modules/${module.key}` },
-    icon: { icon: module.icon },
-  })),
+  ...appModules.map(module => module.key === 'hotel'
+    ? {
+      title: module.title,
+      icon: { icon: module.icon },
+      children: hotelNavigation,
+    }
+    : {
+      title: module.title,
+      to: { path: `/modules/${module.key}` },
+      icon: { icon: module.icon },
+    }),
   {
     heading: 'Account',
   },

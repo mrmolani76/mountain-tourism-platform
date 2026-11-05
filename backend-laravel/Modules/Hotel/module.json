@@ -1,0 +1,11 @@
+{
+    "name": "Hotel",
+    "alias": "hotel",
+    "description": "Mountain Tourism Module 2 - hotel, chalets and huts (inventory, pricing, reservations, stays, nightly posting)",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Hotel\\App\\Providers\\HotelServiceProvider"
+    ],
+    "files": []
+}

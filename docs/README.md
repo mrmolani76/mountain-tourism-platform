@@ -17,6 +17,7 @@ PDF remains the legal contract. If docs and PDF disagree, **PDF wins** until hum
 | [SEED_COMPLEX.md](SEED_COMPLEX.md) | Demo buildings/altitudes |
 | [DECISIONS.md](DECISIONS.md) | Stack choices (Django + Nuxt) |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Living architecture note (Milestone 1 deliverable) |
+| [DATABASE_SCHEMA.md](DATABASE_SCHEMA.md) | Full platform DB schema (Modules A to I, central + tenant) |
 | [HANDOVER.md](HANDOVER.md) | Handover checklist (§11) |
 | [OUT_OF_SCOPE.md](OUT_OF_SCOPE.md) | After-MVP / do not build yet |
 

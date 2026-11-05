@@ -1,4 +1,6 @@
 {
     "Saas": true,
-    "Core": true
+    "Core": true,
+    "Hotel": true,
+    "Folio": true
 }

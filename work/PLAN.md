@@ -9,24 +9,26 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 | Phase | File | Status |
 |-------|------|--------|
 | 1 Foundation | `work/phases/01-foundation.md` + `Module_1_*.md` | Django M1 closed (29–33); Laravel M1 = item **71** |
-| 2–5 Hotel…Reports | `work/phases/02`–`05` + Module_2–9 | Deferred until Laravel Module 1 Verified |
+| 2 Hotel + folio | `work/phases/02-hotel-and-folio.md` + `Module_2_*.md` | Started: Laravel Hotel = item **72** |
 
 ## Todo
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| — | (empty — Module 2–9 kanban 35–66 removed; restore later) | — | — | — | — |
+| — | (empty — Module 3–9 kanban not restored yet) | — | — | — | — |
 
 ## In Progress
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 71 | Laravel Module 1 — central Saas + tenant Core (Inventory pattern) | high | A-core | backend | L |
+| 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 73 | Full platform DB schema design (Modules A to I) | high | docs | docs | L | 2026-11-05 |
+| 71 | Laravel Module 1 — central Saas + tenant Core (Inventory pattern) | high | A-core | backend | L | 2026-11-04 |
 | 70 | Laravel Stage C — pilot slice (auth login/me/logout + buildings) | high | A-core | backend | L | 2026-11-03 |
 | 34 | Fix domain ViewSets auth (hotel…reports) | high | A-core | backend | M | 2026-11-03 |
 | 68 | Laravel switch — Phase 0 Django/DRF audit | high | A-core | docs | L | 2026-11-03 |

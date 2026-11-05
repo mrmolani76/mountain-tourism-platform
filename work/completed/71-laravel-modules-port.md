@@ -61,10 +61,10 @@ Client Laravel switch. Inventory = one central SaaS DB + per-tenant DBs. PDF Mod
 
 ## Completion Log (when work is complete)
 
-- **Completed by**:
-- **Date**:
-- **What was done**:
-- **Files changed**:
-- **Verification**:
-- **Change report**:
-- **PLAN / SUMMARY**:
+- **Completed by**: agent
+- **Date**: 2026-11-04
+- **What was done**: Central `Modules/Saas` + tenant `Modules/Core` port finished (staff auth, buildings, outlets, seasons, staff, outlet access, settings, audit, foundation seed). Loose pilot code removed. Report on Module 1 closeout work is in the change reports listed below.
+- **Files changed**: `backend-laravel/Modules/{Saas,Core}/**`, `backend-laravel/routes/{api,tenant}.php`, `backend-laravel/bootstrap/providers.php`, `backend-laravel/config/tenancy.php`
+- **Verification**: Docker dev stack (`mtmtp`) built and running; central + tenant migrations green; tenant `lab` provisioned (DB `lab_local`, host `lab.local.mtmtp.local`); `/api/health` 200 on `saas.mtmtp.local` and tenant host; SPA 200 on both hosts.
+- **Change report**: `work/changes/2026-11-03--71-*.md` (10 reports)
+- **PLAN / SUMMARY**: updated 2026-11-04

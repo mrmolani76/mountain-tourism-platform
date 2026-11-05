@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/folio",
+    "description": "Mountain Tourism Folio module",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Folio\\App\\": "App/",
+            "Modules\\Folio\\Database\\Factories\\": "Database/Factories/",
+            "Modules\\Folio\\Database\\Seeders\\": "Database/Seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Folio\\Tests\\": "tests/"
+        }
+    }
+}

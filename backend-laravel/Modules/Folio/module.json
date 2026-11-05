@@ -1,0 +1,11 @@
+{
+    "name": "Folio",
+    "alias": "folio",
+    "description": "Mountain Tourism minimal folio slice - folio, charge, payment, void contract used by stays",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Folio\\App\\Providers\\FolioServiceProvider"
+    ],
+    "files": []
+}
