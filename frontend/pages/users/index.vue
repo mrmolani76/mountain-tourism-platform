@@ -1,4 +1,11 @@
 <script setup lang="ts">
+/**
+ * Staff listing — eQMS qualitycenter-spa `pages/users/index.vue` pattern:
+ * - configLoading → VSkeletonLoader type="table"
+ * - listLoading → DataTable :loading (row fetch overlay)
+ * - One composable instance (config + list loading flags separated inside client)
+ */
+
 const { t } = useI18n()
 
 definePageMeta({
@@ -17,12 +24,25 @@ const selectedItemIds = ref([])
 const reasonFormDialogOpen = ref(false)
 const reasonFormDialogSubmitDisable = ref(false)
 const tableParams = ref({})
-const { userDataTableConfig, loading: isLoading, getUserDataTableConfig, saveUserTableFilters } = useUserApiClient()
-const { userDataTableResult, loading: listLoading, getUserDataTableData, deleteUsers, disableUsers, enableUsers, exportUsersListing } = useUserApiClient()
+
+const {
+  userDataTableConfig,
+  userDataTableResult,
+  configLoading,
+  listLoading,
+  getUserDataTableConfig,
+  getUserDataTableData,
+  saveUserTableFilters,
+  deleteUsers,
+  disableUsers,
+  enableUsers,
+  exportUsersListing,
+} = useUserApiClient()
+
+const auth = authStore()
 
 const reloadListingData = async (params: any = tableParams.value) => {
   selectedItemIds.value = []
-
   await getUserDataTableData(params)
 }
 
@@ -38,39 +58,45 @@ const handleExportDocumentsListing = async (exportParams: any) => {
 const bulkAction = async (action: string) => {
   if (action === 'enable') {
     if (await showConfirmDialog()) {
-      showBulkActionProgress(`bulkAction.users.${authStore().user.uuid}`)
+      const uuid = auth.user?.uuid
+      if (uuid)
+        showBulkActionProgress(`bulkAction.users.${uuid}`)
+
       await enableUsers({
         uuids: selectedItemIds.value,
-      });
-      reloadListingData()
+      })
+      await reloadListingData()
     }
 
-    return;
+    return
   }
-  reasonFormDialogOpen.value = true;
-  actionToBeSubmit = action;
+
+  reasonFormDialogOpen.value = true
+  actionToBeSubmit = action
 }
 
 const handleReasonFormSubmit = async (reasonForm: any) => {
-  showBulkActionProgress(`bulkAction.users.${authStore().user.uuid}`)
+  const uuid = auth.user?.uuid
+  if (uuid)
+    showBulkActionProgress(`bulkAction.users.${uuid}`)
 
   const params = {
     uuids: selectedItemIds.value,
     reason: reasonForm.reason,
   }
 
-  let response;
+  let response
 
   if (actionToBeSubmit === 'delete')
-    response = await deleteUsers(params);
+    response = await deleteUsers(params)
   else
-    response = await disableUsers(params);
+    response = await disableUsers(params)
 
   if (response) {
-    resetBulkAction.value.resetBulkOptions()
-    reloadListingData()
-    reasonFormDialogOpen.value = false;
-    reasonFormDialogSubmitDisable.value = false;
+    resetBulkAction.value?.resetBulkOptions?.()
+    await reloadListingData()
+    reasonFormDialogOpen.value = false
+    reasonFormDialogSubmitDisable.value = false
   }
 }
 
@@ -82,16 +108,18 @@ const closeReasonDialog = (value: boolean) => {
   reasonFormDialogOpen.value = value
 }
 
-(async () => {
+const loadConfig = async () => {
   await getUserDataTableConfig()
-})();
+}
+
+loadConfig()
 </script>
 
 <template>
   <div>
-    <template v-if="isLoading">
+    <template v-if="configLoading">
       <VSkeletonLoader
-        :loading="isLoading"
+        :loading="configLoading"
         type="table"
       />
     </template>
@@ -101,26 +129,26 @@ const closeReasonDialog = (value: boolean) => {
         ref="resetBulkAction"
         v-model:selectedItemIds="selectedItemIds"
         v-model="tableParams"
-        :listData="userDataTableResult.data"
-        :totalItems="userDataTableResult.pagination.total"
+        :list-data="userDataTableResult.data"
+        :total-items="userDataTableResult.pagination?.total ?? 0"
         :loading="listLoading"
-        checkboxIdKey="uuid"
-        showAddButton
-        :showExportButton="false"
-        :tableFilterIdentifier="USER_LISTING_FILTER_IDENTIFIER"
-        @loadItems="reloadListingData"
-        @exportListing="handleExportDocumentsListing"
-        @columnFilterChange="columnFilterSave"
-        @bulkActionTrigger="bulkAction"
-        @addNew="navigateTo('/users/form')"
+        checkbox-id-key="uuid"
+        show-add-button
+        :show-export-button="false"
+        :table-filter-identifier="USER_LISTING_FILTER_IDENTIFIER"
+        @load-items="reloadListingData"
+        @export-listing="handleExportDocumentsListing"
+        @column-filter-change="columnFilterSave"
+        @bulk-action-trigger="bulkAction"
+        @add-new="navigateTo('/users/form')"
       >
         <template #actions="{ item }">
           <div class="d-flex gap-1">
             <VBtn
-              v-if="item.actions.writePermission"
+              v-if="item.actions?.writePermission"
               size="38"
               color="primary"
-              :disabled="item.actions.isLocked"
+              :disabled="item.actions?.isLocked"
               @click="navigateTo(`/users/form/${item.uuid}`)"
             >
               <VTooltip activator="parent">
@@ -132,7 +160,7 @@ const closeReasonDialog = (value: boolean) => {
               />
             </VBtn>
             <VBtn
-              v-if="item.actions.viewPermission"
+              v-if="item.actions?.viewPermission"
               size="38"
               color="primary"
               @click="navigateTo(`/users/view/${item.uuid}`)"
@@ -151,10 +179,10 @@ const closeReasonDialog = (value: boolean) => {
     </template>
   </div>
   <ReasonDialogForm
-    :dialogOpen="reasonFormDialogOpen"
-    :alertLang="$t('whyYouWantToDoThisAction')"
-    :signingDialogButtonDisabled="reasonFormDialogSubmitDisable"
-    @updatedDialogValue="closeReasonDialog"
-    @signFormData="handleReasonFormSubmit"
+    :dialog-open="reasonFormDialogOpen"
+    :alert-lang="$t('whyYouWantToDoThisAction')"
+    :signing-dialog-button-disabled="reasonFormDialogSubmitDisable"
+    @updated-dialog-value="closeReasonDialog"
+    @sign-form-data="handleReasonFormSubmit"
   />
 </template>

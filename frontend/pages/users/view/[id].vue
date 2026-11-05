@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Staff view — eQMS users/view header + info tab pattern.
+ * Staff view — eQMS users/view header + info tab pattern with skeleton loading.
  */
 
 const { t } = useI18n()
@@ -20,7 +20,7 @@ const uuid = ref(String(route.params.id))
 const user = ref<User | undefined>()
 const tabItems = ref([] as AppTab[])
 
-;(async () => {
+const reloadData = async () => {
   const response = await getUserViewById(uuid.value)
 
   user.value = response as User | undefined
@@ -33,16 +33,44 @@ const tabItems = ref([] as AppTab[])
       component: markRaw(resolveComponent('UserViewInfo') as object),
     },
   ]
-})()
+}
+
+reloadData()
 </script>
 
 <template>
   <div>
-    <template v-if="loading && !user">
+    <template v-if="loading">
       <div class="tw-mb-4">
-        <VSkeletonLoader type="heading@1" />
+        <VSkeletonLoader
+          :loading="loading"
+          type="heading@1"
+        />
       </div>
-      <VSkeletonLoader type="card" />
+      <div class="tw-grid tw-grid-cols-5 tw-gap-2 tw-justify-between">
+        <div>
+          <VSkeletonLoader
+            :loading="loading"
+            type="card"
+          />
+          <VSkeletonLoader
+            :loading="loading"
+            type="heading@4"
+            class="tw-mt-2"
+          />
+        </div>
+        <div class="tw-col-span-4">
+          <VSkeletonLoader
+            :loading="loading"
+            type="heading@1"
+            class="tw-mb-4"
+          />
+          <VSkeletonLoader
+            :loading="loading"
+            type="heading@4"
+          />
+        </div>
+      </div>
     </template>
 
     <template v-else>

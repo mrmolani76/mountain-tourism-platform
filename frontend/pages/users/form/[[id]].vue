@@ -2,7 +2,7 @@
 import { VForm } from 'vuetify/components/VForm'
 
 /**
- * Staff create / edit — eQMS users/form layout (breadcrumbs + card form),
+ * Staff create / edit — eQMS users/form loading + card form pattern,
  * fields trimmed to Mountain tenant Staff (email, role, password, active).
  */
 
@@ -83,26 +83,32 @@ const saveUser = async () => {
   }
 }
 
-;(async () => {
-  const initial = await formInitaldata()
-  roles.value = initial?.roles ?? []
+const loadPage = async () => {
+  loading.value = true
+  try {
+    const initial = await formInitaldata()
+    roles.value = initial?.roles ?? []
 
-  if (isEdit && uuid) {
-    const data = await getUserById(String(uuid))
-    const user = data?.user as any
-    if (user) {
-      userForm.value = {
-        uuid: String(user.uuid || user.id || uuid),
-        email: user.email || '',
-        password: '',
-        role: user.roleCode || user.role?.name || 'front_desk',
-        is_active: user.is_active ?? user.active ?? true,
+    if (isEdit && uuid) {
+      const data = await getUserById(String(uuid))
+      const user = data?.user as any
+      if (user) {
+        userForm.value = {
+          uuid: String(user.uuid || user.id || uuid),
+          email: user.email || '',
+          password: '',
+          role: user.roleCode || user.role?.name || 'front_desk',
+          is_active: user.is_active ?? user.active ?? true,
+        }
       }
     }
   }
+  finally {
+    loading.value = false
+  }
+}
 
-  loading.value = false
-})()
+loadPage()
 </script>
 
 <template>
@@ -113,94 +119,115 @@ const saveUser = async () => {
       :uuid="uuid ? String(uuid) : null"
     />
 
-    <template v-if="loading">
-      <VSkeletonLoader type="article, actions" />
-    </template>
-
-    <VCard
-      v-else
-      class="pa-6"
-    >
-      <VForm
-        ref="refUserForm"
-        @submit.prevent="saveUser"
-      >
-        <VRow>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <AppTextField
-              v-model="userForm.email"
-              :label="$t('email')"
-              type="email"
-              :rules="[rules.required, rules.email]"
-              required
+    <VCardText class="tw-p-0">
+      <template v-if="loading">
+        <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4 tw-items-start">
+          <div class="tw-col-span-2 tw-mb-5">
+            <VSkeletonLoader
+              :loading="loading"
+              type="text"
             />
-          </VCol>
-
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <AppSelect
-              v-model="userForm.role"
-              :items="roles"
-              item-title="roleName"
-              item-value="name"
-              :label="$t('role')"
-              :rules="[rules.required]"
-              required
+          </div>
+          <div>
+            <VSkeletonLoader
+              :loading="loading"
+              type="heading@10"
             />
-          </VCol>
-
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <AppTextField
-              v-model="userForm.password"
-              :label="$t('password')"
-              type="password"
-              autocomplete="new-password"
-              :hint="isEdit ? 'Leave blank to keep current password' : 'Min 8 characters'"
-              persistent-hint
-              :rules="isEdit ? [rules.passwordEdit] : [rules.required, rules.passwordCreate]"
-              :required="!isEdit"
+          </div>
+          <div>
+            <VSkeletonLoader
+              :loading="loading"
+              type="heading@4"
             />
-          </VCol>
-
-          <VCol
-            cols="12"
-            md="6"
-            class="d-flex align-center"
-          >
-            <VCheckbox
-              v-model="userForm.is_active"
-              :label="$t('enabled') || 'Active'"
-              hide-details
-            />
-          </VCol>
-        </VRow>
-
-        <div class="d-flex justify-end gap-3 mt-6">
-          <VBtn
-            variant="tonal"
-            color="secondary"
-            @click="navigateTo('/users')"
-          >
-            {{ $t('cancel') }}
-          </VBtn>
-          <VBtn
-            color="primary"
-            type="submit"
-            :loading="isButtonDisabled"
-            :disabled="isButtonDisabled"
-          >
-            {{ $t('save') }}
-          </VBtn>
+          </div>
         </div>
-      </VForm>
-    </VCard>
+      </template>
+
+      <VCard
+        v-else
+        class="pa-6"
+      >
+        <VForm
+          ref="refUserForm"
+          @submit.prevent="saveUser"
+        >
+          <VRow>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppTextField
+                v-model="userForm.email"
+                :label="$t('email')"
+                type="email"
+                :rules="[rules.required, rules.email]"
+                required
+              />
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppSelect
+                v-model="userForm.role"
+                :items="roles"
+                item-title="roleName"
+                item-value="name"
+                :label="$t('role')"
+                :rules="[rules.required]"
+                required
+              />
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppTextField
+                v-model="userForm.password"
+                :label="$t('password')"
+                type="password"
+                autocomplete="new-password"
+                :hint="isEdit ? 'Leave blank to keep current password' : 'Min 8 characters'"
+                persistent-hint
+                :rules="isEdit ? [rules.passwordEdit] : [rules.required, rules.passwordCreate]"
+                :required="!isEdit"
+              />
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="6"
+              class="d-flex align-center"
+            >
+              <VCheckbox
+                v-model="userForm.is_active"
+                :label="$t('enabled') || 'Active'"
+                hide-details
+              />
+            </VCol>
+          </VRow>
+
+          <div class="d-flex justify-end gap-3 mt-6">
+            <VBtn
+              variant="tonal"
+              color="secondary"
+              @click="navigateTo('/users')"
+            >
+              {{ $t('cancel') }}
+            </VBtn>
+            <VBtn
+              color="primary"
+              type="submit"
+              :loading="isButtonDisabled"
+              :disabled="isButtonDisabled"
+            >
+              {{ $t('save') }}
+            </VBtn>
+          </div>
+        </VForm>
+      </VCard>
+    </VCardText>
   </div>
 </template>

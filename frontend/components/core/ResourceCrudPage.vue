@@ -33,6 +33,9 @@ const { t } = useI18n()
 const client = useResourceApiClient()
 
 const rows = ref<Array<Record<string, any>>>([])
+/** First paint skeleton (eQMS configLoading). */
+const initialLoading = ref(true)
+/** Table overlay while list refreshes (eQMS listLoading). */
 const loading = ref(false)
 const search = ref('')
 const dialogOpen = ref(false)
@@ -70,11 +73,15 @@ const blankForm = () => {
 
 const load = async () => {
   loading.value = true
+  try {
+    const { data } = await client.list(props.endpoint, { page: 1, page_size: 100, ...props.listParams })
 
-  const { data } = await client.list(props.endpoint, { page: 1, page_size: 100, ...props.listParams })
-
-  rows.value = data as Array<Record<string, any>>
-  loading.value = false
+    rows.value = (data as Array<Record<string, any>>) ?? []
+  }
+  finally {
+    loading.value = false
+    initialLoading.value = false
+  }
 }
 
 const loadOptions = async () => {
@@ -242,7 +249,10 @@ onMounted(async () => {
           {{ subtitle }}
         </p>
       </div>
-      <div class="d-flex align-center gap-2">
+      <div
+        v-if="!initialLoading"
+        class="d-flex align-center gap-2"
+      >
         <VTextField
           v-model="search"
           density="compact"
@@ -251,13 +261,25 @@ onMounted(async () => {
           prepend-inner-icon="tabler-search"
           style="min-inline-size: 220px;"
         />
-        <VBtn v-if="canCreate" color="primary" prepend-icon="tabler-plus" @click="openCreate">
+        <VBtn
+          v-if="canCreate"
+          color="primary"
+          prepend-icon="tabler-plus"
+          @click="openCreate"
+        >
           {{ addLabel }}
         </VBtn>
       </div>
     </div>
 
-    <VCard>
+    <template v-if="initialLoading">
+      <VSkeletonLoader
+        :loading="initialLoading"
+        type="table"
+      />
+    </template>
+
+    <VCard v-else>
       <VDataTable
         v-model:search="search"
         :headers="headers"
