@@ -2,15 +2,15 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Laravel Module 2 — Hotel, chalets and huts + minimal folio contract. Item **72**. Module 1 (items 71) complete. PDF: `document/Mountain_MVP_Scope_v1.pdf` §5.B.
+**Focus:** Item **74** — eQMS-style menu (Core + Hotel only), Core staff CRUD frontend wire, Hotel schema relations. Item **72** returned to todo (tests pending). PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
 ### Todo
-- (empty) Module 3–9 kanban not restored yet. See `work/todo/README-all-modules-todos.md`.
+- **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Code largely written; migrate + `php artisan test` still pending on setup machine.
 
 ### In Progress
-- **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Modules generated with `module:make --api`; `config/modules.php` pins the `App/` layout. Code + tests written, routes and command verified; migrations and `php artisan test` still pending.
+- **74** — EQMS menu + Core staff CRUD wire + Hotel schema relations (high).
 
 ### Completed
 - **73** — Full platform DB schema design (Modules A to I) (high, 2026-11-05): `docs/DATABASE_SCHEMA.md` covers central SaaS + tenant Modules A to I, invariants, indexes, migration order, open questions.

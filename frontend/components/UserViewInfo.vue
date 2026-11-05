@@ -9,7 +9,7 @@ defineProps<{
     <div>
       <VCard>
         <div class="tw-mb-4 tw-text-lg tw-mt-4 tw-ml-4">
-          {{ $t('personalInformation') }}
+          {{ $t('personalInformation') || 'Account' }}
         </div>
         <VDivider
           :thickness="1"
@@ -19,26 +19,14 @@ defineProps<{
         <VList width="100%">
           <VListItem>
             <LabelValueDisplay
-              label="firstName"
-              :value="entityData?.firstName"
-            />
-          </VListItem>
-          <VListItem>
-            <LabelValueDisplay
-              label="lastName"
-              :value="entityData?.lastName"
-            />
-          </VListItem>
-          <VListItem>
-            <LabelValueDisplay
               label="email"
               :value="entityData?.email"
             />
           </VListItem>
           <VListItem>
             <LabelValueDisplay
-              label="phoneNo"
-              :value="entityData?.phoneNo"
+              label="status"
+              :value="entityData?.active ? ($t('enabled') || 'Enabled') : ($t('disabled') || 'Disabled')"
             />
           </VListItem>
         </VList>
@@ -48,7 +36,7 @@ defineProps<{
     <div>
       <VCard>
         <div class="tw-mb-4 tw-text-lg tw-mt-4 tw-ml-4">
-          {{ $t('roleInformation') }}
+          {{ $t('roleInformation') || 'Role' }}
         </div>
         <VDivider
           :thickness="1"
@@ -60,18 +48,6 @@ defineProps<{
             <LabelValueDisplay
               label="role"
               :value="entityData?.role?.roleName"
-            />
-          </VListItem>
-          <VListItem v-if="entityData?.entityLabel || entityData?.entity">
-            <LinkItem
-              :label="entityData?.entityLabel"
-              :item="entityData?.entity"
-            />
-          </VListItem>
-          <VListItem v-if="entityData?.driverIC">
-            <LabelValueDisplay
-              label="driverIC"
-              :value="entityData?.driverIC"
             />
           </VListItem>
         </VList>

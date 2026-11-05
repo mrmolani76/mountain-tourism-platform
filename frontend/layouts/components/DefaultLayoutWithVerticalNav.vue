@@ -8,12 +8,26 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
+import type { VerticalNavItems } from '@layouts/types'
 
-const menuItems = appNavigation
+/**
+ * eQMS Complere pattern: fetch vertical nav from `GET /api/core/menus`
+ * instead of a hard-coded static list.
+ */
+const { getVerticalMenuData } = useCoreService()
+const navItems = ref<VerticalNavItems>([])
+
+const fetchMenuData = async () => {
+  const response = await getVerticalMenuData()
+
+  navItems.value = response.menu ?? []
+}
+
+fetchMenuData()
 </script>
 
 <template>
-  <VerticalNavLayout :navItems="menuItems">
+  <VerticalNavLayout :navItems="navItems">
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="tw-flex h-100 align-center tw-justify-between">
@@ -50,8 +64,5 @@ const menuItems = appNavigation
     <template #footer>
       <Footer />
     </template>
-
-    <!-- 👉 Customizer -->
-    <!-- <TheCustomizer /> -->
   </VerticalNavLayout>
 </template>

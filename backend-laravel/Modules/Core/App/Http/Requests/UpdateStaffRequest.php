@@ -19,7 +19,10 @@ class UpdateStaffRequest extends FormRequest
     public function rules(): array
     {
         $conn = config('tenancy.connection_name');
-        $staffId = (int) $this->route('staff');
+        $staffId = (int) ($this->route('staff')
+            ?? $this->input('uuid')
+            ?? $this->input('id')
+            ?? 0);
 
         return [
             'email' => [
@@ -28,9 +31,12 @@ class UpdateStaffRequest extends FormRequest
                 'max:255',
                 Rule::unique($conn.'.core_staff', 'email')->ignore($staffId),
             ],
-            'password' => ['sometimes', 'string', 'min:8', 'max:128'],
+            'password' => ['sometimes', 'nullable', 'string', 'min:8', 'max:128'],
             'role' => ['sometimes', 'string', 'in:' . implode(',', StaffRole::codes())],
             'is_active' => ['sometimes', 'boolean'],
+            'active' => ['sometimes', 'boolean'],
+            'uuid' => ['sometimes'],
+            'id' => ['sometimes'],
         ];
     }
 }

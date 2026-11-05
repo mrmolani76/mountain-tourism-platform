@@ -185,7 +185,7 @@ onMounted(checkHealth)
     >
       <VCard
         class="h-100"
-        :to="{ path: `/modules/${module.key}` }"
+        :to="{ path: `/${module.key}` }"
         hover
       >
         <VCardItem>

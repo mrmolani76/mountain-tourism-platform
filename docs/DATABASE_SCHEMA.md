@@ -220,8 +220,8 @@ Append-only.
 
 ## 5. Module B: Hotel, chalets and huts (tenant)
 
-Implemented in
-`Modules/Hotel/Database/migrations/tenant/2026_11_04_000001_create_hotel_tables.php`.
+Implemented as one migration file per table under
+`Modules/Hotel/Database/migrations/tenant/` (`2026_11_04_000001` … `000010`).
 
 Design choices already recorded in `docs/DECISIONS.md` (2026-11-04):
 
@@ -230,6 +230,18 @@ Design choices already recorded in `docs/DECISIONS.md` (2026-11-04):
 - Board price is per person per night, `board_price_per_person_cents x (adults + children)`.
 - Chalets are `hotel_room` rows with `accommodation_type = 'chalet'`, not a separate table.
 - Reservation has one board plan and 1 to n allocation rows.
+
+### 5.0 Relation map (Module B)
+
+```text
+core_building ──< hotel_room >── hotel_room_type ──< hotel_room_season_price >── core_season
+core_building ──< hotel_hut_dormitory >── hotel_room_type
+hotel_hut_dormitory ──< hotel_hut_bed
+hotel_board_plan ──< hotel_reservation ──< hotel_reservation_accommodation >── hotel_room
+                                                              └──────────────>── hotel_hut_bed
+hotel_reservation ──< hotel_stay >── folio_folio
+hotel_stay ──< hotel_nightly_posting
+```
 
 ### 5.1 `hotel_room_type` (implemented)
 
@@ -1306,5 +1318,5 @@ Existing migrations that must be applied before dependent modules:
 
 - `Modules/Core/Database/migrations/tenant/2026_11_03_000001_create_core_staff_and_building_tables.php`
 - `Modules/Core/Database/migrations/tenant/2026_11_03_000002_create_core_config_tables.php`
-- `Modules/Hotel/Database/migrations/tenant/2026_11_04_000001_create_hotel_tables.php`
+- `Modules/Hotel/Database/migrations/tenant/2026_11_04_000001_create_hotel_room_type_table.php` … `000010_create_hotel_nightly_posting_table.php` (one table per file)
 - `Modules/Folio/Database/migrations/tenant/2026_11_04_000001_create_folio_tables.php`

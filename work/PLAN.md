@@ -15,13 +15,13 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| — | (empty — Module 3–9 kanban not restored yet) | — | — | — | — |
+| 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
 
 ## In Progress
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
+| 74 | EQMS menu + Core staff CRUD wire + Hotel schema relations | high | A-core | frontend | L |
 
 ## Completed
 

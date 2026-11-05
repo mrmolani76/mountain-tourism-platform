@@ -3,11 +3,11 @@ import type { User } from '@/types/user'
 import { useAuthService } from '@/composables/auth/useAuthService'
 
 /**
- * User / staff listing helpers.
- * Auth (login / logout / me) lives in `useAuthService` — eQMS domain split.
+ * User / staff API — eQMS qualitycenter-spa `composables/users/userService.ts` paths,
+ * backed by Laravel Core `UserListingController` (tenant Staff).
  */
 export const useUserApiClient = () => {
-  const { post, get, put, del } = useApiClient()
+  const { post, get, put } = useApiClient()
   const { saveUserPreference } = useSharedApiClient()
   const auth = useAuthService()
 
@@ -18,13 +18,11 @@ export const useUserApiClient = () => {
   const updateUserProfile = async (body: UserForm) => {
     loading.value = true
 
-    const payload = {
+    const result = await put<ApiResponse<any>>('/user/updateProfile', {
       ...body,
       firstName: body.firstName,
       last_name: body.lastName,
-    }
-
-    const result = await put<ApiResponse<any>>('/user/updateProfile', payload)
+    })
 
     loading.value = false
 
@@ -35,7 +33,7 @@ export const useUserApiClient = () => {
   const getUserById = async (id: string) => {
     loading.value = true
 
-    const response = await get<ApiResponse<{ user: User;permissions: Permission }>>(`/user/fetch?id=${id}`)
+    const response = await get<ApiResponse<{ user: User; permissions?: Permission }>>(`/user/fetch?id=${id}`)
 
     loading.value = false
     if (response?.status)
@@ -68,17 +66,11 @@ export const useUserApiClient = () => {
     loading.value = false
   }
 
-  const createUser = async (body: UserForm) => {
+  /** Create staff — eQMS POST users/create; body is JSON for Laravel. */
+  const createUser = async (body: Record<string, unknown>) => {
     loading.value = true
 
-    const formData = new FormData()
-
-    Object.entries(body || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null)
-        formData.append(key, value as any)
-    })
-
-    const result = await post<ApiResponse<SaveApiResponse>>('/user', formData)
+    const result = await post<ApiResponse<SaveApiResponse> & { uuid?: string }>('/users/create', body)
 
     loading.value = false
 
@@ -86,17 +78,10 @@ export const useUserApiClient = () => {
       return result
   }
 
-  const updateUser = async (body: UserForm) => {
+  const updateUser = async (body: Record<string, unknown>) => {
     loading.value = true
 
-    const formData = new FormData()
-
-    Object.entries(body || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null)
-        formData.append(key, value as any)
-    })
-
-    const result = await post<ApiResponse<SaveApiResponse>>('/user/update', formData)
+    const result = await post<ApiResponse<SaveApiResponse> & { uuid?: string }>('/user/update', body)
 
     loading.value = false
 
@@ -105,7 +90,7 @@ export const useUserApiClient = () => {
   }
 
   const deleteUsers = async (data: Record<string, any>) => {
-    const response = await del<ApiResponse<any>>('/users/delete', data)
+    const response = await post<ApiResponse<any>>('/users/destroy', data)
 
     if (response?.status)
       return response.status
@@ -148,17 +133,13 @@ export const useUserApiClient = () => {
   }
 
   const userPasswordReset = async (params: object) => {
-    const response = await post<ApiResponse<any>>('/user/passwordReset', params)
-    if (response?.status)
-      return response
-
-    return response
+    return await post<ApiResponse<any>>('/user/passwordReset', params)
   }
 
   const formInitaldata = async () => {
     loading.value = true
 
-    const response = await get<ApiResponse<any>>('/user/formInitialData')
+    const response = await get<ApiResponse<{ roles: Array<{ id: string; name: string; roleName: string }> }>>('/user/formInitialData')
 
     loading.value = false
     if (response?.status)
@@ -186,11 +167,7 @@ export const useUserApiClient = () => {
   }
 
   const updateUserLang = async (lang: string) => {
-    const response = await put<ApiResponse<any>>('/user/update-lang', { lang })
-    if (response?.status)
-      return response
-
-    return response
+    return await put<ApiResponse<any>>('/user/update-lang', { lang })
   }
 
   return {

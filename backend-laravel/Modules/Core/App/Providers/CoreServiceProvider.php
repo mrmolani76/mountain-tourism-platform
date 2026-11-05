@@ -41,5 +41,17 @@ class CoreServiceProvider extends ServiceProvider
             base_path('Modules/Core/config/config.php'),
             $this->moduleNameLower
         );
+
+        // eQMS Complere: Modules/Core/config/menu.php → config('menu.items')
+        $this->mergeConfigFrom(
+            base_path('Modules/Core/config/menu.php'),
+            'menu'
+        );
+
+        // eQMS Complere: Modules/Core/config/listing.php → config('listing.users')
+        $this->mergeConfigFrom(
+            base_path('Modules/Core/config/listing.php'),
+            'listing'
+        );
     }
 }

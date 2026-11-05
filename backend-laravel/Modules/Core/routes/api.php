@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Core\App\Http\Controllers\AuthController;
 use Modules\Core\App\Http\Controllers\BuildingController;
+use Modules\Core\App\Http\Controllers\MenuController;
 use Modules\Core\App\Http\Controllers\OutletAccessController;
 use Modules\Core\App\Http\Controllers\OutletController;
 use Modules\Core\App\Http\Controllers\SeasonController;
 use Modules\Core\App\Http\Controllers\SettingsController;
 use Modules\Core\App\Http\Controllers\StaffController;
+use Modules\Core\App\Http\Controllers\UserListingController;
 
 // Trailing-slash aliases keep older Nuxt clients working (DRF used `/auth/login/`).
 Route::post('auth/login', [AuthController::class, 'login']);
@@ -20,6 +22,10 @@ Route::middleware('staff.auth')->group(function () {
     Route::get('auth/me/', [AuthController::class, 'me']);
     Route::post('auth/reset-password', [AuthController::class, 'resetPassword']);
     Route::post('auth/reset-password/', [AuthController::class, 'resetPassword']);
+
+    // eQMS Complere: GET /api/core/menus
+    Route::get('core/menus', [MenuController::class, 'index']);
+    Route::get('core/menus/', [MenuController::class, 'index']);
 
     Route::get('buildings', [BuildingController::class, 'index']);
     Route::post('buildings', [BuildingController::class, 'store']);
@@ -35,6 +41,18 @@ Route::middleware('staff.auth')->group(function () {
 
     Route::apiResource('staff', StaffController::class)->except(['update']);
     Route::patch('staff/{staff}', [StaffController::class, 'update']);
+
+    // eQMS Complere users listing / form / view surface (tenant Staff).
+    Route::get('users/list/config', [UserListingController::class, 'listingConfig']);
+    Route::post('users/list', [UserListingController::class, 'list']);
+    Route::post('users/create', [UserListingController::class, 'create']);
+    Route::post('users/destroy', [UserListingController::class, 'destroy']);
+    Route::post('users/usersActivate', [UserListingController::class, 'activate']);
+    Route::post('users/usersDeactivate', [UserListingController::class, 'deactivate']);
+    Route::get('user/fetch', [UserListingController::class, 'fetch']);
+    Route::get('user/show', [UserListingController::class, 'show']);
+    Route::post('user/update', [UserListingController::class, 'update']);
+    Route::get('user/formInitialData', [UserListingController::class, 'formInitialData']);
 
     Route::get('outlet-access', [OutletAccessController::class, 'index']);
     Route::post('outlet-access', [OutletAccessController::class, 'store']);

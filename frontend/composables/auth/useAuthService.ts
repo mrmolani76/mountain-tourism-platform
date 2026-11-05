@@ -11,9 +11,9 @@ import { API } from '@/composables/core/useApi'
 
 const ROLE_PERMISSIONS: Record<string, Array<string>> = {
   owner: ['*'],
-  manager: ['folio'],
-  front_desk: ['folio'],
-  cashier: ['folio'],
+  manager: ['hotel', 'staff'],
+  front_desk: ['hotel'],
+  cashier: [],
   rental_desk: [],
   service_staff: [],
   transport_desk: [],
@@ -115,9 +115,12 @@ export const useAuthService = () => {
   }
 
   const getMenuItems = async (): Promise<ApiResponse<{ menu: VerticalNavItems }>> => {
+    const { getVerticalMenuData } = useCoreService()
+    const payload = await getVerticalMenuData()
+
     return {
       status: true,
-      data: { menu: appNavigation },
+      data: { menu: payload.menu },
     }
   }
 
