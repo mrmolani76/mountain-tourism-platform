@@ -75,6 +75,10 @@ class UserListingController extends Controller
 
         $page = max(1, (int) $request->input('page', 1));
         $size = (int) $request->input('itemsPerPage', $request->input('page_size', 10));
+        // Vuetify DataTable can send -1 for "all"; cap for safety.
+        if ($size === -1) {
+            $size = 100;
+        }
         if ($size < 1) {
             $size = 10;
         }
@@ -104,8 +108,8 @@ class UserListingController extends Controller
             }
         }
 
-        $sortKey = (string) data_get($request->input('sortBy'), '0.key', 'email');
-        $sortOrder = strtolower((string) data_get($request->input('sortBy'), '0.order', 'asc')) === 'desc' ? 'desc' : 'asc';
+        // DataTable may send sortBy as [{key,order}] (Vuetify) or {key,order} (custom header sort).
+        [$sortKey, $sortOrder] = $this->resolveSort($request->input('sortBy'));
         $sortMap = [
             'email' => 'email',
             'role' => 'role',
@@ -321,9 +325,10 @@ class UserListingController extends Controller
                 'selectable' => true,
                 'isLocked' => false,
             ],
+            // eQMS username cell: type link + url so DataTableCell renders NuxtLink.
             'email' => [
                 'label' => (string) $s->email,
-                'type' => 'text',
+                'type' => 'link',
                 'url' => '/users/view/'.$s->getKey(),
             ],
             'role' => [
@@ -336,6 +341,31 @@ class UserListingController extends Controller
                 'color' => $active ? 'success' : 'error',
             ],
         ];
+    }
+
+    /**
+     * Normalize DataTable sortBy payload.
+     *
+     * @return array{0: string, 1: string} [key, asc|desc]
+     */
+    private function resolveSort(mixed $sortBy): array
+    {
+        $key = 'email';
+        $order = 'asc';
+
+        if (is_array($sortBy)) {
+            if (isset($sortBy['key'])) {
+                $key = (string) $sortBy['key'];
+                $order = (string) ($sortBy['order'] ?? 'asc');
+            } elseif (isset($sortBy[0]) && is_array($sortBy[0])) {
+                $key = (string) ($sortBy[0]['key'] ?? 'email');
+                $order = (string) ($sortBy[0]['order'] ?? 'asc');
+            }
+        }
+
+        $order = strtolower($order) === 'desc' ? 'desc' : 'asc';
+
+        return [$key !== '' ? $key : 'email', $order];
     }
 
     /**

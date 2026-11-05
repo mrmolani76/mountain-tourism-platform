@@ -7,6 +7,9 @@
 
 return [
 
+    // Staff users listing lives in Modules/Core/config/listing.php
+    // (merged via CoreServiceProvider → config('listing.users')).
+
     'buildings' => [
         'default_order' => [
             'field' => 'name',
