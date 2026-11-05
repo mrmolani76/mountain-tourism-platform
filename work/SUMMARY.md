@@ -57,7 +57,7 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
-- (none)
+- **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
 - **BUG-APP-004** — Staff login bad credentials 403 → 401 (low, 2026-11-03)

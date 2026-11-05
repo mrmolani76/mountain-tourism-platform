@@ -4,6 +4,7 @@
 
 | ID | Title | Severity | Status | Created |
 |----|-------|----------|--------|---------|
+| BUG-APP-006 | Dev hard refresh drops :3000 (Apache :80 / login 502) | high | BUG_CREATED | 2026-11-06 |
 
 ## Verified
 

@@ -24,8 +24,10 @@ export default defineNuxtConfig({
       publicDir: '.output/',
     },
   },
+  // Bind all interfaces so lab.localhost:3000 works (EQMS uses a fixed tenant host).
+  // strictPort + HMR clientPort keep :3000 on hard refresh (Apache owns :80 here).
   devServer: {
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 3000,
   },
   devtools: {
@@ -123,9 +125,22 @@ export default defineNuxtConfig({
       }),
     ],
     server: {
+      host: '0.0.0.0',
+      port: 3000,
+      strictPort: true,
+      hmr: {
+        // Preserve :3000 in the browser when the page Host is lab.localhost
+        clientPort: 3000,
+      },
       proxy: {
         '/api': {
-          target: process.env.BACKEND_URL || 'http://lab.local.mountain.local:8000',
+          // Must match frontend/.env.example BACKEND_URL (Laravel artisan serve / docker 8000|8010)
+          target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/sanctum': {
+          target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
           changeOrigin: true,
           secure: false,
         },
