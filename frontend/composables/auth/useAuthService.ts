@@ -11,13 +11,13 @@ import { API } from '@/composables/core/useApi'
 
 const ROLE_PERMISSIONS: Record<string, Array<string>> = {
   owner: ['*'],
-  manager: ['hotel', 'folio', 'pos', 'rental', 'services', 'transport', 'weather', 'reports', 'staff'],
-  front_desk: ['hotel', 'folio', 'pos'],
-  cashier: ['folio', 'pos'],
-  rental_desk: ['rental', 'folio'],
-  service_staff: ['services'],
-  transport_desk: ['transport'],
-  lift_operator: ['weather'],
+  manager: ['folio'],
+  front_desk: ['folio'],
+  cashier: ['folio'],
+  rental_desk: [],
+  service_staff: [],
+  transport_desk: [],
+  lift_operator: [],
 }
 
 function emptyLink() {
