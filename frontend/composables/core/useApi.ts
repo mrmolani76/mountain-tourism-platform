@@ -3,13 +3,21 @@ import { IS_SAAS_ADMIN_HOST, resolveApiOrigin } from '@/utils/tenantHost'
 /**
  * Shared HTTP client — eQMS qualitycenter-spa `composables/core/useApi.ts` pattern.
  *
- * - Sanctum CSRF: GET `{origin}/sanctum/csrf-cookie` once if XSRF-TOKEN missing
- * - Every call: credentials include + X-XSRF-TOKEN
+ * - Sanctum CSRF: only before mutating methods when XSRF-TOKEN missing
+ * - Short timeout so a dead Vite→Laravel proxy fails fast (not 30–120s hang)
+ * - CSRF failure cooldown avoids stacking timeouts on every parallel call
  * - baseURL: `{origin}/api` (no trailing slash on paths; Laravel Core routes)
- * - Pages/components must NOT call $fetch directly — go through domain services
  */
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
+/** Fail fast when Laravel is down / proxy cannot connect. */
+const REQUEST_TIMEOUT_MS = 8_000
+
+/** After CSRF fails, skip re-trying for this window (ms). */
+const CSRF_FAIL_COOLDOWN_MS = 5_000
+
+const UNSAFE_METHODS = new Set<HttpMethod>(['POST', 'PUT', 'PATCH', 'DELETE'])
 
 function readCookie(name: string): string | null {
   if (typeof document === 'undefined')
@@ -28,11 +36,26 @@ function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, '')
 }
 
+function timeoutSignal(ms: number): AbortSignal | undefined {
+  if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function')
+    return AbortSignal.timeout(ms)
+
+  return undefined
+}
+
 class MountainApi {
   private csrfTokenPromise: Promise<void> | null = null
+  private csrfCooldownUntil = 0
 
-  private async ensureCsrfCookie(): Promise<void> {
+  /**
+   * Seed XSRF cookie. Safe GETs skip this (session cookie is enough to probe `/auth/me`).
+   * Mutating calls still require it for Sanctum SPA.
+   */
+  async ensureCsrfCookie(): Promise<void> {
     if (readCookie('XSRF-TOKEN'))
+      return
+
+    if (Date.now() < this.csrfCooldownUntil)
       return
 
     if (!this.csrfTokenPromise) {
@@ -41,12 +64,16 @@ class MountainApi {
       this.csrfTokenPromise = $fetch(`${origin}/sanctum/csrf-cookie`, {
         method: 'GET',
         credentials: 'include',
+        signal: timeoutSignal(REQUEST_TIMEOUT_MS),
+        timeout: REQUEST_TIMEOUT_MS,
       })
         .then(() => {
           this.csrfTokenPromise = null
+          this.csrfCooldownUntil = 0
         })
         .catch(() => {
           this.csrfTokenPromise = null
+          this.csrfCooldownUntil = Date.now() + CSRF_FAIL_COOLDOWN_MS
         })
     }
 
@@ -54,7 +81,8 @@ class MountainApi {
   }
 
   private async request<T>(method: HttpMethod, url: string, body?: unknown): Promise<T | null> {
-    await this.ensureCsrfCookie()
+    if (UNSAFE_METHODS.has(method))
+      await this.ensureCsrfCookie()
 
     const origin = resolveApiOrigin()
     const path = stripTrailingSlash(url.replace(/^\//, ''))
@@ -75,6 +103,8 @@ class MountainApi {
         body: method === 'GET' ? undefined : body,
         credentials: 'include',
         headers,
+        signal: timeoutSignal(REQUEST_TIMEOUT_MS),
+        timeout: REQUEST_TIMEOUT_MS,
       })
     }
     catch (error: any) {
@@ -94,10 +124,19 @@ class MountainApi {
 
     const isAuthProbe = url.includes('/auth/me') || url.includes('/saas/auth/')
     const isLogout = url.includes('/auth/logout')
+    const isTimeout = error?.name === 'TimeoutError'
+      || error?.code === 'TIMEOUT'
+      || error?.cause?.name === 'TimeoutError'
+      || String(error?.message || '').toLowerCase().includes('timeout')
+
+    if (isTimeout && !isAuthProbe) {
+      $toast.error('API timed out. Is the Laravel backend running?')
+
+      return
+    }
 
     if (status === 401) {
       if (IS_SAAS_ADMIN_HOST) {
-        // SaaS admin store wiring lands with Module 1 SaaS pages.
         if (!url.includes('saas/auth/'))
           await navigateTo('/saas/login')
       }

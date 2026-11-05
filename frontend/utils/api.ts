@@ -36,16 +36,18 @@ function csrfHeaders(headers: Headers): void {
 }
 
 export const $api = $fetch.create({
+  timeout: 8_000,
   async onRequest({ options }) {
-    // Seed Sanctum CSRF the same way `API` does (cached inside MountainApi).
-    await ensureLaravelCsrfCookie()
+    const method = (options.method || 'GET').toString().toUpperCase()
+
+    // Mutating calls only — matches MountainApi (avoid CSRF hang before every GET).
+    if (UNSAFE_METHODS.has(method))
+      await ensureLaravelCsrfCookie()
 
     const origin = resolveApiOrigin()
 
     options.baseURL = `${origin}/api`
     options.credentials = 'include'
-
-    const method = (options.method || 'GET').toString().toUpperCase()
 
     if (UNSAFE_METHODS.has(method)) {
       options.headers = new Headers(options.headers || {})
@@ -96,15 +98,8 @@ export const $api = $fetch.create({
  * No-op when XSRF-TOKEN already present. Always uses current host origin.
  */
 export async function ensureLaravelCsrfCookie(): Promise<void> {
-  if (readCookie('XSRF-TOKEN'))
-    return
-
-  const origin = resolveApiOrigin()
-
-  await $fetch(`${origin}/sanctum/csrf-cookie`, {
-    method: 'GET',
-    credentials: 'include',
-  })
+  // Shared cooldown + timeout live on the MountainApi singleton.
+  await API.ensureCsrfCookie()
 }
 
 /** Re-export for callers that want the EQMS singleton by name. */

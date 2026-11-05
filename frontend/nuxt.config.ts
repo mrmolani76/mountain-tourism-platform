@@ -138,11 +138,16 @@ export default defineNuxtConfig({
           target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
           changeOrigin: true,
           secure: false,
+          // Dead Laravel used to hang the browser for minutes; fail in ~8s.
+          timeout: 8_000,
+          proxyTimeout: 8_000,
         },
         '/sanctum': {
           target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
           changeOrigin: true,
           secure: false,
+          timeout: 8_000,
+          proxyTimeout: 8_000,
         },
       },
     },
