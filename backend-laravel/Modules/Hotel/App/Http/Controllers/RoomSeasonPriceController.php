@@ -50,13 +50,13 @@ class RoomSeasonPriceController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreRoomSeasonPriceData $data): JsonResponse
+    public function store(StoreRoomSeasonPriceData $request): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
-        $model = RoomSeasonPrice::on(config('tenancy.connection_name'))->create($data->toFillArray());
+        $model = RoomSeasonPrice::on(config('tenancy.connection_name'))->create($request->toFillArray());
         CoreAudit::record(
             AuditEvent::ACTION_CREATE,
             'hotel_room_season_price',
@@ -67,7 +67,7 @@ class RoomSeasonPriceController extends Controller
         return response()->json($model->fresh()->toApiArray(), 201);
     }
 
-    public function update(UpdateRoomSeasonPriceData $data, int $room_season_price): JsonResponse
+    public function update(UpdateRoomSeasonPriceData $request, int $room_season_price): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
@@ -79,7 +79,7 @@ class RoomSeasonPriceController extends Controller
         }
 
         $old = $model->toApiArray();
-        $model->fill($data->toFillArray())->save();
+        $model->fill($request->toFillArray())->save();
         $fresh = $model->fresh();
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,

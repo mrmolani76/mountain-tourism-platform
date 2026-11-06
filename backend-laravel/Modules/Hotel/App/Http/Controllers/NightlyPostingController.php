@@ -5,7 +5,7 @@ namespace Modules\Hotel\App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Hotel\App\Http\Requests\RunNightlyPostingRequest;
+use Modules\Hotel\App\Data\RunNightlyPostingData;
 use Modules\Hotel\App\Models\NightlyPosting;
 use Modules\Hotel\App\Services\NightlyPostingService;
 use Modules\Hotel\App\Support\HotelAuthz;
@@ -38,17 +38,15 @@ class NightlyPostingController extends Controller
         return ListQuery::respond($items, $total, $request, fn (NightlyPosting $posting) => $posting->toApiArray());
     }
 
-    public function run(RunNightlyPostingRequest $request): JsonResponse
+    public function run(RunNightlyPostingData $request): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessManagerPlus()) {
             return $denied;
         }
 
-        $date = $request->validated()['date'] ?? null;
-
         return response()->json([
             'success' => true,
-            'data' => $this->posting->run($date),
+            'data' => $this->posting->run($request->date),
             'error' => null,
             'meta' => [],
         ], 200);

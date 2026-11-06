@@ -64,18 +64,18 @@ class ReservationController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreReservationData $data): JsonResponse
+    public function store(StoreReservationData $request): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessFrontDesk()) {
             return $denied;
         }
 
-        $reservation = $this->reservations->create($data->toFillArray());
+        $reservation = $this->reservations->create($request->toFillArray());
 
         return response()->json($reservation->toApiArray(), 201);
     }
 
-    public function update(UpdateReservationData $data, int $reservation): JsonResponse
+    public function update(UpdateReservationData $request, int $reservation): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessFrontDesk()) {
             return $denied;
@@ -86,10 +86,10 @@ class ReservationController extends Controller
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
 
-        return response()->json($this->reservations->update($model, $data->toFillArray())->toApiArray(), 200);
+        return response()->json($this->reservations->update($model, $request->toFillArray())->toApiArray(), 200);
     }
 
-    public function cancel(CancelReservationData $data, int $reservation): JsonResponse
+    public function cancel(CancelReservationData $request, int $reservation): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessFrontDesk()) {
             return $denied;
@@ -100,7 +100,7 @@ class ReservationController extends Controller
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
 
-        $cancelled = $this->reservations->cancel($model, $data->reason);
+        $cancelled = $this->reservations->cancel($model, $request->reason);
 
         return response()->json($cancelled->toApiArray(), 200);
     }

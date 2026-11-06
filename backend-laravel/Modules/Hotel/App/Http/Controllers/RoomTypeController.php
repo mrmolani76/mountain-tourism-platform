@@ -50,13 +50,13 @@ class RoomTypeController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreRoomTypeData $data): JsonResponse
+    public function store(StoreRoomTypeData $request): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
-        $model = RoomType::on(config('tenancy.connection_name'))->create($data->toFillArray());
+        $model = RoomType::on(config('tenancy.connection_name'))->create($request->toFillArray());
         CoreAudit::record(
             AuditEvent::ACTION_CREATE,
             'hotel_room_type',
@@ -67,7 +67,7 @@ class RoomTypeController extends Controller
         return response()->json($model->fresh()->toApiArray(), 201);
     }
 
-    public function update(UpdateRoomTypeData $data, int $room_type): JsonResponse
+    public function update(UpdateRoomTypeData $request, int $room_type): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
@@ -79,7 +79,7 @@ class RoomTypeController extends Controller
         }
 
         $old = $model->toApiArray();
-        $model->fill($data->toFillArray())->save();
+        $model->fill($request->toFillArray())->save();
         $fresh = $model->fresh();
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,

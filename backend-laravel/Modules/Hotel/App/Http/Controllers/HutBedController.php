@@ -51,13 +51,13 @@ class HutBedController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreHutBedData $data): JsonResponse
+    public function store(StoreHutBedData $request): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
-        $model = HutBed::on(config('tenancy.connection_name'))->create($data->toFillArray());
+        $model = HutBed::on(config('tenancy.connection_name'))->create($request->toFillArray());
         CoreAudit::record(
             AuditEvent::ACTION_CREATE,
             'hotel_hut_bed',
@@ -68,7 +68,7 @@ class HutBedController extends Controller
         return response()->json($model->fresh()->toApiArray(), 201);
     }
 
-    public function update(UpdateHutBedData $data, int $hut_bed): JsonResponse
+    public function update(UpdateHutBedData $request, int $hut_bed): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
@@ -80,7 +80,7 @@ class HutBedController extends Controller
         }
 
         $old = $model->toApiArray();
-        $model->fill($data->toFillArray())->save();
+        $model->fill($request->toFillArray())->save();
         $fresh = $model->fresh();
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,
