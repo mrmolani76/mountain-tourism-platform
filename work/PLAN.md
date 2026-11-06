@@ -21,12 +21,12 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 74 | EQMS menu + Core staff CRUD wire + Hotel schema relations | high | A-core | frontend | L |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 74 | EQMS menu + Core staff CRUD wire + Hotel schema relations | high | A-core | frontend | L | 2026-11-06 |
 | 73 | Full platform DB schema design (Modules A to I) | high | docs | docs | L | 2026-11-05 |
 | 71 | Laravel Module 1 — central Saas + tenant Core (Inventory pattern) | high | A-core | backend | L | 2026-11-04 |
 | 70 | Laravel Stage C — pilot slice (auth login/me/logout + buildings) | high | A-core | backend | L | 2026-11-03 |

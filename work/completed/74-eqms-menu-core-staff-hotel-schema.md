@@ -2,7 +2,7 @@
 title: EQMS menu + Core staff CRUD wire + Hotel schema relations
 id: 74
 priority: high
-status: inprogress
+status: completed
 milestone: 2
 module: A-core
 area: frontend
@@ -43,13 +43,13 @@ User asked to match eQMS menu flow, keep only Core + Hotel modules visible, fini
 
 ## Acceptance Criteria (complete only when all ticked)
 
-- [ ] Backend menu config + `GET /api/core/menus` (role-filtered, Core + Hotel only)
-- [ ] Frontend layout fetches menu from API (eQMS pattern)
-- [ ] Staff CRUD frontend wired to Laravel `/staff`
-- [ ] Hotel schema ER + relation notes in `docs/DATABASE_SCHEMA.md`; model relations filled if gaps
-- [ ] Tests N/A (code-only; user said no setup)
-- [ ] `work/changes/2026-11-06--74-eqms-menu-core-staff-hotel-schema.md` written
-- [ ] PLAN.md + SUMMARY.md updated
+- [x] Backend menu config + `GET /api/core/menus` (role-filtered, Core + Hotel only)
+- [x] Frontend layout fetches menu from API (eQMS pattern)
+- [x] Staff CRUD frontend wired to Laravel `/users/*` listing + `/staff` resource
+- [x] Hotel schema ER + relation notes in `docs/DATABASE_SCHEMA.md`; model relations filled if gaps
+- [x] Tests N/A (code-only; user said no setup)
+- [x] `work/changes/2026-11-06--74-eqms-menu-core-staff-hotel-datatable.md` written
+- [x] PLAN.md + SUMMARY.md updated
 
 ## Files Likely Affected
 
@@ -64,12 +64,17 @@ User asked to match eQMS menu flow, keep only Core + Hotel modules visible, fini
 - `frontend/composables/api-clients/useUserApiClient.ts`
 - `docs/DATABASE_SCHEMA.md`
 - `backend-laravel/Modules/Hotel/App/Models/*`
+- `frontend/utils/listing-table.ts`
+- `frontend/components/core/ResourceCrudPage.vue`
+- `frontend/components/hotel/HotelCrudPage.vue`
+- `frontend/pages/hotel/availability.vue`
 
 ## Notes / Follow-ups
 
 - Code only: no Docker, migrate, or test runs.
 - Folio backend may remain (Hotel depends on it) but must not appear in the MVP menu.
 - Pinned-items / websocket live menu refresh from eQMS are out of scope for this slice.
+- Follow-on: Hotel inventory pages already use `HotelListingPage` DataTable; availability + Resource/Hotel CRUD also DataTable.
 
 ---
 
@@ -77,10 +82,10 @@ User asked to match eQMS menu flow, keep only Core + Hotel modules visible, fini
 
 ## Completion Log (when work is complete)
 
-- **Completed by**:
-- **Date**:
-- **What was done**:
-- **Files changed**:
-- **Verification**:
-- **Change report**:
-- **PLAN / SUMMARY**:
+- **Completed by**: Agent
+- **Date**: 2026-11-06
+- **What was done**: Core+Hotel menu API + layout fetch; staff DataTable listing via `/users/*`; Hotel view tabs/links; Hotel listing APIs; Spatie Data DTOs for Hotel; all remaining product `VDataTable` lists moved to EQMS `DataTable` (availability, ResourceCrudPage, HotelCrudPage) via `listing-table.ts` helpers.
+- **Files changed**: See change report. Latest uncommitted: `listing-table.ts`, `availability.vue`, `ResourceCrudPage.vue`, `HotelCrudPage.vue`.
+- **Verification**: Grep: no `VDataTable` under `frontend/pages` or `frontend/components/hotel`. Code-only; no browser/test run.
+- **Change report**: `work/changes/2026-11-06--74-eqms-menu-core-staff-hotel-datatable.md`
+- **PLAN / SUMMARY**: Updated on complete.

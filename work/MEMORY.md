@@ -4,18 +4,19 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **Product/API code only** (Django + DRF). No Docker/VPS/CI/env/setup unless user asks. Frontend deferred unless user opens it.
-- **Tenancy = DB-per-tenant**; domain in `backend/modules/`. No SSO.
-- **Test suite runs now**: `docker compose -f docker-compose.dev.yml exec web python -m pytest -q` → 38 passed (first run after rewrite; scratch DBs `lab_test`/`other_test` required — CI must create + migrate them the same way).
+- **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
+- **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
+- **WIP empty** after **74** complete. Next: **72** (Hotel migrate + tests on setup machine) when user asks.
 
 ## Next suggested pickups (kanban order)
-1. **35** — Module 2 — HutBed, season prices, Reservation APIs (high, backend, L)
-2. **67** — GitHub Actions CI/CD Improvement — CI/CD best practices (high, devops)
-2. Then **36→66** module-wise (WIP = 1); **SaaS tenant-create console last**
+1. **72** — Module 2 Hotel Laravel + folio contract (high; migrate + test pending)
+2. Then next unfinished module feature from phases (WIP = 1)
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **74** — EQMS menu + staff CRUD + Hotel DataTable listings (high, 2026-11-06)
+- **73** — Full platform DB schema design Modules A–I (high, 2026-11-05)
 - **69** — Laravel foundation Stage B complete (app+pgsql+envelope+health+CI) (high, 2026-11-03)
 - **68** — Laravel switch Phase 0 Django/DRF audit (45 endpoints, schema, auth matrix, risks) (high, 2026-11-03) — Laravel switch Phase 0 Django/DRF audit (45 endpoints, schema, auth matrix, risks) (high, 2026-11-03)
 - **34** — Fix domain ViewSets auth (hotel…reports) — StaffSessionAuthentication on all 20 domain ViewSets; BUG-APP-005 resolved; suite 46 passed (high, 2026-11-03)

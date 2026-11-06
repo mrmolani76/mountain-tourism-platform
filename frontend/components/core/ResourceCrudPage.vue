@@ -2,8 +2,7 @@
 import type { VForm } from 'vuetify/components/VForm'
 
 /**
- * Generic CRUD page for Core (buildings, outlets, seasons) and other
- * envelope list APIs. Form: external VLabel + red *, App* fields, VForm rules.
+ * Core CRUD with EQMS DataTable listing + dialog form.
  */
 
 const props = withDefaults(defineProps<{
@@ -31,12 +30,17 @@ const props = withDefaults(defineProps<{
 const { t } = useI18n()
 const client = useResourceApiClient()
 
-const rows = ref<Array<Record<string, any>>>([])
-/** First paint skeleton. */
-const initialLoading = ref(true)
-/** Table overlay while list refreshes. */
-const loading = ref(false)
-const search = ref('')
+const configLoading = ref(true)
+const listLoading = ref(false)
+const tableConfig = ref<DataTableConfig | null>(null)
+const listResult = ref<DataTableResult<any>>({
+  status: false,
+  data: [],
+  pagination: { total: 0 },
+})
+const tableParams = ref<Record<string, any>>({})
+const rawRows = ref<Array<Record<string, any>>>([])
+
 const dialogOpen = ref(false)
 const saving = ref(false)
 const editingId = ref<number | null>(null)
@@ -44,18 +48,12 @@ const form = ref<Record<string, any>>({})
 const resolvedOptions = ref<Record<string, Array<HotelOption>>>({})
 const refForm = ref<VForm>()
 
-const headers = computed(() => [
-  ...props.columns,
-  { key: 'actions', title: '', sortable: false, align: 'end' as const },
-])
-
 const dialogTitle = computed(() => editingId.value === null ? props.addLabel : `Edit ${props.title.replace(/s$/, '')}`)
 
 const fieldRules = (field: HotelFormField) => {
   if (!field.required || field.type === 'checkbox')
     return []
 
-  // Password required on create only.
   if (field.type === 'password' && editingId.value !== null)
     return []
 
@@ -85,19 +83,6 @@ const blankForm = () => {
   return base
 }
 
-const load = async () => {
-  loading.value = true
-  try {
-    const { data } = await client.list(props.endpoint, { page: 1, page_size: 100, ...props.listParams })
-
-    rows.value = (data as Array<Record<string, any>>) ?? []
-  }
-  finally {
-    loading.value = false
-    initialLoading.value = false
-  }
-}
-
 const loadOptions = async () => {
   const optionMap: Record<string, Array<HotelOption>> = {}
 
@@ -111,6 +96,42 @@ const loadOptions = async () => {
   resolvedOptions.value = optionMap
 }
 
+const applyListRows = (rows: Array<Record<string, any>>) => {
+  rawRows.value = rows
+  listResult.value = {
+    status: true,
+    data: rows.map(row => mapRowToDataTableCells(row, props.columns, {
+      optionLabels: resolvedOptions.value,
+    })),
+    pagination: { total: rows.length },
+  }
+}
+
+const reloadListingData = async (params: any = tableParams.value) => {
+  listLoading.value = true
+  tableParams.value = params || {}
+
+  try {
+    const page = Number(params?.page || 1)
+    const pageSize = Number(params?.itemsPerPage || params?.page_size || 25)
+
+    const { data, meta } = await client.list(props.endpoint, {
+      page,
+      page_size: pageSize === -1 ? 100 : pageSize,
+      ...props.listParams,
+    })
+
+    const rows = (data as Array<Record<string, any>>) ?? []
+
+    applyListRows(rows)
+    listResult.value.pagination = { total: Number(meta?.total_count ?? rows.length) }
+  }
+  finally {
+    listLoading.value = false
+    configLoading.value = false
+  }
+}
+
 const openCreate = async () => {
   editingId.value = null
   form.value = blankForm()
@@ -119,9 +140,15 @@ const openCreate = async () => {
   refForm.value?.resetValidation()
 }
 
-const openEdit = async (row: Record<string, any>) => {
-  editingId.value = Number(row.id)
+const openEdit = async (item: Record<string, any>) => {
+  const id = Number(item.id ?? item.uuid)
+  const row = rawRows.value.find(entry => Number(entry.id) === id)
+    ?? await client.show<Record<string, any>>(props.endpoint, id)
 
+  if (!row)
+    return
+
+  editingId.value = id
   const values: Record<string, any> = { ...row }
 
   props.fields.forEach((field) => {
@@ -131,7 +158,6 @@ const openEdit = async (row: Record<string, any>) => {
     if (field.type === 'multiselect' && !Array.isArray(values[field.key]))
       values[field.key] = []
 
-    // Never echo hashed passwords into the edit form.
     if (field.type === 'password')
       values[field.key] = ''
   })
@@ -151,7 +177,6 @@ const buildPayload = () => {
     if (field.type === 'money') {
       if (isBlank(value) && !field.required)
         return
-
       payload[field.key] = majorToCents(value)
 
       return
@@ -167,7 +192,6 @@ const buildPayload = () => {
 
         return
       }
-
       payload[field.key] = Number(value)
 
       return
@@ -208,7 +232,7 @@ const save = async () => {
 
     if (response) {
       dialogOpen.value = false
-      await load()
+      await reloadListingData()
     }
   }
   finally {
@@ -216,58 +240,21 @@ const save = async () => {
   }
 }
 
-const destroy = async (row: Record<string, any>) => {
-  const confirmed = await showConfirmDialog(`Delete "${row.name ?? row.room_number ?? row.bed_number ?? row.id}"?`, t('delete'), t('cancel'))
+const destroy = async (item: Record<string, any>) => {
+  const id = Number(item.id ?? item.uuid)
+  const confirmed = await showConfirmDialog(`Delete #${id}?`, t('delete'), t('cancel'))
 
   if (!confirmed)
     return
 
-  await client.remove(props.endpoint, Number(row.id))
-  await load()
-}
-
-const cellText = (row: Record<string, any>, column: HotelColumn) => {
-  const value = row[column.key]
-
-  if (value === null || value === undefined || value === '')
-    return '--'
-
-  if (column.kind === 'money')
-    return formatCents(value)
-
-  if (column.kind === 'bool')
-    return value ? 'Active' : 'Inactive'
-
-  if (column.kind === 'date')
-    return String(value).slice(0, 10)
-
-  if (column.kind === 'datetime')
-    return String(value).replace('T', ' ').slice(0, 16)
-
-  return String(value)
-}
-
-/** Vuetify 3.10 wraps rows as `{ raw, columns }`; older shapes pass the row directly. */
-const rawItem = (item: any): Record<string, any> => item?.raw ?? item
-
-const optionLabel = (field: HotelFormField, value: any) => {
-  const options = resolvedOptions.value[field.key] ?? field.options ?? []
-  const match = options.find(option => String(option.value) === String(value))
-
-  return match?.title ?? value ?? '--'
-}
-
-const displayValue = (row: Record<string, any>, column: HotelColumn) => {
-  const field = props.fields.find(item => item.key === column.key)
-
-  if (field && (field.type === 'select' || field.type === 'multiselect'))
-    return optionLabel(field, row[column.key])
-
-  return cellText(row, column)
+  await client.remove(props.endpoint, id)
+  await reloadListingData()
 }
 
 onMounted(async () => {
-  await Promise.all([load(), loadOptions()])
+  tableConfig.value = buildDataTableConfig(props.columns)
+  await loadOptions()
+  await reloadListingData({ page: 1, itemsPerPage: 25 })
 })
 </script>
 
@@ -278,98 +265,69 @@ onMounted(async () => {
         <h2 class="text-h5 mb-1">
           {{ title }}
         </h2>
-        <p v-if="subtitle" class="text-body-2 text-medium-emphasis mb-0">
+        <p
+          v-if="subtitle"
+          class="text-body-2 text-medium-emphasis mb-0"
+        >
           {{ subtitle }}
         </p>
       </div>
-      <div
-        v-if="!initialLoading"
-        class="d-flex align-center gap-2"
-      >
-        <VTextField
-          v-model="search"
-          density="compact"
-          hide-details
-          placeholder="Search"
-          prepend-inner-icon="tabler-search"
-          style="min-inline-size: 220px;"
-        />
-        <VBtn
-          v-if="canCreate"
-          color="primary"
-          prepend-icon="tabler-plus"
-          @click="openCreate"
-        >
-          {{ addLabel }}
-        </VBtn>
-      </div>
     </div>
 
-    <template v-if="initialLoading">
+    <template v-if="configLoading || !tableConfig">
       <VSkeletonLoader
-        :loading="initialLoading"
+        :loading="configLoading"
         type="table"
       />
     </template>
 
-    <VCard v-else>
-      <VDataTable
-        v-model:search="search"
-        :headers="headers"
-        :items="rows"
-        :loading="loading"
-        items-per-page="25"
-        density="comfortable"
-      >
-        <template #item="{ item }">
-          <tr>
-            <td v-for="column in columns" :key="column.key" :class="column.align === 'end' ? 'text-end' : ''">
-              <VChip
-                v-if="column.kind === 'bool'"
-                :color="rawItem(item)[column.key] ? 'success' : 'default'"
-                size="small"
-                variant="tonal"
-              >
-                {{ rawItem(item)[column.key] ? 'Active' : 'Inactive' }}
-              </VChip>
-              <VChip
-                v-else-if="column.kind === 'status'"
-                size="small"
-                variant="tonal"
-                :color="rawItem(item)[column.key] === 'checked_in' ? 'success' : rawItem(item)[column.key] === 'cancelled' ? 'error' : 'primary'"
-              >
-                {{ rawItem(item)[column.key] }}
-              </VChip>
-              <span v-else>{{ displayValue(rawItem(item), column) }}</span>
-            </td>
-            <td class="text-end">
-              <VBtn
-                v-if="canEdit"
-                icon="tabler-edit"
-                size="small"
-                variant="text"
-                color="primary"
-                @click="openEdit(rawItem(item))"
-              />
-              <VBtn
-                v-if="canDelete"
-                icon="tabler-trash"
-                size="small"
-                variant="text"
-                color="error"
-                @click="destroy(rawItem(item))"
-              />
-            </td>
-          </tr>
-        </template>
-
-        <template #no-data>
-          <div class="py-8 text-center text-medium-emphasis">
-            No records yet.
-          </div>
-        </template>
-      </VDataTable>
-    </VCard>
+    <DataTable
+      v-else
+      v-bind="tableConfig"
+      v-model="tableParams"
+      :list-data="listResult.data"
+      :total-items="listResult.pagination?.total ?? 0"
+      :loading="listLoading"
+      :show-add-button="canCreate"
+      :add-new-button-label="addLabel"
+      checkbox-id-key="id"
+      @load-items="reloadListingData"
+      @add-new="openCreate"
+    >
+      <template #actions="{ item }">
+        <div class="d-flex gap-1">
+          <VBtn
+            v-if="canEdit"
+            size="38"
+            color="primary"
+            @click="openEdit(item)"
+          >
+            <VTooltip activator="parent">
+              {{ t('edit') }}
+            </VTooltip>
+            <VIcon
+              icon="tabler-edit"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="canDelete"
+            size="38"
+            color="error"
+            variant="tonal"
+            @click="destroy(item)"
+          >
+            <VTooltip activator="parent">
+              {{ t('delete') }}
+            </VTooltip>
+            <VIcon
+              icon="tabler-trash"
+              size="22"
+            />
+          </VBtn>
+        </div>
+      </template>
+    </DataTable>
 
     <VDialog
       v-model="dialogOpen"
@@ -398,7 +356,6 @@ onMounted(async () => {
                     class="mt-4"
                   />
                 </template>
-
                 <template v-else>
                   <VLabel class="mb-1 text-body-2 text-wrap d-inline-flex align-center">
                     {{ field.label }}
@@ -414,65 +371,45 @@ onMounted(async () => {
                     :items="resolvedOptions[field.key] ?? field.options ?? []"
                     item-title="title"
                     item-value="value"
-                    :hint="field.hint"
                     :rules="fieldRules(field)"
                     :required="field.required"
                     clearable
                     density="comfortable"
-                    persistent-hint
                   />
-
                   <AppSelect
                     v-else-if="field.type === 'multiselect'"
                     v-model="form[field.key]"
                     :items="resolvedOptions[field.key] ?? field.options ?? []"
                     item-title="title"
                     item-value="value"
-                    :hint="field.hint"
                     :rules="fieldRules(field)"
-                    :required="field.required"
                     chips
-                    closable-chips
-                    density="comfortable"
                     multiple
-                    persistent-hint
+                    density="comfortable"
                   />
-
                   <AppTextarea
                     v-else-if="field.type === 'textarea'"
                     v-model="form[field.key]"
-                    :hint="field.hint"
                     :rules="fieldRules(field)"
-                    :required="field.required"
-                    density="comfortable"
-                    persistent-hint
-                    rows="2"
+                    rows="3"
                   />
-
                   <AppTextField
                     v-else
                     v-model="form[field.key]"
-                    :type="field.type === 'money' || field.type === 'number' ? 'number' : (field.type === 'password' ? 'password' : (field.type ?? 'text'))"
-                    :hint="field.hint"
-                    :min="field.min"
-                    :max="field.max"
-                    :step="field.type === 'money' ? '0.01' : field.step"
+                    :type="field.type === 'password' ? 'password' : (field.type === 'number' || field.type === 'money' ? 'number' : (field.type === 'email' ? 'email' : (field.type === 'date' ? 'date' : 'text')))"
                     :rules="fieldRules(field)"
-                    :required="field.required && !(field.type === 'password' && editingId !== null)"
-                    autocomplete="new-password"
+                    :required="field.required"
                     density="comfortable"
-                    persistent-hint
                   />
                 </template>
               </VCol>
             </VRow>
           </VCardText>
-
           <VCardActions>
             <VSpacer />
             <VBtn
-              variant="text"
-              :disabled="saving"
+              variant="tonal"
+              color="secondary"
               @click="dialogOpen = false"
             >
               {{ t('cancel') }}
@@ -481,7 +418,6 @@ onMounted(async () => {
               color="primary"
               type="submit"
               :loading="saving"
-              :disabled="saving"
             >
               {{ t('save') }}
             </VBtn>

@@ -3,8 +3,7 @@ import type { VForm } from 'vuetify/components/VForm'
 
 /**
  * Generic CRUD page for simple Hotel resources (room types, rooms, dormitories, beds,
- * season prices, board plans). Form layout follows the SPA pattern:
- * external VLabel + red required mark, App* fields, VForm rules, then save.
+ * season prices, board plans). List uses EQMS DataTable; form is dialog-based.
  */
 
 const props = withDefaults(defineProps<{
@@ -60,21 +59,23 @@ const viewUrl = (row: Record<string, any>) => {
   return `${props.viewPath.replace(/\/$/, '')}/view/${row.id}`
 }
 
-const rows = ref<Array<Record<string, any>>>([])
-const initialLoading = ref(true)
-const loading = ref(false)
-const search = ref('')
+const configLoading = ref(true)
+const listLoading = ref(false)
+const tableConfig = ref<DataTableConfig | null>(null)
+const listResult = ref<DataTableResult<any>>({
+  status: false,
+  data: [],
+  pagination: { total: 0 },
+})
+const tableParams = ref<Record<string, any>>({})
+const rawRows = ref<Array<Record<string, any>>>([])
+
 const dialogOpen = ref(false)
 const saving = ref(false)
 const editingId = ref<number | null>(null)
 const form = ref<Record<string, any>>({})
 const resolvedOptions = ref<Record<string, Array<HotelOption>>>({})
 const refForm = ref<VForm>()
-
-const headers = computed(() => [
-  ...props.columns,
-  { key: 'actions', title: '', sortable: false, align: 'end' as const },
-])
 
 const dialogTitle = computed(() => editingId.value === null ? props.addLabel : `Edit ${props.title.replace(/s$/, '')}`)
 
@@ -118,6 +119,67 @@ const loadOptions = async () => {
   resolvedOptions.value = optionMap
 }
 
+const applyListRows = (rows: Array<Record<string, any>>) => {
+  rawRows.value = rows
+  listResult.value = {
+    status: true,
+    data: rows.map(row => mapRowToDataTableCells(row, props.columns, {
+      linkKey: props.canView && props.viewPath ? resolvedLinkKey.value : undefined,
+      viewUrl: props.canView && props.viewPath ? viewUrl : undefined,
+      optionLabels: resolvedOptions.value,
+    })),
+    pagination: { total: rows.length },
+  }
+}
+
+const openEditFromQuery = async () => {
+  const editId = route.query.edit
+  if (!editId || !props.viewPath)
+    return
+
+  const id = Number(editId)
+  const row = rawRows.value.find(item => Number(item.id) === id)
+    ?? await client.show<Record<string, any>>(props.endpoint, id)
+
+  if (row)
+    await openEdit({ id: row.id })
+
+  const query = { ...route.query }
+
+  delete query.edit
+  await router.replace({ path: route.path, query })
+}
+
+const reloadListingData = async (params: any = tableParams.value) => {
+  listLoading.value = true
+  tableParams.value = params || {}
+
+  try {
+    const page = Number(params?.page || 1)
+    const pageSize = Number(params?.itemsPerPage || params?.page_size || 25)
+
+    const { data, meta } = await client.list(props.endpoint, {
+      page,
+      page_size: pageSize === -1 ? 100 : pageSize,
+      ...props.listParams,
+    })
+
+    const rows = (data as Array<Record<string, any>>) ?? []
+
+    applyListRows(rows)
+    listResult.value.pagination = { total: Number(meta?.total_count ?? rows.length) }
+  }
+  finally {
+    listLoading.value = false
+    configLoading.value = false
+  }
+
+  await openEditFromQuery()
+}
+
+const isBlank = (value: unknown) =>
+  value === null || value === undefined || value === ''
+
 const openCreate = async () => {
   editingId.value = null
   form.value = blankForm()
@@ -126,8 +188,15 @@ const openCreate = async () => {
   refForm.value?.resetValidation()
 }
 
-const openEdit = async (row: Record<string, any>) => {
-  editingId.value = Number(row.id)
+const openEdit = async (item: Record<string, any>) => {
+  const id = Number(item.id ?? item.uuid)
+  const row = rawRows.value.find(entry => Number(entry.id) === id)
+    ?? await client.show<Record<string, any>>(props.endpoint, id)
+
+  if (!row)
+    return
+
+  editingId.value = id
 
   const values: Record<string, any> = { ...row }
 
@@ -144,42 +213,6 @@ const openEdit = async (row: Record<string, any>) => {
   await nextTick()
   refForm.value?.resetValidation()
 }
-
-const openEditFromQuery = async () => {
-  const editId = route.query.edit
-  if (!editId || !props.viewPath)
-    return
-
-  const id = Number(editId)
-  const row = rows.value.find(item => Number(item.id) === id)
-    ?? await client.show<Record<string, any>>(props.endpoint, id)
-
-  if (row)
-    await openEdit(row)
-
-  const query = { ...route.query }
-
-  delete query.edit
-  await router.replace({ path: route.path, query })
-}
-
-const load = async () => {
-  loading.value = true
-  try {
-    const { data } = await client.list(props.endpoint, { page: 1, page_size: 100, ...props.listParams })
-
-    rows.value = (data as Array<Record<string, any>>) ?? []
-  }
-  finally {
-    loading.value = false
-    initialLoading.value = false
-  }
-
-  await openEditFromQuery()
-}
-
-const isBlank = (value: unknown) =>
-  value === null || value === undefined || value === ''
 
 const buildPayload = () => {
   const payload: Record<string, any> = {}
@@ -251,7 +284,7 @@ const save = async () => {
       if (props.viewPath && savedId)
         await navigateTo(viewUrl({ id: savedId }))
       else
-        await load()
+        await reloadListingData()
     }
   }
   finally {
@@ -259,58 +292,25 @@ const save = async () => {
   }
 }
 
-const destroy = async (row: Record<string, any>) => {
-  const confirmed = await showConfirmDialog(`Delete "${row.name ?? row.room_number ?? row.bed_number ?? row.id}"?`, t('delete'), t('cancel'))
+const destroy = async (item: Record<string, any>) => {
+  const id = Number(item.id ?? item.uuid)
+  const row = rawRows.value.find(entry => Number(entry.id) === id)
+  const label = row?.name ?? row?.room_number ?? row?.bed_number ?? id
+  const confirmed = await showConfirmDialog(`Delete "${label}"?`, t('delete'), t('cancel'))
 
   if (!confirmed)
     return
 
-  await client.remove(props.endpoint, Number(row.id))
-  await load()
-}
-
-const cellText = (row: Record<string, any>, column: HotelColumn) => {
-  const value = row[column.key]
-
-  if (value === null || value === undefined || value === '')
-    return '--'
-
-  if (column.kind === 'money')
-    return formatCents(value)
-
-  if (column.kind === 'bool')
-    return value ? 'Active' : 'Inactive'
-
-  if (column.kind === 'date')
-    return String(value).slice(0, 10)
-
-  if (column.kind === 'datetime')
-    return String(value).replace('T', ' ').slice(0, 16)
-
-  return String(value)
-}
-
-/** Vuetify 3.10 wraps rows as `{ raw, columns }`; older shapes pass the row directly. */
-const rawItem = (item: any): Record<string, any> => item?.raw ?? item
-
-const optionLabel = (field: HotelFormField, value: any) => {
-  const options = resolvedOptions.value[field.key] ?? field.options ?? []
-  const match = options.find(option => String(option.value) === String(value))
-
-  return match?.title ?? value ?? '--'
-}
-
-const displayValue = (row: Record<string, any>, column: HotelColumn) => {
-  const field = props.fields.find(item => item.key === column.key)
-
-  if (field && (field.type === 'select' || field.type === 'multiselect'))
-    return optionLabel(field, row[column.key])
-
-  return cellText(row, column)
+  await client.remove(props.endpoint, id)
+  await reloadListingData()
 }
 
 onMounted(async () => {
-  await Promise.all([load(), loadOptions()])
+  tableConfig.value = buildDataTableConfig(props.columns, {
+    defaultSortKey: resolvedLinkKey.value || props.columns[0]?.key,
+  })
+  await loadOptions()
+  await reloadListingData({ page: 1, itemsPerPage: 25 })
 })
 </script>
 
@@ -328,113 +328,76 @@ onMounted(async () => {
           {{ subtitle }}
         </p>
       </div>
-      <div
-        v-if="!initialLoading"
-        class="d-flex align-center gap-2"
-      >
-        <VTextField
-          v-model="search"
-          density="compact"
-          hide-details
-          placeholder="Search"
-          prepend-inner-icon="tabler-search"
-          style="min-inline-size: 220px;"
-        />
-        <VBtn
-          v-if="canCreate"
-          color="primary"
-          prepend-icon="tabler-plus"
-          @click="openCreate"
-        >
-          {{ addLabel }}
-        </VBtn>
-      </div>
     </div>
 
-    <template v-if="initialLoading">
+    <template v-if="configLoading || !tableConfig">
       <VSkeletonLoader
-        :loading="initialLoading"
+        :loading="configLoading"
         type="table"
       />
     </template>
 
-    <VCard v-else>
-      <VDataTable
-        v-model:search="search"
-        :headers="headers"
-        :items="rows"
-        :loading="loading"
-        items-per-page="25"
-        density="comfortable"
-      >
-        <template #item="{ item }">
-          <tr>
-            <td
-              v-for="column in columns"
-              :key="column.key"
-              :class="column.align === 'end' ? 'text-end' : ''"
-            >
-              <VChip
-                v-if="column.kind === 'bool'"
-                :color="rawItem(item)[column.key] ? 'success' : 'default'"
-                size="small"
-                variant="tonal"
-              >
-                {{ rawItem(item)[column.key] ? 'Active' : 'Inactive' }}
-              </VChip>
-              <VChip
-                v-else-if="column.kind === 'status'"
-                size="small"
-                variant="tonal"
-                :color="rawItem(item)[column.key] === 'checked_in' ? 'success' : rawItem(item)[column.key] === 'cancelled' ? 'error' : 'primary'"
-              >
-                {{ rawItem(item)[column.key] }}
-              </VChip>
-              <NuxtLink
-                v-else-if="canView && viewPath && column.key === resolvedLinkKey && viewUrl(rawItem(item))"
-                :to="viewUrl(rawItem(item))"
-                class="text-primary text-decoration-none font-weight-medium"
-              >
-                {{ displayValue(rawItem(item), column) }}
-              </NuxtLink>
-              <span v-else>{{ displayValue(rawItem(item), column) }}</span>
-            </td>
-            <td class="text-end">
-              <VBtn
-                v-if="canView && viewPath"
-                icon="tabler-eye"
-                size="small"
-                variant="text"
-                color="default"
-                @click="navigateTo(viewUrl(rawItem(item)))"
-              />
-              <VBtn
-                v-if="canEdit"
-                icon="tabler-edit"
-                size="small"
-                variant="text"
-                color="primary"
-                @click="openEdit(rawItem(item))"
-              />
-              <VBtn
-                v-if="canDelete"
-                icon="tabler-trash"
-                size="small"
-                variant="text"
-                color="error"
-                @click="destroy(rawItem(item))"
-              />
-            </td>
-          </tr>
-        </template>
-
-        <template #no-data>
-          <div class="py-8 text-center text-medium-emphasis">
-            No records yet.
-          </div>
-        </template>
-      </VDataTable>
-    </VCard>
+    <DataTable
+      v-else
+      v-bind="tableConfig"
+      v-model="tableParams"
+      :list-data="listResult.data"
+      :total-items="listResult.pagination?.total ?? 0"
+      :loading="listLoading"
+      :show-add-button="canCreate"
+      :add-new-button-label="addLabel"
+      checkbox-id-key="id"
+      @load-items="reloadListingData"
+      @add-new="openCreate"
+    >
+      <template #actions="{ item }">
+        <div class="d-flex gap-1">
+          <VBtn
+            v-if="canView && viewPath"
+            size="38"
+            color="primary"
+            @click="navigateTo(viewUrl(item))"
+          >
+            <VTooltip activator="parent">
+              {{ t('view') }}
+            </VTooltip>
+            <VIcon
+              icon="tabler-eye"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="canEdit"
+            size="38"
+            color="primary"
+            @click="openEdit(item)"
+          >
+            <VTooltip activator="parent">
+              {{ t('edit') }}
+            </VTooltip>
+            <VIcon
+              icon="tabler-edit"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="canDelete"
+            size="38"
+            color="error"
+            variant="tonal"
+            @click="destroy(item)"
+          >
+            <VTooltip activator="parent">
+              {{ t('delete') }}
+            </VTooltip>
+            <VIcon
+              icon="tabler-trash"
+              size="22"
+            />
+          </VBtn>
+        </div>
+      </template>
+    </DataTable>
 
     <VDialog
       v-model="dialogOpen"

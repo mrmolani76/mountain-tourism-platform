@@ -2,7 +2,7 @@
 title: Laravel Module 1 — central Saas + tenant Core (Inventory pattern)
 id: 71
 priority: high
-status: inprogress
+status: completed
 milestone: 1
 module: A-core
 area: backend
