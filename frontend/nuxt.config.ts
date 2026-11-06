@@ -58,15 +58,18 @@ export default defineNuxtConfig({
     }],
   },
   plugins: ['@/plugins/vuetify/index.ts', '@/plugins/iconify/index.ts'],
+  // EQMS pattern: register dirs once so pages/components do not re-import
+  // validators, utils, types, api clients, or stores on every file.
   imports: {
     dirs: [
       './@core/utils',
       './@core/composable/',
       './plugins/*/composables/*',
-      'types',
+      './composables/api-clients',
       './composables',
-      './composables/**',
+      './stores',
       './utils/**',
+      './types',
     ],
   },
   experimental: {

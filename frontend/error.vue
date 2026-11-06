@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { NuxtError } from 'nuxt/app'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import misc404 from '@images/pages/404.png'
 import miscMaskDark from '@images/pages/misc-mask-dark.png'
 import miscMaskLight from '@images/pages/misc-mask-light.png'

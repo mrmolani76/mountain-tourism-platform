@@ -39,7 +39,7 @@ const {
   exportUsersListing,
 } = useUserApiClient()
 
-const auth = authStore()
+const auth = useAuthStore()
 
 const reloadListingData = async (params: any = tableParams.value) => {
   selectedItemIds.value = []

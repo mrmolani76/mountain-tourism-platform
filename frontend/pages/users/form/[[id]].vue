@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { VForm } from 'vuetify/components/VForm'
+import type { VForm } from 'vuetify/components/VForm'
 
 /**
- * Staff create / edit — skeleton loading then card form,
- * fields trimmed to Mountain tenant Staff (email, role, password, active).
+ * Staff create / edit — EQMS form pattern:
+ * auto-imported validators, external VLabel + red *, App* fields, skeleton then card.
  */
 
 const nuxtApp: any = useNuxtApp()
@@ -27,7 +27,7 @@ useHead({
 
 const isButtonDisabled = ref(false)
 const loading = ref(true)
-const refUserForm = ref<VForm>()
+const refUserForm = ref<InstanceType<typeof VForm>>()
 const roles = ref<Array<{ id: string; name: string; roleName: string }>>([])
 
 const userForm = ref({
@@ -38,12 +38,23 @@ const userForm = ref({
   is_active: true,
 })
 
-const rules = {
-  required: (v: unknown) => !!v || t('required'),
-  email: (v: string) => /.+@.+\..+/.test(v) || t('email'),
-  passwordCreate: (v: string) => (!isEdit && (!v || String(v).length < 8) ? t('min8') || 'Min 8 characters' : true),
-  passwordEdit: (v: string) => (!v || String(v).length >= 8 ? true : 'Min 8 characters'),
-}
+const emailRules = computed(() => [
+  requiredValidator,
+  emailValidator,
+])
+
+const passwordRules = computed(() => {
+  if (isEdit) {
+    return [
+      (v: string) => (!v || String(v).length >= 8 ? true : 'Min 8 characters'),
+    ]
+  }
+
+  return [
+    requiredValidator,
+    (v: string) => (String(v || '').length >= 8 ? true : 'Min 8 characters'),
+  ]
+})
 
 const saveUser = async () => {
   const { valid } = await refUserForm.value!.validate()
@@ -83,32 +94,34 @@ const saveUser = async () => {
   }
 }
 
-const loadPage = async () => {
+;(async () => {
   loading.value = true
-  try {
-    const initial = await formInitaldata()
-    roles.value = initial?.roles ?? []
 
-    if (isEdit && uuid) {
-      const data = await getUserById(String(uuid))
-      const user = data?.user as any
-      if (user) {
-        userForm.value = {
-          uuid: String(user.uuid || user.id || uuid),
-          email: user.email || '',
-          password: '',
-          role: user.roleCode || user.role?.name || 'front_desk',
-          is_active: user.is_active ?? user.active ?? true,
-        }
-      }
+  const initial = await formInitaldata()
+
+  roles.value = initial?.roles ?? []
+
+  if (!uuid) {
+    loading.value = false
+
+    return
+  }
+
+  const data = await getUserById(String(uuid))
+  const user = data?.user as any
+
+  if (user) {
+    userForm.value = {
+      uuid: String(user.uuid || user.id || uuid),
+      email: user.email || '',
+      password: '',
+      role: user.roleCode || user.role?.name || 'front_desk',
+      is_active: user.is_active ?? user.active ?? true,
     }
   }
-  finally {
-    loading.value = false
-  }
-}
 
-loadPage()
+  loading.value = false
+})()
 </script>
 
 <template>
@@ -156,11 +169,14 @@ loadPage()
               cols="12"
               md="6"
             >
+              <VLabel class="mb-1 text-body-2">
+                {{ $t('email') }}
+                <span class="text-error font-weight-bold ms-1">*</span>
+              </VLabel>
               <AppTextField
                 v-model="userForm.email"
-                :label="$t('email')"
                 type="email"
-                :rules="[rules.required, rules.email]"
+                :rules="emailRules"
                 required
               />
             </VCol>
@@ -169,13 +185,16 @@ loadPage()
               cols="12"
               md="6"
             >
+              <VLabel class="mb-1 text-body-2">
+                {{ $t('role') }}
+                <span class="text-error font-weight-bold ms-1">*</span>
+              </VLabel>
               <AppSelect
                 v-model="userForm.role"
                 :items="roles"
                 item-title="roleName"
                 item-value="name"
-                :label="$t('role')"
-                :rules="[rules.required]"
+                :rules="[requiredValidator]"
                 required
               />
             </VCol>
@@ -184,14 +203,20 @@ loadPage()
               cols="12"
               md="6"
             >
+              <VLabel class="mb-1 text-body-2">
+                {{ $t('password') }}
+                <span
+                  v-if="!isEdit"
+                  class="text-error font-weight-bold ms-1"
+                >*</span>
+              </VLabel>
               <AppTextField
                 v-model="userForm.password"
-                :label="$t('password')"
                 type="password"
                 autocomplete="new-password"
                 :hint="isEdit ? 'Leave blank to keep current password' : 'Min 8 characters'"
                 persistent-hint
-                :rules="isEdit ? [rules.passwordEdit] : [rules.required, rules.passwordCreate]"
+                :rules="passwordRules"
                 :required="!isEdit"
               />
             </VCol>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import miscMaskDark from '@images/pages/misc-mask-dark.png'
 import miscMaskLight from '@images/pages/misc-mask-light.png'
 

@@ -1,6 +1,4 @@
 import type { VerticalNavItems } from '@/@layouts/types'
-import type { User } from '@/types/user'
-import { useAuthService } from '@/composables/auth/useAuthService'
 
 /**
  * User / staff API paths for tenant Staff,

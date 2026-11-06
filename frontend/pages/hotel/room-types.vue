@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { HotelColumn, HotelFormField } from '@/types/hotel'
-
 useHead({ title: 'Room types' })
 
 const columns: Array<HotelColumn> = [

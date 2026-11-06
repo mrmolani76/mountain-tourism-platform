@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { AvailabilityBed, AvailabilityRoom, HotelOption } from '@/types/hotel'
-
 useHead({ title: 'Availability' })
 
 const client = useHotelApiClient()

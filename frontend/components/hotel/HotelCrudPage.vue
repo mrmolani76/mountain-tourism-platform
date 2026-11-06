@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components/VForm'
-import type { HotelColumn, HotelFormField, HotelOption } from '@/types/hotel'
-import { formatCents, centsToMajor, majorToCents } from '@/utils/money'
-import { requiredValidator } from '@core/utils/validators'
 
 /**
  * Generic CRUD page for simple Hotel resources (room types, rooms, dormitories, beds,

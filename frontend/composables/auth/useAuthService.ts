@@ -1,4 +1,3 @@
-import type { StaffSessionPayload, StaffUser, User } from '@/types/user'
 import type { VerticalNavItems } from '@/@layouts/types'
 import { API } from '@/composables/core/useApi'
 

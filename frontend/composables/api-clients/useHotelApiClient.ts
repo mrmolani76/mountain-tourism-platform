@@ -1,19 +1,3 @@
-import type {
-  AvailabilityBed,
-  AvailabilityRoom,
-  BoardPlan,
-  HotelListMeta,
-  HotelListPayload,
-  HotelOption,
-  HutBed,
-  HutDormitory,
-  Reservation,
-  Room,
-  RoomSeasonPrice,
-  RoomType,
-  Stay,
-} from '@/types/hotel'
-
 /**
  * Hotel module API client (`Modules/Hotel` routes: `api/hotel/*`).
  *

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import type { Reservation, Stay } from '@/types/hotel'
-import { formatCents } from '@/utils/money'
-
 useHead({ title: 'Stays' })
 
 const client = useHotelApiClient()

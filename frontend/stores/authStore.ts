@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useAuthService } from '@/composables/auth/useAuthService'
 
 /**
  * Tenant staff session store.

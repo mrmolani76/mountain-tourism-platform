@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getAppModule } from '@/utils/app-modules'
-
 const props = defineProps<{
   moduleKey: string
 }>()

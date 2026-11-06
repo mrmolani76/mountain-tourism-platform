@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { appModules } from '@/utils/app-modules'
-
 useHead({
   title: 'Dashboard',
 })
