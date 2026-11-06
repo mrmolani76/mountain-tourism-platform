@@ -2,7 +2,7 @@
 
 /**
  * Hotel DataTable listing configs (EQMS SPA shape).
- * Keys match URL resources under /api/hotel/listings/{resource}.
+ * Keys match EQMS URL resources under /api/hotel/{resource}/list.
  */
 $field = static function (
     string $title,

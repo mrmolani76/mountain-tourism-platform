@@ -147,7 +147,7 @@ export const useHotelApiClient = () => {
   // ---- Reads ---------------------------------------------------------------
 
   const availability = async (params: { check_in_on: string, check_out_on: string, building_id?: number | null }) => {
-    const response = await get<Envelope<{ rooms: Array<AvailabilityRoom>, beds: Array<AvailabilityBed> }>>(
+    const response = await get<Envelope<AvailabilityListingPayload>>(
       'hotel/availability',
       cleanParams(params),
     )

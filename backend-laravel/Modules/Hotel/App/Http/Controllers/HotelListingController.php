@@ -12,13 +12,15 @@ use Modules\Hotel\App\Support\HotelAuthz;
 /**
  * EQMS-style DataTable listing for Hotel resources.
  *
- *   GET  /api/hotel/listings/{resource}/config
- *   POST /api/hotel/listings/{resource}/list
+ *   GET  /api/hotel/{resource}/list/config
+ *   POST /api/hotel/{resource}/list
  */
 class HotelListingController extends Controller
 {
-    public function config(string $resource): JsonResponse
+    public function listingConfig(Request $request): JsonResponse
     {
+        $resource = $this->resolveResource($request);
+
         if ($denied = $this->denyFor($resource)) {
             return $denied;
         }
@@ -45,8 +47,10 @@ class HotelListingController extends Controller
         ]);
     }
 
-    public function list(Request $request, string $resource): JsonResponse
+    public function list(Request $request): JsonResponse
     {
+        $resource = $this->resolveResource($request);
+
         if ($denied = $this->denyFor($resource)) {
             return $denied;
         }
@@ -85,6 +89,22 @@ class HotelListingController extends Controller
             'data' => $rows,
             'pagination' => ['total' => $total],
         ]);
+    }
+
+    private function resolveResource(Request $request): string
+    {
+        $fromDefaults = (string) $request->route('resource', '');
+        if ($fromDefaults !== '') {
+            return $fromDefaults;
+        }
+
+        // Fallback: parse hotel/{resource}/list from path.
+        $path = trim($request->path(), '/');
+        if (preg_match('#hotel/([^/]+)/list#', $path, $matches) === 1) {
+            return $matches[1];
+        }
+
+        return '';
     }
 
     private function denyFor(string $resource): ?JsonResponse

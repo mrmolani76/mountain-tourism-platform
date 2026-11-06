@@ -14,9 +14,24 @@ use Modules\Hotel\App\Http\Controllers\RoomTypeController;
 use Modules\Hotel\App\Http\Controllers\StayController;
 
 Route::middleware('staff.auth')->group(function () {
-    // EQMS DataTable listing (config + paged rows).
-    Route::get('hotel/listings/{resource}/config', [HotelListingController::class, 'config']);
-    Route::post('hotel/listings/{resource}/list', [HotelListingController::class, 'list']);
+    // EQMS DataTable listing: GET {resource}/list/config + POST {resource}/list (before {id} routes).
+    $hotelListResources = [
+        'room-types',
+        'rooms',
+        'hut-dormitories',
+        'hut-beds',
+        'season-prices',
+        'board-plans',
+        'reservations',
+        'stays',
+    ];
+
+    foreach ($hotelListResources as $hotelResource) {
+        Route::get("hotel/{$hotelResource}/list/config", [HotelListingController::class, 'listingConfig'])
+            ->defaults('resource', $hotelResource);
+        Route::post("hotel/{$hotelResource}/list", [HotelListingController::class, 'list'])
+            ->defaults('resource', $hotelResource);
+    }
 
     // Inventory + pricing (Owner configures, Front Desk reads).
     Route::apiResource('hotel/room-types', RoomTypeController::class)->except(['update']);
@@ -38,6 +53,7 @@ Route::middleware('staff.auth')->group(function () {
     Route::patch('hotel/board-plans/{board_plan}', [BoardPlanController::class, 'update']);
 
     // Availability, calendar and quote reads.
+    Route::get('hotel/availability/list/config', [AvailabilityController::class, 'listingConfig']);
     Route::get('hotel/availability', [AvailabilityController::class, 'index']);
     Route::get('hotel/calendar', [AvailabilityController::class, 'calendar']);
     Route::get('hotel/quote', [AvailabilityController::class, 'quote']);

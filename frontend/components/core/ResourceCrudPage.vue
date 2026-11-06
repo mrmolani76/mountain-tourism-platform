@@ -2,14 +2,14 @@
 import type { VForm } from 'vuetify/components/VForm'
 
 /**
- * Core CRUD with EQMS DataTable listing + dialog form.
+ * Core CRUD with EQMS DataTable listing (server config + list) + dialog form.
+ * Mirrors users index: GET {endpoint}/list/config, POST {endpoint}/list.
  */
 
 const props = withDefaults(defineProps<{
   title: string
   subtitle?: string
   endpoint: string
-  columns: Array<HotelColumn>
   fields: Array<HotelFormField>
   defaults?: Record<string, any>
   canCreate?: boolean
@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<{
 
 const { t } = useI18n()
 const client = useResourceApiClient()
+const { get, post } = useApiClient()
 
 const configLoading = ref(true)
 const listLoading = ref(false)
@@ -39,7 +40,6 @@ const listResult = ref<DataTableResult<any>>({
   pagination: { total: 0 },
 })
 const tableParams = ref<Record<string, any>>({})
-const rawRows = ref<Array<Record<string, any>>>([])
 
 const dialogOpen = ref(false)
 const saving = ref(false)
@@ -96,14 +96,16 @@ const loadOptions = async () => {
   resolvedOptions.value = optionMap
 }
 
-const applyListRows = (rows: Array<Record<string, any>>) => {
-  rawRows.value = rows
-  listResult.value = {
-    status: true,
-    data: rows.map(row => mapRowToDataTableCells(row, props.columns, {
-      optionLabels: resolvedOptions.value,
-    })),
-    pagination: { total: rows.length },
+const loadConfig = async () => {
+  configLoading.value = true
+  try {
+    const result = await get<ApiResponse<DataTableConfig>>(`${props.endpoint}/list/config`)
+
+    if (result?.status)
+      tableConfig.value = result.data as DataTableConfig
+  }
+  finally {
+    configLoading.value = false
   }
 }
 
@@ -112,23 +114,16 @@ const reloadListingData = async (params: any = tableParams.value) => {
   tableParams.value = params || {}
 
   try {
-    const page = Number(params?.page || 1)
-    const pageSize = Number(params?.itemsPerPage || params?.page_size || 25)
-
-    const { data, meta } = await client.list(props.endpoint, {
-      page,
-      page_size: pageSize === -1 ? 100 : pageSize,
+    const result = await post<DataTableResult<any>>(`${props.endpoint}/list`, {
+      ...(params || {}),
       ...props.listParams,
     })
 
-    const rows = (data as Array<Record<string, any>>) ?? []
-
-    applyListRows(rows)
-    listResult.value.pagination = { total: Number(meta?.total_count ?? rows.length) }
+    if (result?.status)
+      listResult.value = result
   }
   finally {
     listLoading.value = false
-    configLoading.value = false
   }
 }
 
@@ -142,8 +137,7 @@ const openCreate = async () => {
 
 const openEdit = async (item: Record<string, any>) => {
   const id = Number(item.id ?? item.uuid)
-  const row = rawRows.value.find(entry => Number(entry.id) === id)
-    ?? await client.show<Record<string, any>>(props.endpoint, id)
+  const row = await client.show<Record<string, any>>(props.endpoint, id)
 
   if (!row)
     return
@@ -252,9 +246,7 @@ const destroy = async (item: Record<string, any>) => {
 }
 
 onMounted(async () => {
-  tableConfig.value = buildDataTableConfig(props.columns)
-  await loadOptions()
-  await reloadListingData({ page: 1, itemsPerPage: 25 })
+  await Promise.all([loadConfig(), loadOptions()])
 })
 </script>
 

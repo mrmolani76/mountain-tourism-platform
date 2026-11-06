@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Core\App\Http\Controllers\AuthController;
 use Modules\Core\App\Http\Controllers\BuildingController;
+use Modules\Core\App\Http\Controllers\CoreListingController;
 use Modules\Core\App\Http\Controllers\MenuController;
 use Modules\Core\App\Http\Controllers\OutletAccessController;
 use Modules\Core\App\Http\Controllers\OutletController;
@@ -26,6 +27,16 @@ Route::middleware('staff.auth')->group(function () {
     // GET /api/core/menus
     Route::get('core/menus', [MenuController::class, 'index']);
     Route::get('core/menus/', [MenuController::class, 'index']);
+
+    // EQMS DataTable listing (before {id} routes).
+    Route::get('buildings/list/config', [CoreListingController::class, 'listingConfig'])
+        ->defaults('resource', 'buildings');
+    Route::post('buildings/list', [CoreListingController::class, 'list'])
+        ->defaults('resource', 'buildings');
+    Route::get('seasons/list/config', [CoreListingController::class, 'listingConfig'])
+        ->defaults('resource', 'seasons');
+    Route::post('seasons/list', [CoreListingController::class, 'list'])
+        ->defaults('resource', 'seasons');
 
     Route::get('buildings', [BuildingController::class, 'index']);
     Route::post('buildings', [BuildingController::class, 'store']);

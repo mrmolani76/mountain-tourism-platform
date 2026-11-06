@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **72** next (Hotel module tests/migrate on setup machine). PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Item **72** next (Hotel migrate + tests on setup machine). PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **75** — Align Hotel/Core listings to EQMS DataTable pattern (high, 2026-11-06): `{resource}/list/config` + `/list`, server cells, no client listing mapper.
 - **74** — EQMS menu + Core staff CRUD + Hotel DataTable listings (high, 2026-11-06): menu API, staff `/users` listing, Hotel views/listings, Spatie Data DTOs, all product lists on EQMS `DataTable`.
 - **73** — Full platform DB schema design (Modules A to I) (high, 2026-11-05): `docs/DATABASE_SCHEMA.md` covers central SaaS + tenant Modules A to I, invariants, indexes, migration order, open questions.
 - **71** — Laravel Module 1 — central Saas + tenant Core (Inventory pattern) (high, 2026-11-04)
@@ -77,6 +78,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-06 — `work/changes/2026-11-06--75-eqms-datatable-listing-align.md` — item 75: EQMS `list/config` + `list` for Hotel/Core; server cell rows; drop client listing-table
 - 2026-11-06 — `work/changes/2026-11-06--74-eqms-menu-core-staff-hotel-datatable.md` — item 74: Core+Hotel menu, staff listing, Hotel DataTable everywhere (availability + CRUD pages)
 - 2026-11-03 — `work/changes/2026-11-03--71-login-frontend-laravel-connect.md` — item 71: Nuxt login ↔ Laravel Core auth, CORS/Sanctum, nginx/compose → laravel, DevPilotSeeder roles
 - 2026-11-03 — `work/changes/2026-11-03--71-eqms-complere-module-folder-structure.md` — eQMS Complere App/ module layout for Saas+Core

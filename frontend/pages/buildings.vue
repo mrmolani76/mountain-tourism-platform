@@ -1,13 +1,6 @@
 <script setup lang="ts">
 useHead({ title: 'Buildings' })
 
-const columns: Array<HotelColumn> = [
-  { key: 'name', title: 'Name' },
-  { key: 'building_type', title: 'Type' },
-  { key: 'altitude_m', title: 'Altitude (m)', align: 'end' },
-  { key: 'is_active', title: 'Status', kind: 'bool' },
-]
-
 const fields: Array<HotelFormField> = [
   { key: 'name', label: 'Name', required: true, col: 12 },
   {
@@ -37,7 +30,6 @@ const fields: Array<HotelFormField> = [
     title="Buildings"
     subtitle="Places in the complex. Also used as weather points."
     endpoint="buildings"
-    :columns="columns"
     :fields="fields"
     :defaults="{ building_type: 'other', is_active: true }"
     add-label="New building"

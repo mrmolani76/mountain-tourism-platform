@@ -90,7 +90,7 @@ const loadReference = async () => {
 const loadConfig = async () => {
   configLoading.value = true
   try {
-    const result = await get<ApiResponse<DataTableConfig>>('hotel/listings/stays/config')
+    const result = await get<ApiResponse<DataTableConfig>>('hotel/stays/list/config')
     if (result?.status)
       tableConfig.value = result.data as DataTableConfig
   }
@@ -110,7 +110,7 @@ const reloadListingData = async (params: any = tableParams.value) => {
         status: filterStatus.value || params?.columnSearch?.status,
       },
     }
-    const result = await post<DataTableResult<any>>('hotel/listings/stays/list', body)
+    const result = await post<DataTableResult<any>>('hotel/stays/list', body)
     if (result?.status)
       listResult.value = result
   }

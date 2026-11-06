@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * EQMS DataTable listing for Hotel resources.
- * Config + paged rows from `/api/hotel/listings/{resource}`.
+ * Config + paged rows from `/api/hotel/{resource}/list/config` + `/list`.
  * Create / edit still uses the dialog form (fields prop).
  */
 import type { VForm } from 'vuetify/components/VForm'
@@ -91,7 +91,7 @@ const loadOptions = async () => {
 const loadConfig = async () => {
   configLoading.value = true
   try {
-    const result = await get<ApiResponse<DataTableConfig>>(`hotel/listings/${props.resource}/config`)
+    const result = await get<ApiResponse<DataTableConfig>>(`hotel/${props.resource}/list/config`)
 
     if (result?.status)
       tableConfig.value = result.data as DataTableConfig
@@ -105,7 +105,7 @@ const reloadListingData = async (params: any = tableParams.value) => {
   listLoading.value = true
   tableParams.value = params
   try {
-    const result = await post<DataTableResult<any>>(`hotel/listings/${props.resource}/list`, params)
+    const result = await post<DataTableResult<any>>(`hotel/${props.resource}/list`, params)
 
     if (result?.status)
       listResult.value = result

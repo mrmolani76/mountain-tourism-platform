@@ -110,6 +110,7 @@ export interface HotelOption {
   title: string
 }
 
+/** Raw availability row before DataTable cell shaping (service layer). */
 export interface AvailabilityRoom {
   id: number
   building_id: number
@@ -125,6 +126,16 @@ export interface AvailabilityBed {
   hut_dormitory_id: number
   bed_number: string
   available: boolean
+}
+
+/** EQMS cell-shaped availability payload from GET hotel/availability. */
+export interface AvailabilityListingPayload {
+  rooms: Array<Record<string, any>>
+  beds: Array<Record<string, any>>
+  free_room_count?: number
+  free_bed_count?: number
+  room_count?: number
+  bed_count?: number
 }
 
 export type HotelFieldType = 'text' | 'textarea' | 'number' | 'money' | 'checkbox' | 'select' | 'multiselect' | 'date' | 'time' | 'email' | 'password'

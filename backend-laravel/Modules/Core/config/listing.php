@@ -1,9 +1,40 @@
 <?php
 
 /**
- * Listing column configs for staff DataTable.
- * Mountain MVP: staff (users) only. Keep keys stable for the SPA DataTable.
+ * Listing column configs for EQMS DataTable.
+ * users: staff listing. buildings / seasons: Core CRUD listings.
  */
+
+$field = static function (
+    string $title,
+    string $key,
+    string $dbField,
+    array $extra = [],
+): array {
+    return array_merge([
+        'title' => $title,
+        'key' => $key,
+        'db_field' => $dbField,
+        'orderByField' => $dbField,
+        'default' => true,
+        'search_field' => 'Text',
+        'column_sort' => true,
+        'includeAllFilter' => false,
+    ], $extra);
+};
+
+$actions = [
+    'title' => 'Actions',
+    'key' => 'actions',
+    'db_field' => '',
+    'disabled' => true,
+    'default' => true,
+];
+
+$status = $field('Status', 'status', 'is_active', [
+    'search_field' => 'Dropdown',
+]);
+
 return [
     'users' => [
         'fields' => [
@@ -42,8 +73,41 @@ return [
                 'disabled' => true,
             ],
         ],
-        // DataTable reads `default_sort`; keep `default_order` for parity.
         'default_sort' => ['key' => 'email', 'order' => 'asc'],
         'default_order' => ['field' => 'email', 'dir' => 'asc'],
+    ],
+
+    'buildings' => [
+        'model' => \Modules\Core\App\Models\Building::class,
+        'table' => 'core_building',
+        'link_key' => 'name',
+        'search_columns' => ['name'],
+        'headers' => [
+            'fields' => [
+                $field('Name', 'name', 'name', ['disabled' => true]),
+                $field('Type', 'building_type', 'building_type', ['search_field' => 'Dropdown']),
+                $field('Altitude (m)', 'altitude_m', 'altitude_m', ['search_field' => 'Number']),
+                $status,
+                $actions,
+            ],
+            'default_sort' => ['key' => 'name', 'order' => 'asc'],
+        ],
+    ],
+
+    'seasons' => [
+        'model' => \Modules\Core\App\Models\Season::class,
+        'table' => 'core_season',
+        'link_key' => 'kind',
+        'search_columns' => [],
+        'headers' => [
+            'fields' => [
+                $field('Kind', 'kind', 'kind', ['disabled' => true, 'search_field' => 'Dropdown']),
+                $field('Starts', 'starts_on', 'starts_on', ['search_field' => 'Date']),
+                $field('Ends', 'ends_on', 'ends_on', ['search_field' => 'Date']),
+                $status,
+                $actions,
+            ],
+            'default_sort' => ['key' => 'starts_on', 'order' => 'desc'],
+        ],
     ],
 ];

@@ -1,13 +1,6 @@
 <script setup lang="ts">
 useHead({ title: 'Seasons' })
 
-const columns: Array<HotelColumn> = [
-  { key: 'kind', title: 'Kind' },
-  { key: 'starts_on', title: 'Starts', kind: 'date' },
-  { key: 'ends_on', title: 'Ends', kind: 'date' },
-  { key: 'is_active', title: 'Status', kind: 'bool' },
-]
-
 const fields: Array<HotelFormField> = [
   {
     key: 'kind',
@@ -31,7 +24,6 @@ const fields: Array<HotelFormField> = [
     title="Seasons"
     subtitle="Winter, summer or closed date ranges. Prices can differ by season."
     endpoint="seasons"
-    :columns="columns"
     :fields="fields"
     :defaults="{ kind: 'winter', is_active: true }"
     add-label="New season"
