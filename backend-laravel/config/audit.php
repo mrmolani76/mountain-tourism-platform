@@ -2,7 +2,7 @@
 
 /**
  * owen-it/laravel-auditing — disabled by default until hist tables ship per module.
- * eQMS enables this with per-tenant hist_* tables; Mountain Module 1 uses core_audit_event.
+ * Optional package auditing; Module 1 uses core_audit_event instead of hist_* tables.
  */
 
 return [

@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async to => {
-  // EQMS name: useAuthStore (alias of authStore)
+  // useAuthStore is an alias of authStore
   const store = useAuthStore()
 
   // Pure public pages can render without probing the session. Guest-only pages

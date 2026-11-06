@@ -1,1 +1,1 @@
-// Core module assets (eQMS Complere stub).
+// Core module assets (Mountain stub).

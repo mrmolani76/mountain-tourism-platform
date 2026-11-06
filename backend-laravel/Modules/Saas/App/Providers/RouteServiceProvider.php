@@ -6,7 +6,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Route;
 
 /**
- * eQMS Complere-style module route map (central SaaS APIs).
+ * Module route map for central SaaS APIs.
  */
 class RouteServiceProvider extends ServiceProvider
 {

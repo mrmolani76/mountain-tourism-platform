@@ -5,7 +5,7 @@ namespace Modules\Saas\App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Central SaaS module — eQMS Complere folder + provider shape.
+ * Central SaaS module provider.
  */
 class SaasServiceProvider extends ServiceProvider
 {

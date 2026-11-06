@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Central (landlord) — Modules/Saas (eQMS: central registry on landlord DB).
+ * Central (landlord) — Modules/Saas registry tables.
  * Run: php artisan migrate
  */
 return new class extends Migration

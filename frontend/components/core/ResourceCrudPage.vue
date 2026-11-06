@@ -33,9 +33,9 @@ const { t } = useI18n()
 const client = useResourceApiClient()
 
 const rows = ref<Array<Record<string, any>>>([])
-/** First paint skeleton (eQMS configLoading). */
+/** First paint skeleton. */
 const initialLoading = ref(true)
-/** Table overlay while list refreshes (eQMS listLoading). */
+/** Table overlay while list refreshes. */
 const loading = ref(false)
 const search = ref('')
 const dialogOpen = ref(false)

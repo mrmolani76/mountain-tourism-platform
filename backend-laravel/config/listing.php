@@ -1,7 +1,7 @@
 <?php
 
 /**
- * DataTable listing configs — eQMS pattern (config/listing/{entity}.php merged here).
+ * DataTable listing configs (module listing.php merged here).
  * Example for Module 1 buildings; controllers pass this into DataTableService.
  */
 

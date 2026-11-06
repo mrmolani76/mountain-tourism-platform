@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 /**
- * Shared API controller — eQMS complere/app/Http/Controllers/Controller.php (Mountain subset).
+ * Shared API controller base for Module handlers.
  *
  * Use handleAction() for listing/mutations that should map exceptions to JSON envelopes.
  * Domain AuthZ still belongs in each action (staff roles / policies).
@@ -28,7 +28,7 @@ abstract class Controller extends BaseController
 
     /**
      * Wrap an action; map common exceptions to JSON.
-     * Prefer Mountain Envelope shape; also accept eQMS-style {status:false,message} from call sites.
+     * Prefer Mountain Envelope shape; also accept module-style {status:false,message} from call sites.
      *
      * @param  callable(): mixed  $callback
      */

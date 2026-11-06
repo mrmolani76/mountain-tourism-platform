@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Role;
  * Tenant Spatie roles = PDF §3 staff roles (code-only; run on setup machine
  * after `composer install` + permission migrations on the tenant connection).
  *
- * Guard `web` matches Inventory/eQMS tenant staff sessions.
+ * Guard `web` for tenant staff sessions.
  * Fine-grained Permission::defaultPermissions() can be layered later per module.
  */
 class StaffRoleSeeder extends Seeder

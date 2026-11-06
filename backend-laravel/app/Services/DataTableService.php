@@ -7,7 +7,7 @@ use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Listing engine — eQMS complere/app/Services/DataTableService.php.
+ * Listing engine — Mountain app/Services/DataTableService.php.
  *
  * Config shape (config/listing/*.php):
  *   fields[].key, fields[].db_field, fields[].search_field, fields[].orderByField

@@ -13,7 +13,7 @@ function normalizePath(url: string): string {
 
 /**
  * Thin domain-agnostic HTTP helpers over the shared `API` singleton
- * (eQMS: pages → domain services → `API` from `composables/core/useApi`).
+ * Pages call domain clients; clients call `API` from `composables/core/useApi`.
  */
 export const useApiClient = () => {
   const get = async <T>(url: string, query?: Record<string, unknown>) => {

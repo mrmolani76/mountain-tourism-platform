@@ -42,7 +42,7 @@ return [
     ],
 
     /**
-     * eQMS Complere pattern: tenant migrations are module-wise under
+     * Tenant migrations are module-wise under
      * Modules/{Name}/Database/migrations/tenant/ (+ optional root tenant path).
      */
     'migration_parameters' => [

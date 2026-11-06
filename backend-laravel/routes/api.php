@@ -2,7 +2,7 @@
 
 /**
  * App-level central routes only (health).
- * Module routes load via eQMS-style Module RouteServiceProviders:
+ * Module routes load via module-style Module RouteServiceProviders:
  *   - Modules/Saas → central SaaS
  *   - Modules/Core → tenant Core
  */

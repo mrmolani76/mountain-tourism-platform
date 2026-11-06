@@ -6,7 +6,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Route;
 
 /**
- * eQMS Complere-style module route map (tenant Core APIs).
+ * Module route map for tenant Core APIs.
  * Tenancy Host resolve already runs on the global `api` middleware stack.
  */
 class RouteServiceProvider extends ServiceProvider

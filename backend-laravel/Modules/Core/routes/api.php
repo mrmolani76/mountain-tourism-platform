@@ -23,7 +23,7 @@ Route::middleware('staff.auth')->group(function () {
     Route::post('auth/reset-password', [AuthController::class, 'resetPassword']);
     Route::post('auth/reset-password/', [AuthController::class, 'resetPassword']);
 
-    // eQMS Complere: GET /api/core/menus
+    // GET /api/core/menus
     Route::get('core/menus', [MenuController::class, 'index']);
     Route::get('core/menus/', [MenuController::class, 'index']);
 
@@ -42,7 +42,7 @@ Route::middleware('staff.auth')->group(function () {
     Route::apiResource('staff', StaffController::class)->except(['update']);
     Route::patch('staff/{staff}', [StaffController::class, 'update']);
 
-    // eQMS Complere users listing / form / view surface (tenant Staff).
+    // Staff listing / form / view surface.
     Route::get('users/list/config', [UserListingController::class, 'listingConfig']);
     Route::post('users/list', [UserListingController::class, 'list']);
     Route::post('users/create', [UserListingController::class, 'create']);

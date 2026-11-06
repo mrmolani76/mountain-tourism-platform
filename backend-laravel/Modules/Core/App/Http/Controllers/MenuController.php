@@ -8,7 +8,7 @@ use Modules\Core\App\Services\MenuService;
 use Modules\Core\App\Support\StaffAuthz;
 
 /**
- * eQMS Complere `GET /api/core/menus` equivalent for tenant staff.
+ * GET /api/core/menus for tenant staff vertical nav.
  */
 class MenuController extends Controller
 {

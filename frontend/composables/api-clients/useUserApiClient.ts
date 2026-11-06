@@ -3,10 +3,10 @@ import type { User } from '@/types/user'
 import { useAuthService } from '@/composables/auth/useAuthService'
 
 /**
- * User / staff API — eQMS qualitycenter-spa `composables/users/userService.ts` paths,
+ * User / staff API paths for tenant Staff,
  * backed by Laravel Core `UserListingController` (tenant Staff).
  *
- * Loading mirrors eQMS users/index:
+ * Loading flags:
  * - `configLoading` → full-page table skeleton until list/config returns
  * - `listLoading` → VDataTableServer overlay while rows reload
  * - `loading` → form / view fetch skeleton
@@ -23,13 +23,13 @@ export const useUserApiClient = () => {
     status: false,
   } as DataTableResult<any>)
 
-  /** Form / view page fetches (eQMS `loading` on form/view). */
+  /** Form / view page fetches. */
   const loading = ref(false)
 
-  /** Listing config fetch — drives index skeleton (eQMS first `useUserService` call). */
+  /** Listing config fetch — drives index skeleton. */
   const configLoading = ref(false)
 
-  /** Listing rows fetch — drives DataTable `:loading` (eQMS second call). */
+  /** Listing rows fetch — drives DataTable `:loading`. */
   const listLoading = ref(false)
 
   const updateUserProfile = async (body: UserForm) => {
@@ -92,7 +92,7 @@ export const useUserApiClient = () => {
     }
   }
 
-  /** Create staff — eQMS POST users/create; body is JSON for Laravel. */
+  /** Create staff — POST users/create. */
   const createUser = async (body: Record<string, unknown>) => {
     loading.value = true
     try {

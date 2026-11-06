@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Global helpers — eQMS complere/app/Helpers/GlobalHelper.php (subset for Module 1).
+ * Global helpers — Mountain app/Helpers/GlobalHelper.php (subset for Module 1).
  */
 
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +29,7 @@ if (! function_exists('actor_id')) {
 }
 
 if (! function_exists('setDateFormat')) {
-    /** Default listing date format (eQMS setDateFormat). */
+    /** Default listing date format. */
     function setDateFormat(): string
     {
         return (string) config('app.date_format', 'Y-m-d');

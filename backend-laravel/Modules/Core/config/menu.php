@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tenant vertical nav — eQMS Complere `Modules/Core/config/menu.php` shape.
+ * Tenant vertical nav items for GET /api/core/menus.
  *
  * MVP slice: Core + Hotel only. Other modules stay out of the menu until ported.
  *

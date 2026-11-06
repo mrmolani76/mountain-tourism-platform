@@ -2,7 +2,7 @@ import type { VerticalNavItems } from '@/@layouts/types'
 import { API } from '@/composables/core/useApi'
 
 /**
- * Core domain service — eQMS qualitycenter-spa `composables/coreService.ts` pattern.
+ * Core domain service (menus and shared Core API helpers).
  * Menu comes from Laravel `GET /api/core/menus` (role-filtered, Core + Hotel only).
  */
 

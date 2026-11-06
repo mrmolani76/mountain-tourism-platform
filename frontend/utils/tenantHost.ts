@@ -1,12 +1,12 @@
 /**
- * Host → tenant / SaaS detection (eQMS qualitycenter-spa `utils/common.ts` pattern).
+ * Host → tenant / SaaS detection for local and multi-tenant hosts.
  *
  * Local scheme (Module 1):
  *   lab.localhost     → tenant `lab`
  *   saas.localhost    → central SaaS admin
  *   *.localhost       → tenant slug = first label
  *
- * Optional later: `{slug}.local.mountain.local` (Complere-style dots).
+ * Optional later: `{slug}.local.mountain.local` (module-style dots).
  */
 
 export function getEnvAndTenantFromHost(hostname?: string): {
@@ -29,7 +29,7 @@ export function getEnvAndTenantFromHost(hostname?: string): {
     ? window.location.origin
     : ''
 
-  // Complere-like: lab.local.mountain.local / saas.local.mountain.local
+  // lab.local.mountain.local / saas.local.mountain.local
   if (host.endsWith('.local.mountain.local') || host.endsWith('.mountain.local')) {
     const prefix = host
       .replace(/\.local\.mountain\.local$/, '')
@@ -71,7 +71,7 @@ export const SPA_ENVIRONMENT = clientInfo.ENVIRONMENT
 export const IS_SAAS_ADMIN_HOST = clientInfo.IS_SAAS_ADMIN_HOST
 
 /**
- * Same-origin API root for the current host (EQMS: SAAS_CUSTOMER_URL).
+ * Same-origin API root for the current browser host.
  * Empty NUXT_PUBLIC_API_BASE_URL → browser origin (nginx proxies /api).
  */
 export function resolveApiOrigin(): string {

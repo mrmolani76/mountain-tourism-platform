@@ -6,7 +6,7 @@ use Modules\Core\App\Enums\StaffRole;
 use Modules\Core\App\Models\Staff;
 
 /**
- * Builds the vertical nav from `config('menu.items')` (eQMS Complere pattern).
+ * Builds the vertical nav from `config('menu.items')`.
  * Filters by staff role. Owner sees every entry that names `owner` or has no role gate.
  */
 class MenuService

@@ -24,7 +24,7 @@ export default defineNuxtConfig({
       publicDir: '.output/',
     },
   },
-  // Bind all interfaces so lab.localhost:3000 works (EQMS uses a fixed tenant host).
+  // Bind all interfaces so lab.localhost:3000 works.
   // strictPort + HMR clientPort keep :3000 on hard refresh (Apache owns :80 here).
   devServer: {
     host: '0.0.0.0',

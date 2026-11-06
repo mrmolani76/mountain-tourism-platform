@@ -54,4 +54,4 @@ Password for all: `password123`
 |------|---------|--------|-------|
 | | | | |
 
-See also: `EQMS_SPA_API_AUTH.md`, `LOCAL_SETUP.md`
+See also: `Mountain_SPA_API_AUTH.md`, `LOCAL_SETUP.md`

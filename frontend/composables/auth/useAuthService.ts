@@ -3,7 +3,7 @@ import type { VerticalNavItems } from '@/@layouts/types'
 import { API } from '@/composables/core/useApi'
 
 /**
- * Tenant staff auth — eQMS qualitycenter-spa `composables/auth/useAuthService.ts` pattern.
+ * Tenant staff auth (login, logout, session probe, menu).
  *
  * Pages/components call this service (or authStore). They must not call $fetch / API directly.
  * Server AuthZ is authoritative; ROLE_PERMISSIONS below are UI menu hints only.
@@ -94,7 +94,7 @@ export const useAuthService = () => {
   }
 
   /**
-   * Session probe — EQMS `getUserData` equivalent.
+   * Session probe — loads the current staff user.
    * Loads user into authStore when called from store.saveUser.
    */
   const getUserDetails = async (): Promise<ApiResponse<StaffSessionPayload> | null> => {

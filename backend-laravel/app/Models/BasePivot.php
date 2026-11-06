@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * eQMS complere/app/Models/BasePivot.php — pivot with actor stamps when columns exist.
+ * Mountain app/Models/BasePivot.php — pivot with actor stamps when columns exist.
  */
 class BasePivot extends Pivot
 {

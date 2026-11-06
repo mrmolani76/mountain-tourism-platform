@@ -11,7 +11,7 @@ export interface AppModuleInfo {
 
 /**
  * Live modules for dashboard cards + fallback nav.
- * MVP focus: Core + Hotel only (EQMS-style page paths, no /modules prefix).
+ * MVP focus: Core + Hotel only (root page paths, no /modules prefix).
  */
 export const appModules: Array<AppModuleInfo> = [
   {
@@ -28,7 +28,7 @@ export function getAppModule(key: string): AppModuleInfo | undefined {
   return appModules.find(module => module.key === key)
 }
 
-/** Hotel screens (static fallback). Paths match eQMS: /hotel/... */
+/** Hotel screens (static fallback). Paths under /hotel/... */
 export const hotelNavigation: Array<NavLink> = [
   {
     title: 'Overview',

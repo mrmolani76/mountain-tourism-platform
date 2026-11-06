@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Staff listing — eQMS qualitycenter-spa `pages/users/index.vue` pattern:
+ * Staff listing — config skeleton, then DataTable row loading:
  * - configLoading → VSkeletonLoader type="table"
  * - listLoading → DataTable :loading (row fetch overlay)
  * - One composable instance (config + list loading flags separated inside client)

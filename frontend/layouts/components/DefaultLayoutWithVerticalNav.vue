@@ -11,7 +11,7 @@ import { VerticalNavLayout } from '@layouts'
 import type { VerticalNavItems } from '@layouts/types'
 
 /**
- * eQMS Complere pattern: fetch vertical nav from `GET /api/core/menus`
+ * Fetch vertical nav from `GET /api/core/menus`
  * instead of a hard-coded static list.
  */
 const { getVerticalMenuData } = useCoreService()

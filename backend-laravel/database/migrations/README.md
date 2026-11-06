@@ -2,7 +2,7 @@
 
 Keep Laravel skeleton / framework tables here (`users`, `cache`, `jobs`, Sanctum tokens).
 
-**Domain migrations are module-wise (eQMS Complere):**
+**Domain migrations are module-wise (Mountain):**
 
 | Scope | Path | Command |
 |-------|------|---------|

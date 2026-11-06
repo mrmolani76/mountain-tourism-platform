@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use OwenIt\Auditing\Models\Audit;
 
 /**
- * Immutable audit trail base — eQMS complere/app/Models/BaseAuditTrail.php (GAP-011 spirit).
+ * Immutable audit trail base — Mountain app/Models/BaseAuditTrail.php (GAP-011 spirit).
  *
  * Mountain Module 1 also has domain `core_audit_event` (append-only). This class is for
  * owen-it per-table `hist_*` trails when modules enable auditing.

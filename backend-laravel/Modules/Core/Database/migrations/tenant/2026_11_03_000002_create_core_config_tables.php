@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Tenant Core config — outlets, seasons, settings, outlet access, audit.
- * Modules/Core/Database/migrations/tenant/ (eQMS layout).
+ * Modules/Core/Database/migrations/tenant/ (Mountain layout).
  */
 return new class extends Migration
 {

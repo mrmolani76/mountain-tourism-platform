@@ -1,7 +1,7 @@
 /**
  * Legacy `$api` helper.
  *
- * Prefer `API` from `@/composables/core/useApi` (eQMS qualitycenter-spa pattern)
+ * Prefer `API` from `@/composables/core/useApi`
  * or `useApiClient` / domain services. Kept so older call sites compile.
  *
  * New code: `import { API } from '@/composables/core/useApi'`.
@@ -94,7 +94,7 @@ export const $api = $fetch.create({
 })
 
 /**
- * Laravel Sanctum CSRF cookie (EQMS: `axios.get(.../sanctum/csrf-cookie)`).
+ * Laravel Sanctum CSRF cookie (`GET /sanctum/csrf-cookie`).
  * No-op when XSRF-TOKEN already present. Always uses current host origin.
  */
 export async function ensureLaravelCsrfCookie(): Promise<void> {
@@ -102,5 +102,5 @@ export async function ensureLaravelCsrfCookie(): Promise<void> {
   await API.ensureCsrfCookie()
 }
 
-/** Re-export for callers that want the EQMS singleton by name. */
+/** Re-export of the shared `API` singleton. */
 export { API }

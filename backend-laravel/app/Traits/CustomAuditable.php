@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Event;
 use OwenIt\Auditing\Events\AuditCustom;
 
 /**
- * eQMS complere/app/Traits/CustomAuditable.php — owen-it Auditable + relation audit dispatch.
+ * Mountain app/Traits/CustomAuditable.php — owen-it Auditable + relation audit dispatch.
  */
 trait CustomAuditable
 {

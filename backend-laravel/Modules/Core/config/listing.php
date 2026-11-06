@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Listing column configs — eQMS Complere `Modules/Core/config/listing.php` shape.
+ * Listing column configs for staff DataTable.
  * Mountain MVP: staff (users) only. Keep keys stable for the SPA DataTable.
  */
 return [
@@ -42,7 +42,7 @@ return [
                 'disabled' => true,
             ],
         ],
-        // Mountain DataTable reads `default_sort`; eQMS uses `default_order`.
+        // DataTable reads `default_sort`; keep `default_order` for parity.
         'default_sort' => ['key' => 'email', 'order' => 'asc'],
         'default_order' => ['field' => 'email', 'dir' => 'asc'],
     ],

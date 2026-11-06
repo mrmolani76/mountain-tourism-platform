@@ -16,9 +16,9 @@ use Modules\Core\App\Support\CoreAudit;
 use Modules\Core\App\Support\StaffAuthz;
 
 /**
- * eQMS Complere UserController listing surface, mapped onto tenant Staff.
+ * Staff listing / form / view API surface.
  *
- * Routes mirror qualitycenter-spa expectations:
+ * Routes expected by the Nuxt SPA:
  *   GET  /api/users/list/config
  *   POST /api/users/list
  *   POST /api/users/create
@@ -28,7 +28,7 @@ use Modules\Core\App\Support\StaffAuthz;
  *   POST /api/users/usersActivate
  *   POST /api/users/usersDeactivate
  *
- * Row cells follow the eQMS contract: `{ label, type }` / status color / actions flags.
+ * Row cells: `{ label, type }` / status color / actions flags.
  */
 class UserListingController extends Controller
 {
@@ -308,7 +308,7 @@ class UserListingController extends Controller
     }
 
     /**
-     * eQMS listing row cell contract.
+     * Listing row cell shape for DataTableCell.
      *
      * @return array<string, mixed>
      */
@@ -325,7 +325,7 @@ class UserListingController extends Controller
                 'selectable' => true,
                 'isLocked' => false,
             ],
-            // eQMS username cell: type link + url so DataTableCell renders NuxtLink.
+            // Email cell: type link + url so DataTableCell renders NuxtLink.
             'email' => [
                 'label' => (string) $s->email,
                 'type' => 'link',

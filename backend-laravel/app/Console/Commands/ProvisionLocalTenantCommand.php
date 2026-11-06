@@ -11,13 +11,13 @@ use Modules\Saas\App\Models\Domain;
 use Modules\Saas\App\Models\Tenant;
 
 /**
- * Local-only tenant provision (eQMS resetLocalDatabase.sh spirit).
+ * Local-only tenant provision helper.
  *
  * Creates: physical Postgres DB + central registry/domain + tenant migrations + fixture staff.
  * Does NOT call AWS. Guarded to APP_ENV=local.
  *
- * DB name = "{slug}_local" (eQMS: "{url_prefix}_{APP_ENV}").
- * Host    = "{slug}.localhost" (dev shorthand of "{slug}.local.complere.local").
+ * DB name = "{slug}_local".
+ * Host    = "{slug}.localhost".
  */
 class ProvisionLocalTenantCommand extends Command
 {

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Tenant — Modules/Core (eQMS: Modules/{Name}/Database/migrations/tenant/).
+ * Tenant — Modules/Core/Database/migrations/tenant/.
  * Run: php artisan tenants:migrate
  *   or: php artisan migrate --path=Modules/Core/Database/migrations/tenant --database=tenant
  */

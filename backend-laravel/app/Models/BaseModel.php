@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Shared Eloquent base — eQMS complere/app/Models/BaseModel.php.
+ * Shared Eloquent base — Mountain app/Models/BaseModel.php.
  *
  * - Optional owen-it auditing (config audit.enabled)
  * - created_by / updated_by / deleted_by only when the column exists (Postgres-safe)
@@ -40,7 +40,7 @@ class BaseModel extends Model implements \OwenIt\Auditing\Contracts\Auditable
         $connection = $this->getConnectionName() ?: config('database.default');
         $table = $this->getTable();
 
-        // Postgres-friendly (eQMS used MySQL SHOW COLUMNS).
+        // Postgres-friendly column introspection.
         return Schema::connection($connection)->getConnection()->select(
             'SELECT column_name AS "Field", data_type AS "Type"
              FROM information_schema.columns

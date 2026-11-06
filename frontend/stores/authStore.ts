@@ -3,7 +3,7 @@ import { useAuthService } from '@/composables/auth/useAuthService'
 
 /**
  * Tenant staff session store.
- * EQMS name alias: `useAuthStore` (same store id `auth`).
+ * Alias: `useAuthStore` (same store id `auth`).
  */
 export const authStore = defineStore('auth', () => {
   const { getUserDetails, logout } = useAuthService()
@@ -78,5 +78,5 @@ export const authStore = defineStore('auth', () => {
   }
 })
 
-/** eQMS qualitycenter-spa naming. */
+/** Pinia store alias used by layouts and middleware. */
 export const useAuthStore = authStore

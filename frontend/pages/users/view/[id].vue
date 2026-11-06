@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Staff view — eQMS users/view header + info tab pattern with skeleton loading.
+ * Staff view — header, info tab, skeleton loading.
  */
 
 const { t } = useI18n()

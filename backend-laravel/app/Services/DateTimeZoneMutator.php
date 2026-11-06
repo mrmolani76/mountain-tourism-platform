@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DateTimeZone;
 
 /**
- * eQMS complere/app/Services/DateTimeZoneMutator.php — Mountain subset (no TenantSetting cache yet).
+ * Mountain app/Services/DateTimeZoneMutator.php — Mountain subset (no TenantSetting cache yet).
  */
 class DateTimeZoneMutator
 {

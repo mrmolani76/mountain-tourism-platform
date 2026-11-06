@@ -1,7 +1,7 @@
 import { IS_SAAS_ADMIN_HOST, resolveApiOrigin } from '@/utils/tenantHost'
 
 /**
- * Shared HTTP client — eQMS qualitycenter-spa `composables/core/useApi.ts` pattern.
+ * Shared HTTP client for the Mountain Nuxt SPA.
  *
  * - Sanctum CSRF: only before mutating methods when XSRF-TOKEN missing
  * - Short timeout so a dead Vite→Laravel proxy fails fast (not 30–120s hang)
@@ -168,8 +168,8 @@ class MountainApi {
   delete = async <T>(url: string, data: object = {}) => this.request<T>('DELETE', url, data)
 }
 
-/** Singleton — eQMS exports `API = new useApi()`. */
+/** Shared singleton HTTP client. */
 export const API = new MountainApi()
 
-/** Factory alias matching eQMS `useApi` name for discoverability. */
+/** Factory alias that returns the shared `API` singleton. */
 export const useApi = () => API

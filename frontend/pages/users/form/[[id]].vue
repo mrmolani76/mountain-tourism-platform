@@ -2,7 +2,7 @@
 import { VForm } from 'vuetify/components/VForm'
 
 /**
- * Staff create / edit — eQMS users/form loading + card form pattern,
+ * Staff create / edit — skeleton loading then card form,
  * fields trimmed to Mountain tenant Staff (email, role, password, active).
  */
 

@@ -1,7 +1,6 @@
-# Local SPA setup — Mountain (eQMS LOCAL_SETUP style)
+# Local SPA setup
 
-How local multi-tenant hosting should work for the Nuxt SPA against Laravel Module 1.
-Pattern source: eQMS `complere/LOCAL_SETUP.md` + `qualitycenter-spa` CLAUDE.md.
+How local multi-tenant hosting works for the Nuxt SPA against Laravel.
 
 **This agent host does not run Docker / composer / migrate.** Use a setup machine for smoke.
 
@@ -12,14 +11,14 @@ Pattern source: eQMS `complere/LOCAL_SETUP.md` + `qualitycenter-spa` CLAUDE.md.
 | Host | Role | DB | Purpose |
 |------|------|----|---------|
 | `saas.localhost` | **Central** (landlord) | central SaaS | Super admin: tenants, domains, activate/deactivate (`Modules/Saas`) |
-| `lab.localhost` | Tenant | tenant DB for `lab` | Manual day-to-day SPA + Core staff auth |
+| `lab.localhost` | Tenant | tenant DB for `lab` | Day-to-day SPA + Core staff auth |
 | `*.localhost` | Tenant | that slug’s DB | First DNS label = tenant slug |
 
-Optional Complere-style dots (later): `lab.local.mountain.local`, `saas.local.mountain.local`.
+Optional dotted form (later): `lab.local.mountain.local`, `saas.local.mountain.local`.
 Parser already understands both schemes in `utils/tenantHost.ts`.
 
 - **Central host is not a tenant.** Tenant Core routes must not be called from `saas.*`.
-- **Tenant host** resolves Domain → Tenant → tenant connection (Stancl / Inventory pattern).
+- **Tenant host** resolves Domain → Tenant → tenant connection.
 
 ---
 
@@ -28,88 +27,44 @@ Parser already understands both schemes in `utils/tenantHost.ts`.
 ### 1. /etc/hosts
 
 ```bash
-echo "127.0.0.1  lab.localhost saas.localhost" | sudo tee -a /etc/hosts
+127.0.0.1 saas.localhost lab.localhost
 ```
 
-### 2. Compose / nginx
-
-Frontend and Laravel share a cookie domain via same-origin proxy:
-
-- Browser → `http://lab.localhost` (or published port)
-- nginx: `/api` + `/sanctum` → Laravel
-- `NUXT_PUBLIC_API_BASE_URL` empty → SPA uses `window.location.origin`
-
-### 3. Verify tenant Core is up
-
-```bash
-# Expect 401 JSON without session — means Host resolved and route exists
-curl -s -o /dev/null -w "%{http_code}\n" -H "Host: lab.localhost" http://127.0.0.1/api/auth/me
-```
-
-SaaS central (expect route under `/api/saas/...`):
-
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" -H "Host: saas.localhost" http://127.0.0.1/api/saas/auth/me
-```
-
----
-
-## SPA commands
-
-```bash
-cd frontend
-pnpm install          # or npm — match lockfile
-pnpm run dev          # open via lab.localhost (not bare IP if cookies matter)
-```
-
-Login page: `/login` → `POST /api/auth/login` after Sanctum CSRF.
-
----
-
-## Seeded staff (when DevPilotSeeder / tenant seed exists)
-
-| Role | Notes |
-|------|--------|
-| Owner | Full settings |
-| Manager | Outlet-scoped |
-| Front desk / Cashier / … | PDF MVP roles |
-| Drivers | **No login** — printed passenger list only |
-
-Exact emails/passwords live in the Laravel seeder on the setup machine — do not commit secrets here.
-
----
-
-## Auth cookie flow (must work for login)
-
-1. Browser loads SPA on `lab.localhost`.
-2. First unsafe call (or `API` init) → `GET /sanctum/csrf-cookie` → sets `XSRF-TOKEN` + session cookie.
-3. `POST /api/auth/login` with `X-XSRF-TOKEN` + `credentials: include`.
-4. Later navigations → `GET /api/auth/me` via `useAuthStore().saveUser()`.
-
-If login “succeeds” but refresh logs out: cookie `SameSite` / wrong Host / API on another origin without CORS credentials.
-
----
-
-## Provision / reset local tenant
-
-eQMS uses `complere/resetLocalDatabase.sh`. Mountain equivalent:
-
-```bash
-# from repo root (setup machine)
-./scripts/reset-local-tenant.sh lab --reset
-```
-
-Artisan only:
+### 2. Backend
 
 ```bash
 cd backend-laravel
-php artisan tenants:provision-local lab --reset --with-saas-admin
+cp .env.example .env
+# set APP_KEY, DB_*, FRONTEND_URL=http://lab.localhost:3000
+composer install
+php artisan migrate
+php artisan tenants:migrate   # if tenancy commands exist
+php artisan serve --host=0.0.0.0 --port=8000
 ```
 
-Creates DB `lab_local`, domain `lab.localhost`, fixture staff (`owner@lab.test` / `password123`).
+### 3. Frontend
 
-## Related docs
+```bash
+cd frontend
+cp .env.example .env
+# BACKEND_URL=http://lab.localhost:8000
+npm install
+npm run dev -- --host 0.0.0.0 --port 3000
+```
 
-- Login smoke checklist: [`LOGIN_TEST_CHECKLIST.md`](./LOGIN_TEST_CHECKLIST.md)
-- Deep API/auth map: [`EQMS_SPA_API_AUTH.md`](./EQMS_SPA_API_AUTH.md)
-- Backend Module 1 work item: `work/inprogress/71-laravel-modules-port.md`
+Open `http://lab.localhost:3000`.
+
+Vite proxies `/api` and `/sanctum` to `BACKEND_URL`.
+
+---
+
+## Sanity checks
+
+| Check | Expect |
+|-------|--------|
+| `GET /sanctum/csrf-cookie` via Nuxt origin | 204 / Set-Cookie |
+| `POST /api/auth/login` | session + staff |
+| `GET /api/auth/me` | current staff |
+| `GET /api/core/menus` | vertical nav JSON |
+
+See also: `SPA_API_AUTH.md`.

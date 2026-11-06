@@ -5,7 +5,7 @@ namespace Modules\Core\App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Tenant Core module — eQMS Complere folder + provider shape.
+ * Tenant Core module provider.
  */
 class CoreServiceProvider extends ServiceProvider
 {
@@ -42,13 +42,13 @@ class CoreServiceProvider extends ServiceProvider
             $this->moduleNameLower
         );
 
-        // eQMS Complere: Modules/Core/config/menu.php → config('menu.items')
+        // Modules/Core/config/menu.php → config('menu.items')
         $this->mergeConfigFrom(
             base_path('Modules/Core/config/menu.php'),
             'menu'
         );
 
-        // eQMS Complere: Modules/Core/config/listing.php → config('listing.users')
+        // Modules/Core/config/listing.php → config('listing.users')
         $this->mergeConfigFrom(
             base_path('Modules/Core/config/listing.php'),
             'listing'
