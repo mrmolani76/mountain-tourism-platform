@@ -11,6 +11,12 @@ interface AllocationDraft {
 
 const rows = ref<Array<Reservation>>([])
 const loading = ref(false)
+const configLoading = ref(true)
+const listLoading = ref(false)
+const tableConfig = ref<DataTableConfig | null>(null)
+const listResult = ref<DataTableResult<any>>({ status: false, data: [], pagination: { total: 0 } })
+const tableParams = ref<Record<string, any>>({})
+const { get, post } = useApiClient()
 const saving = ref(false)
 const dialogOpen = ref(false)
 const editingId = ref<number | null>(null)
@@ -199,19 +205,42 @@ const loadOptions = async () => {
   }))
 }
 
+const loadConfig = async () => {
+  configLoading.value = true
+  try {
+    const result = await get<ApiResponse<DataTableConfig>>('hotel/listings/reservations/config')
+    if (result?.status)
+      tableConfig.value = result.data as DataTableConfig
+  }
+  finally {
+    configLoading.value = false
+  }
+}
+
+const reloadListingData = async (params: any = tableParams.value) => {
+  listLoading.value = true
+  tableParams.value = params
+  try {
+    const body = {
+      ...params,
+      columnSearch: {
+        ...(params?.columnSearch || {}),
+        guest_name: filterGuest.value || params?.columnSearch?.guest_name,
+        status: filterStatus.value || params?.columnSearch?.status,
+      },
+    }
+    const result = await post<DataTableResult<any>>('hotel/listings/reservations/list', body)
+    if (result?.status)
+      listResult.value = result
+  }
+  finally {
+    listLoading.value = false
+  }
+}
+
 const load = async () => {
   loading.value = true
-
-  const { data } = await client.listReservations({
-    page: 1,
-    page_size: 100,
-    guest: filterGuest.value || undefined,
-    status: filterStatus.value || undefined,
-    from: filterFrom.value || undefined,
-    to: filterTo.value || undefined,
-  })
-
-  rows.value = data
+  await reloadListingData()
   loading.value = false
 }
 
@@ -230,7 +259,12 @@ const openCreate = () => {
   dialogOpen.value = true
 }
 
-const openEdit = (row: Reservation) => {
+const openEdit = async (item: any) => {
+  const id = Number(item.id ?? item.uuid)
+  const row = await client.showReservation(id)
+  if (!row)
+    return
+
   editingId.value = row.id
   form.value = {
     guest_name: row.guest_name,
@@ -314,10 +348,19 @@ const save = async () => {
   }
 }
 
-const canOperate = (row: Reservation) => !lockableStatuses.includes(row.status)
+const canOperateRow = (item: any) => {
+  const status = item?.status?.label || item?.status || ''
 
-const openCancel = (row: Reservation) => {
-  cancelTarget.value = row
+  return !lockableStatuses.includes(String(status))
+}
+
+const openCancel = async (item: any) => {
+  const id = Number(item.id ?? item.uuid)
+  const full = await client.showReservation(id)
+  if (!full)
+    return
+
+  cancelTarget.value = full
   cancelReason.value = ''
   cancelOpen.value = true
 }
@@ -336,13 +379,15 @@ const submitCancel = async () => {
   }
 }
 
-const checkIn = async (row: Reservation) => {
-  const confirmed = await showConfirmDialog(`Check in ${row.guest_name}?`, 'Check in', 'Cancel')
+const checkIn = async (item: any) => {
+  const id = Number(item.id ?? item.uuid)
+  const name = item.guest_name?.label || item.guest_name || `#${id}`
+  const confirmed = await showConfirmDialog(`Check in ${name}?`, 'Check in', 'Cancel')
 
   if (!confirmed)
     return
 
-  const response = await client.checkIn(row.id)
+  const response = await client.checkIn(id)
 
   if (response) {
     await load()
@@ -351,7 +396,7 @@ const checkIn = async (row: Reservation) => {
 }
 
 onMounted(async () => {
-  await Promise.all([load(), loadOptions()])
+  await Promise.all([loadConfig(), loadOptions()])
 })
 </script>
 
@@ -429,81 +474,84 @@ onMounted(async () => {
       </VCardText>
     </VCard>
 
-    <VCard>
-      <VDataTable
-        :headers="headers"
-        :items="rows"
-        :loading="loading"
-        items-per-page="25"
-        density="comfortable"
-      >
-        <template #item="{ item }">
-          <tr>
-            <td class="font-weight-medium">
-              <NuxtLink
-                class="text-primary text-decoration-none"
-                :to="`/hotel/reservations/view/${rowOf(item).id}`"
-              >
-                {{ rowOf(item).reference }}
-              </NuxtLink>
-            </td>
-            <td>{{ rowOf(item).guest_name }}</td>
-            <td>{{ rowOf(item).check_in_on }}</td>
-            <td>{{ rowOf(item).check_out_on }}</td>
-            <td class="text-end">
-              {{ rowOf(item).nights }}
-            </td>
-            <td class="text-end">
-              {{ rowOf(item).adults }} + {{ rowOf(item).children }}
-            </td>
-            <td>{{ accommodationSummary(rowOf(item)) }}</td>
-            <td>
-              <VChip :color="statusColor(rowOf(item).status)" size="small" variant="tonal">
-                {{ rowOf(item).status }}
-              </VChip>
-            </td>
-            <td class="text-end">
-              <VBtn
-                icon="tabler-eye"
-                size="small"
-                variant="text"
-                @click="navigateTo(`/hotel/reservations/view/${rowOf(item).id}`)"
-              />
-              <VBtn
-                v-if="canOperate(rowOf(item))"
-                icon="tabler-edit"
-                size="small"
-                variant="text"
-                color="primary"
-                @click="openEdit(rowOf(item))"
-              />
-              <VBtn
-                v-if="canOperate(rowOf(item))"
-                icon="tabler-login"
-                size="small"
-                variant="text"
-                color="success"
-                @click="checkIn(rowOf(item))"
-              />
-              <VBtn
-                v-if="canOperate(rowOf(item))"
-                icon="tabler-ban"
-                size="small"
-                variant="text"
-                color="error"
-                @click="openCancel(rowOf(item))"
-              />
-            </td>
-          </tr>
-        </template>
-
-        <template #no-data>
-          <div class="py-8 text-center text-medium-emphasis">
-            No reservations for these filters.
-          </div>
-        </template>
-      </VDataTable>
-    </VCard>
+    <template v-if="configLoading || !tableConfig">
+      <VSkeletonLoader
+        :loading="configLoading"
+        type="table"
+      />
+    </template>
+    <DataTable
+      v-else
+      v-bind="tableConfig"
+      v-model="tableParams"
+      :list-data="listResult.data"
+      :total-items="listResult.pagination?.total ?? 0"
+      :loading="listLoading || loading"
+      :show-add-button="false"
+      checkbox-id-key="id"
+      @load-items="reloadListingData"
+    >
+      <template #actions="{ item }">
+        <div class="d-flex gap-1">
+          <VBtn
+            size="38"
+            color="primary"
+            @click="navigateTo(`/hotel/reservations/view/${item.id}`)"
+          >
+            <VTooltip activator="parent">
+              View
+            </VTooltip>
+            <VIcon
+              icon="tabler-eye"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="canOperateRow(item)"
+            size="38"
+            color="primary"
+            @click="openEdit(item)"
+          >
+            <VTooltip activator="parent">
+              Edit
+            </VTooltip>
+            <VIcon
+              icon="tabler-edit"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="canOperateRow(item)"
+            size="38"
+            color="success"
+            @click="checkIn(item)"
+          >
+            <VTooltip activator="parent">
+              Check in
+            </VTooltip>
+            <VIcon
+              icon="tabler-login"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="canOperateRow(item)"
+            size="38"
+            color="error"
+            variant="tonal"
+            @click="openCancel(item)"
+          >
+            <VTooltip activator="parent">
+              Cancel
+            </VTooltip>
+            <VIcon
+              icon="tabler-ban"
+              size="22"
+            />
+          </VBtn>
+        </div>
+      </template>
+    </DataTable>
 
     <VDialog v-model="dialogOpen" max-width="900" persistent scrollable>
       <VCard>

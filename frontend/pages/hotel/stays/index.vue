@@ -13,6 +13,12 @@ interface FolioSnapshot {
 const rows = ref<Array<Stay>>([])
 const loading = ref(false)
 const filterStatus = ref<string | null>('in_house')
+const configLoading = ref(true)
+const listLoading = ref(false)
+const tableConfig = ref<DataTableConfig | null>(null)
+const listResult = ref<DataTableResult<any>>({ status: false, data: [], pagination: { total: 0 } })
+const tableParams = ref<Record<string, any>>({})
+const { get, post } = useApiClient()
 
 const reservations = ref<Record<string, Reservation>>({})
 const roomTitles = ref<Record<string, string>>({})
@@ -81,20 +87,50 @@ const loadReference = async () => {
   ]))
 }
 
+const loadConfig = async () => {
+  configLoading.value = true
+  try {
+    const result = await get<ApiResponse<DataTableConfig>>('hotel/listings/stays/config')
+    if (result?.status)
+      tableConfig.value = result.data as DataTableConfig
+  }
+  finally {
+    configLoading.value = false
+  }
+}
+
+const reloadListingData = async (params: any = tableParams.value) => {
+  listLoading.value = true
+  tableParams.value = params
+  try {
+    const body = {
+      ...params,
+      columnSearch: {
+        ...(params?.columnSearch || {}),
+        status: filterStatus.value || params?.columnSearch?.status,
+      },
+    }
+    const result = await post<DataTableResult<any>>('hotel/listings/stays/list', body)
+    if (result?.status)
+      listResult.value = result
+  }
+  finally {
+    listLoading.value = false
+  }
+}
+
 const load = async () => {
   loading.value = true
-
-  const { data } = await client.listStays({
-    page: 1,
-    page_size: 100,
-    status: filterStatus.value || undefined,
-  })
-
-  rows.value = data
+  await reloadListingData()
   loading.value = false
 }
 
-const openFolio = async (row: Stay) => {
+const openFolio = async (item: any) => {
+  const id = Number(item.id ?? item.uuid)
+  const row = await client.showStay(id) as Stay | null
+  if (!row)
+    return
+
   folioStay.value = row
   folio.value = null
   folioOpen.value = true
@@ -105,18 +141,19 @@ const openFolio = async (row: Stay) => {
   folioLoading.value = false
 }
 
-const checkOut = async (row: Stay) => {
-  const outstanding = folioStay.value?.id === row.id && folio.value ? folio.value.balance_cents : null
+const checkOut = async (item: any) => {
+  const id = Number(item.id ?? item.uuid)
+  const outstanding = folioStay.value?.id === id && folio.value ? folio.value.balance_cents : null
   const note = outstanding !== null && outstanding !== 0
     ? ` Balance on folio is ${formatCents(outstanding)}.`
     : ''
 
-  const confirmed = await showConfirmDialog(`Check out ${guestName(row)}?${note}`, 'Check out', 'Cancel')
+  const confirmed = await showConfirmDialog(`Check out stay #${id}?${note}`, 'Check out', 'Cancel')
 
   if (!confirmed)
     return
 
-  const response = await client.checkOut(row.id)
+  const response = await client.checkOut(id)
 
   if (response) {
     folioOpen.value = false
@@ -125,7 +162,7 @@ const checkOut = async (row: Stay) => {
 }
 
 onMounted(async () => {
-  await Promise.all([load(), loadReference()])
+  await Promise.all([loadConfig(), loadReference()])
 })
 </script>
 
@@ -152,71 +189,69 @@ onMounted(async () => {
       />
     </div>
 
-    <VCard>
-      <VDataTable
-        :headers="headers"
-        :items="rows"
-        :loading="loading"
-        items-per-page="25"
-        density="comfortable"
-      >
-        <template #item="{ item }">
-          <tr>
-            <td class="text-end">
-              <NuxtLink
-                class="text-primary text-decoration-none"
-                :to="`/hotel/stays/view/${rowOf(item).id}`"
-              >
-                {{ rowOf(item).id }}
-              </NuxtLink>
-            </td>
-            <td class="font-weight-medium">
-              {{ guestName(rowOf(item)) }}
-            </td>
-            <td>{{ accommodationLabel(rowOf(item)) }}</td>
-            <td>{{ formatDateTime(rowOf(item).checked_in_at) }}</td>
-            <td>{{ formatDateTime(rowOf(item).checked_out_at) }}</td>
-            <td>
-              <VChip :color="statusColor(rowOf(item).status)" size="small" variant="tonal">
-                {{ rowOf(item).status }}
-              </VChip>
-            </td>
-            <td class="text-end">
-              <VBtn
-                icon="tabler-eye"
-                size="small"
-                variant="text"
-                title="View"
-                @click="navigateTo(`/hotel/stays/view/${rowOf(item).id}`)"
-              />
-              <VBtn
-                icon="tabler-receipt"
-                size="small"
-                variant="text"
-                color="primary"
-                title="Folio"
-                @click="openFolio(rowOf(item))"
-              />
-              <VBtn
-                v-if="rowOf(item).status === 'in_house'"
-                icon="tabler-logout"
-                size="small"
-                variant="text"
-                color="error"
-                title="Check out"
-                @click="checkOut(rowOf(item))"
-              />
-            </td>
-          </tr>
-        </template>
-
-        <template #no-data>
-          <div class="py-8 text-center text-medium-emphasis">
-            No stays for this filter.
-          </div>
-        </template>
-      </VDataTable>
-    </VCard>
+    <template v-if="configLoading || !tableConfig">
+      <VSkeletonLoader
+        :loading="configLoading"
+        type="table"
+      />
+    </template>
+    <DataTable
+      v-else
+      v-bind="tableConfig"
+      v-model="tableParams"
+      :list-data="listResult.data"
+      :total-items="listResult.pagination?.total ?? 0"
+      :loading="listLoading || loading"
+      :show-add-button="false"
+      checkbox-id-key="id"
+      @load-items="reloadListingData"
+    >
+      <template #actions="{ item }">
+        <div class="d-flex gap-1">
+          <VBtn
+            size="38"
+            color="primary"
+            @click="navigateTo(`/hotel/stays/view/${item.id}`)"
+          >
+            <VTooltip activator="parent">
+              View
+            </VTooltip>
+            <VIcon
+              icon="tabler-eye"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            size="38"
+            color="primary"
+            @click="openFolio(item)"
+          >
+            <VTooltip activator="parent">
+              Folio
+            </VTooltip>
+            <VIcon
+              icon="tabler-receipt"
+              size="22"
+            />
+          </VBtn>
+          <VBtn
+            v-if="(item.status?.label || item.status) === 'in_house'"
+            size="38"
+            color="error"
+            variant="tonal"
+            @click="checkOut(item)"
+          >
+            <VTooltip activator="parent">
+              Check out
+            </VTooltip>
+            <VIcon
+              icon="tabler-logout"
+              size="22"
+            />
+          </VBtn>
+        </div>
+      </template>
+    </DataTable>
 
     <VDialog v-model="folioOpen" max-width="860" scrollable>
       <VCard>

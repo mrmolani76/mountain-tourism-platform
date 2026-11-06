@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Hotel\App\Http\Controllers\AvailabilityController;
 use Modules\Hotel\App\Http\Controllers\BoardPlanController;
+use Modules\Hotel\App\Http\Controllers\HotelListingController;
 use Modules\Hotel\App\Http\Controllers\HutBedController;
 use Modules\Hotel\App\Http\Controllers\HutDormitoryController;
 use Modules\Hotel\App\Http\Controllers\NightlyPostingController;
@@ -13,6 +14,10 @@ use Modules\Hotel\App\Http\Controllers\RoomTypeController;
 use Modules\Hotel\App\Http\Controllers\StayController;
 
 Route::middleware('staff.auth')->group(function () {
+    // EQMS DataTable listing (config + paged rows).
+    Route::get('hotel/listings/{resource}/config', [HotelListingController::class, 'config']);
+    Route::post('hotel/listings/{resource}/list', [HotelListingController::class, 'list']);
+
     // Inventory + pricing (Owner configures, Front Desk reads).
     Route::apiResource('hotel/room-types', RoomTypeController::class)->except(['update']);
     Route::patch('hotel/room-types/{room_type}', [RoomTypeController::class, 'update']);

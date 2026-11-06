@@ -23,6 +23,11 @@ class HotelServiceProvider extends ServiceProvider
     {
         $this->app->register(RouteServiceProvider::class);
 
+        $this->mergeConfigFrom(
+            base_path('Modules/Hotel/config/listing.php'),
+            'hotel_listing'
+        );
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 NightlyPostingCommand::class,

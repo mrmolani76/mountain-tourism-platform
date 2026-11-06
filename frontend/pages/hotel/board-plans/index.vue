@@ -1,14 +1,6 @@
 <script setup lang="ts">
 useHead({ title: 'Board plans' })
 
-const columns: Array<HotelColumn> = [
-  { key: 'code', title: 'Code' },
-  { key: 'name', title: 'Name' },
-  { key: 'price_per_person_cents', title: 'Per person / night', kind: 'money', align: 'end' },
-  { key: 'inclusions', title: 'Inclusions' },
-  { key: 'is_active', title: 'Status' },
-]
-
 const fields: Array<HotelFormField> = [
   {
     key: 'code',
@@ -46,12 +38,12 @@ const fields: Array<HotelFormField> = [
 </script>
 
 <template>
-  <HotelCrudPage
+  <HotelListingPage
+    resource="board-plans"
     title="Board plans"
     subtitle="Board price is charged per person per night (adults plus children)."
     endpoint="hotel/board-plans"
     view-path="/hotel/board-plans"
-    :columns="columns"
     :fields="fields"
     add-label="New board plan"
   />

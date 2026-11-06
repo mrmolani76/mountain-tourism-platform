@@ -3,12 +3,6 @@ useHead({ title: 'Season prices' })
 
 const client = useHotelApiClient()
 
-const columns: Array<HotelColumn> = [
-  { key: 'room_type_id', title: 'Room type' },
-  { key: 'season_id', title: 'Season' },
-  { key: 'amount_cents', title: 'Price per night', kind: 'money', align: 'end' },
-]
-
 const fields: Array<HotelFormField> = [
   {
     key: 'room_type_id',
@@ -41,12 +35,12 @@ const fields: Array<HotelFormField> = [
 </script>
 
 <template>
-  <HotelCrudPage
+  <HotelListingPage
+    resource="season-prices"
     title="Season prices"
     subtitle="Room type price per season. Nightly posting uses the season of each posted night."
     endpoint="hotel/room-season-prices"
     view-path="/hotel/season-prices"
-    :columns="columns"
     :fields="fields"
     add-label="New price"
   />

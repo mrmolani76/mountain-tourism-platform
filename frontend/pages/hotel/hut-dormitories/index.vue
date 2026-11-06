@@ -3,13 +3,6 @@ useHead({ title: 'Hut dormitories' })
 
 const client = useHotelApiClient()
 
-const columns: Array<HotelColumn> = [
-  { key: 'name', title: 'Name' },
-  { key: 'building_id', title: 'Building' },
-  { key: 'room_type_id', title: 'Room type' },
-  { key: 'is_active', title: 'Status' },
-]
-
 const fields: Array<HotelFormField> = [
   {
     key: 'building_id',
@@ -35,12 +28,12 @@ const fields: Array<HotelFormField> = [
 </script>
 
 <template>
-  <HotelCrudPage
+  <HotelListingPage
+    resource="hut-dormitories"
     title="Hut dormitories"
     subtitle="Dormitory blocks inside a hut. Beds are booked individually."
     endpoint="hotel/hut-dormitories"
     view-path="/hotel/hut-dormitories"
-    :columns="columns"
     :fields="fields"
     add-label="New dormitory"
   />
