@@ -1,13 +1,21 @@
 <?php
 
-namespace Modules\Hotel\App\Http\Requests;
+namespace Modules\Hotel\App\Data;
 
 use Illuminate\Validation\Rule;
 use Modules\Hotel\App\Models\BoardPlan;
 
-class UpdateBoardPlanRequest extends HotelRequest
+class UpdateBoardPlanData extends HotelData
 {
-    public function rules(): array
+    public function __construct(
+        public ?string $code = null,
+        public ?string $name = null,
+        public ?int $price_per_person_cents = null,
+        public ?array $inclusions = null,
+        public ?bool $is_active = null,
+    ) {}
+
+    public static function rules(): array
     {
         return [
             'code' => ['sometimes', 'string', Rule::in(array_keys(BoardPlan::CODES))],

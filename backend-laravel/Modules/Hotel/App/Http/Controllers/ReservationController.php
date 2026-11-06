@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Hotel\App\Http\Requests\CancelReservationRequest;
-use Modules\Hotel\App\Http\Requests\StoreReservationRequest;
-use Modules\Hotel\App\Http\Requests\UpdateReservationRequest;
+use Modules\Hotel\App\Data\CancelReservationData;
+use Modules\Hotel\App\Data\StoreReservationData;
+use Modules\Hotel\App\Data\UpdateReservationData;
 use Modules\Hotel\App\Models\Reservation;
 use Modules\Hotel\App\Services\CheckInService;
 use Modules\Hotel\App\Services\ReservationService;
@@ -64,18 +64,18 @@ class ReservationController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreReservationRequest $request): JsonResponse
+    public function store(StoreReservationData $data): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessFrontDesk()) {
             return $denied;
         }
 
-        $reservation = $this->reservations->create($request->validated());
+        $reservation = $this->reservations->create($data->toFillArray());
 
         return response()->json($reservation->toApiArray(), 201);
     }
 
-    public function update(UpdateReservationRequest $request, int $reservation): JsonResponse
+    public function update(UpdateReservationData $data, int $reservation): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessFrontDesk()) {
             return $denied;
@@ -86,10 +86,10 @@ class ReservationController extends Controller
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
 
-        return response()->json($this->reservations->update($model, $request->validated())->toApiArray(), 200);
+        return response()->json($this->reservations->update($model, $data->toFillArray())->toApiArray(), 200);
     }
 
-    public function cancel(CancelReservationRequest $request, int $reservation): JsonResponse
+    public function cancel(CancelReservationData $data, int $reservation): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessFrontDesk()) {
             return $denied;
@@ -100,7 +100,7 @@ class ReservationController extends Controller
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
 
-        $cancelled = $this->reservations->cancel($model, $request->validated()['reason'] ?? null);
+        $cancelled = $this->reservations->cancel($model, $data->reason);
 
         return response()->json($cancelled->toApiArray(), 200);
     }

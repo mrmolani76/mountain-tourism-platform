@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\AuditEvent;
 use Modules\Core\App\Support\CoreAudit;
-use Modules\Hotel\App\Http\Requests\StoreRoomRequest;
-use Modules\Hotel\App\Http\Requests\UpdateRoomRequest;
+use Modules\Hotel\App\Data\StoreRoomData;
+use Modules\Hotel\App\Data\UpdateRoomData;
 use Modules\Hotel\App\Models\ReservationAccommodation;
 use Modules\Hotel\App\Models\Room;
 use Modules\Hotel\App\Support\HotelAuthz;
@@ -53,13 +53,13 @@ class RoomController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreRoomRequest $request): JsonResponse
+    public function store(StoreRoomData $data): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
-        $model = Room::on(config('tenancy.connection_name'))->create($request->validated());
+        $model = Room::on(config('tenancy.connection_name'))->create($data->toFillArray());
         CoreAudit::record(
             AuditEvent::ACTION_CREATE,
             'hotel_room',
@@ -70,7 +70,7 @@ class RoomController extends Controller
         return response()->json($model->fresh()->toApiArray(), 201);
     }
 
-    public function update(UpdateRoomRequest $request, int $room): JsonResponse
+    public function update(UpdateRoomData $data, int $room): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
@@ -82,7 +82,7 @@ class RoomController extends Controller
         }
 
         $old = $model->toApiArray();
-        $model->fill($request->validated())->save();
+        $model->fill($data->toFillArray())->save();
         $fresh = $model->fresh();
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,

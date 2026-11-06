@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\AuditEvent;
 use Modules\Core\App\Support\CoreAudit;
-use Modules\Hotel\App\Http\Requests\StoreHutBedRequest;
-use Modules\Hotel\App\Http\Requests\UpdateHutBedRequest;
+use Modules\Hotel\App\Data\StoreHutBedData;
+use Modules\Hotel\App\Data\UpdateHutBedData;
 use Modules\Hotel\App\Models\HutBed;
 use Modules\Hotel\App\Models\ReservationAccommodation;
 use Modules\Hotel\App\Support\HotelAuthz;
@@ -51,13 +51,13 @@ class HutBedController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreHutBedRequest $request): JsonResponse
+    public function store(StoreHutBedData $data): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
-        $model = HutBed::on(config('tenancy.connection_name'))->create($request->validated());
+        $model = HutBed::on(config('tenancy.connection_name'))->create($data->toFillArray());
         CoreAudit::record(
             AuditEvent::ACTION_CREATE,
             'hotel_hut_bed',
@@ -68,7 +68,7 @@ class HutBedController extends Controller
         return response()->json($model->fresh()->toApiArray(), 201);
     }
 
-    public function update(UpdateHutBedRequest $request, int $hut_bed): JsonResponse
+    public function update(UpdateHutBedData $data, int $hut_bed): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
@@ -80,7 +80,7 @@ class HutBedController extends Controller
         }
 
         $old = $model->toApiArray();
-        $model->fill($request->validated())->save();
+        $model->fill($data->toFillArray())->save();
         $fresh = $model->fresh();
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,

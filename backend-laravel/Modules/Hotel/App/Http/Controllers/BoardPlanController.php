@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\AuditEvent;
 use Modules\Core\App\Support\CoreAudit;
-use Modules\Hotel\App\Http\Requests\StoreBoardPlanRequest;
-use Modules\Hotel\App\Http\Requests\UpdateBoardPlanRequest;
+use Modules\Hotel\App\Data\StoreBoardPlanData;
+use Modules\Hotel\App\Data\UpdateBoardPlanData;
 use Modules\Hotel\App\Models\BoardPlan;
 use Modules\Hotel\App\Models\Reservation;
 use Modules\Hotel\App\Support\HotelAuthz;
@@ -49,13 +49,13 @@ class BoardPlanController extends Controller
         return response()->json($model->toApiArray(), 200);
     }
 
-    public function store(StoreBoardPlanRequest $request): JsonResponse
+    public function store(StoreBoardPlanData $data): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
         }
 
-        $model = BoardPlan::on(config('tenancy.connection_name'))->create($request->validated());
+        $model = BoardPlan::on(config('tenancy.connection_name'))->create($data->toFillArray());
         CoreAudit::record(
             AuditEvent::ACTION_CREATE,
             'hotel_board_plan',
@@ -66,7 +66,7 @@ class BoardPlanController extends Controller
         return response()->json($model->fresh()->toApiArray(), 201);
     }
 
-    public function update(UpdateBoardPlanRequest $request, int $board_plan): JsonResponse
+    public function update(UpdateBoardPlanData $data, int $board_plan): JsonResponse
     {
         if ($denied = HotelAuthz::denyUnlessOwner()) {
             return $denied;
@@ -78,7 +78,7 @@ class BoardPlanController extends Controller
         }
 
         $old = $model->toApiArray();
-        $model->fill($request->validated())->save();
+        $model->fill($data->toFillArray())->save();
         $fresh = $model->fresh();
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,

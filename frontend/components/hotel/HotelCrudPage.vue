@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import type { VForm } from 'vuetify/components/VForm'
 import type { HotelColumn, HotelFormField, HotelOption } from '@/types/hotel'
 import { formatCents, centsToMajor, majorToCents } from '@/utils/money'
+import { requiredValidator } from '@core/utils/validators'
 
 /**
  * Generic CRUD page for simple Hotel resources (room types, rooms, dormitories, beds,
- * season prices, board plans). One page per resource, the field list drives the form.
- * Reservations and stays have their own pages because of allocations and checkout rules.
+ * season prices, board plans). Form layout follows the SPA pattern:
+ * external VLabel + red required mark, App* fields, VForm rules, then save.
  */
 
 const props = withDefaults(defineProps<{
@@ -34,9 +36,7 @@ const { t } = useI18n()
 const client = useHotelApiClient()
 
 const rows = ref<Array<Record<string, any>>>([])
-/** First paint skeleton. */
 const initialLoading = ref(true)
-/** Table overlay while list refreshes. */
 const loading = ref(false)
 const search = ref('')
 const dialogOpen = ref(false)
@@ -44,6 +44,7 @@ const saving = ref(false)
 const editingId = ref<number | null>(null)
 const form = ref<Record<string, any>>({})
 const resolvedOptions = ref<Record<string, Array<HotelOption>>>({})
+const refForm = ref<VForm>()
 
 const headers = computed(() => [
   ...props.columns,
@@ -51,6 +52,13 @@ const headers = computed(() => [
 ])
 
 const dialogTitle = computed(() => editingId.value === null ? props.addLabel : `Edit ${props.title.replace(/s$/, '')}`)
+
+const fieldRules = (field: HotelFormField) => {
+  if (!field.required || field.type === 'checkbox')
+    return []
+
+  return [requiredValidator]
+}
 
 const blankForm = () => {
   const base: Record<string, any> = {
@@ -98,13 +106,15 @@ const loadOptions = async () => {
   resolvedOptions.value = optionMap
 }
 
-const openCreate = () => {
+const openCreate = async () => {
   editingId.value = null
   form.value = blankForm()
   dialogOpen.value = true
+  await nextTick()
+  refForm.value?.resetValidation()
 }
 
-const openEdit = (row: Record<string, any>) => {
+const openEdit = async (row: Record<string, any>) => {
   editingId.value = Number(row.id)
 
   const values: Record<string, any> = { ...row }
@@ -119,16 +129,12 @@ const openEdit = (row: Record<string, any>) => {
 
   form.value = values
   dialogOpen.value = true
+  await nextTick()
+  refForm.value?.resetValidation()
 }
 
-const missingRequired = computed(() => props.fields
-  .filter(field => field.required)
-  .filter((field) => {
-    const value = form.value[field.key]
-
-    return value === null || value === undefined || value === ''
-  })
-  .map(field => field.label))
+const isBlank = (value: unknown) =>
+  value === null || value === undefined || value === ''
 
 const buildPayload = () => {
   const payload: Record<string, any> = {}
@@ -137,10 +143,42 @@ const buildPayload = () => {
     const value = form.value[field.key]
 
     if (field.type === 'money') {
+      if (isBlank(value) && !field.required)
+        return
+
       payload[field.key] = majorToCents(value)
 
       return
     }
+
+    if (field.type === 'number' || field.key.endsWith('_id')) {
+      if (isBlank(value)) {
+        if (field.required)
+          payload[field.key] = value
+
+        return
+      }
+
+      payload[field.key] = Number(value)
+
+      return
+    }
+
+    if (field.type === 'checkbox') {
+      payload[field.key] = Boolean(value)
+
+      return
+    }
+
+    if (field.type === 'multiselect') {
+      payload[field.key] = Array.isArray(value) ? value : []
+
+      return
+    }
+
+    // Omit empty optional strings so Laravel `sometimes`/`integer` rules do not see null/"".
+    if (isBlank(value) && !field.required)
+      return
 
     payload[field.key] = value
   })
@@ -149,21 +187,24 @@ const buildPayload = () => {
 }
 
 const save = async () => {
-  if (missingRequired.value.length > 0)
+  const { valid } = await refForm.value!.validate()
+  if (!valid)
     return
 
   saving.value = true
+  try {
+    const payload = buildPayload()
+    const response = editingId.value === null
+      ? await client.create(props.endpoint, payload)
+      : await client.update(props.endpoint, editingId.value, payload)
 
-  const payload = buildPayload()
-  const response = editingId.value === null
-    ? await client.create(props.endpoint, payload)
-    : await client.update(props.endpoint, editingId.value, payload)
-
-  saving.value = false
-
-  if (response) {
-    dialogOpen.value = false
-    await load()
+    if (response) {
+      dialogOpen.value = false
+      await load()
+    }
+  }
+  finally {
+    saving.value = false
   }
 }
 
@@ -277,7 +318,11 @@ onMounted(async () => {
       >
         <template #item="{ item }">
           <tr>
-            <td v-for="column in columns" :key="column.key" :class="column.align === 'end' ? 'text-end' : ''">
+            <td
+              v-for="column in columns"
+              :key="column.key"
+              :class="column.align === 'end' ? 'text-end' : ''"
+            >
               <VChip
                 v-if="column.kind === 'bool'"
                 :color="rawItem(item)[column.key] ? 'success' : 'default'"
@@ -325,103 +370,121 @@ onMounted(async () => {
       </VDataTable>
     </VCard>
 
-    <VDialog v-model="dialogOpen" max-width="640" persistent>
+    <VDialog
+      v-model="dialogOpen"
+      max-width="720"
+      persistent
+    >
       <VCard>
         <VCardTitle>{{ dialogTitle }}</VCardTitle>
-        <VCardText>
-          <VRow>
-            <VCol
-              v-for="field in fields"
-              :key="field.key"
-              :cols="12"
-              :md="field.col ?? 6"
+        <VForm
+          ref="refForm"
+          @submit.prevent="save"
+        >
+          <VCardText>
+            <VRow>
+              <VCol
+                v-for="field in fields"
+                :key="field.key"
+                :cols="12"
+                :md="field.col ?? 6"
+              >
+                <template v-if="field.type === 'checkbox'">
+                  <VCheckbox
+                    v-model="form[field.key]"
+                    :label="field.label"
+                    hide-details
+                    class="mt-4"
+                  />
+                </template>
+
+                <template v-else>
+                  <VLabel class="mb-1 text-body-2 text-wrap d-inline-flex align-center">
+                    {{ field.label }}
+                    <span
+                      v-if="field.required"
+                      class="text-error font-weight-bold ms-1"
+                    >*</span>
+                  </VLabel>
+
+                  <AppSelect
+                    v-if="field.type === 'select'"
+                    v-model="form[field.key]"
+                    :items="resolvedOptions[field.key] ?? field.options ?? []"
+                    item-title="title"
+                    item-value="value"
+                    :hint="field.hint"
+                    :rules="fieldRules(field)"
+                    :required="field.required"
+                    clearable
+                    density="comfortable"
+                    persistent-hint
+                  />
+
+                  <AppSelect
+                    v-else-if="field.type === 'multiselect'"
+                    v-model="form[field.key]"
+                    :items="resolvedOptions[field.key] ?? field.options ?? []"
+                    item-title="title"
+                    item-value="value"
+                    :hint="field.hint"
+                    :rules="fieldRules(field)"
+                    :required="field.required"
+                    chips
+                    closable-chips
+                    density="comfortable"
+                    multiple
+                    persistent-hint
+                  />
+
+                  <AppTextarea
+                    v-else-if="field.type === 'textarea'"
+                    v-model="form[field.key]"
+                    :hint="field.hint"
+                    :rules="fieldRules(field)"
+                    :required="field.required"
+                    density="comfortable"
+                    persistent-hint
+                    rows="2"
+                  />
+
+                  <AppTextField
+                    v-else
+                    v-model="form[field.key]"
+                    :type="field.type === 'money' || field.type === 'number' ? 'number' : (field.type ?? 'text')"
+                    :hint="field.hint"
+                    :min="field.min"
+                    :max="field.max"
+                    :step="field.type === 'money' ? '0.01' : field.step"
+                    :rules="fieldRules(field)"
+                    :required="field.required"
+                    density="comfortable"
+                    persistent-hint
+                  />
+                </template>
+              </VCol>
+            </VRow>
+          </VCardText>
+
+          <VCardActions>
+            <VSpacer />
+            <VBtn
+              variant="text"
+              :disabled="saving"
+              @click="dialogOpen = false"
             >
-              <VCheckbox
-                v-if="field.type === 'checkbox'"
-                v-model="form[field.key]"
-                :label="field.label"
-                hide-details
-              />
-
-              <VSelect
-                v-else-if="field.type === 'select'"
-                v-model="form[field.key]"
-                :items="resolvedOptions[field.key] ?? field.options ?? []"
-                :label="field.label"
-                :hint="field.hint"
-                :required="field.required"
-                clearable
-                density="comfortable"
-                persistent-hint
-                variant="outlined"
-              />
-
-              <VSelect
-                v-else-if="field.type === 'multiselect'"
-                v-model="form[field.key]"
-                :items="resolvedOptions[field.key] ?? field.options ?? []"
-                :label="field.label"
-                :hint="field.hint"
-                chips
-                closable-chips
-                density="comfortable"
-                multiple
-                persistent-hint
-                variant="outlined"
-              />
-
-              <VTextarea
-                v-else-if="field.type === 'textarea'"
-                v-model="form[field.key]"
-                :label="field.label"
-                :hint="field.hint"
-                density="comfortable"
-                persistent-hint
-                rows="2"
-                variant="outlined"
-              />
-
-              <VTextField
-                v-else
-                v-model="form[field.key]"
-                :type="field.type === 'money' || field.type === 'number' ? 'number' : (field.type ?? 'text')"
-                :label="field.label"
-                :hint="field.hint"
-                :min="field.min"
-                :max="field.max"
-                :step="field.type === 'money' ? '0.01' : field.step"
-                :required="field.required"
-                density="comfortable"
-                persistent-hint
-                variant="outlined"
-              />
-            </VCol>
-          </VRow>
-
-          <VAlert
-            v-if="missingRequired.length > 0"
-            type="warning"
-            variant="tonal"
-            density="compact"
-            class="mt-2"
-          >
-            Required: {{ missingRequired.join(', ') }}
-          </VAlert>
-        </VCardText>
-        <VCardActions>
-          <VSpacer />
-          <VBtn variant="text" @click="dialogOpen = false">
-            {{ t('cancel') }}
-          </VBtn>
-          <VBtn
-            color="primary"
-            :loading="saving"
-            :disabled="missingRequired.length > 0"
-            @click="save"
-          >
-            {{ t('save') }}
-          </VBtn>
-        </VCardActions>
+              {{ t('cancel') }}
+            </VBtn>
+            <VBtn
+              color="primary"
+              type="submit"
+              :loading="saving"
+              :disabled="saving"
+            >
+              {{ t('save') }}
+            </VBtn>
+          </VCardActions>
+        </VForm>
       </VCard>
     </VDialog>
   </div>
