@@ -1,11 +1,15 @@
 <script setup lang="ts">
+/**
+ * EQMS-style vertical + horizontal entity tabs.
+ * Left rail = all tabs; top strip = open/pinned tabs; hash `#tabKey` deep-links.
+ */
 interface Emit {
   (e: 'postSubmit'): void
 }
 
 const props = defineProps({
   tabItems: {
-    type: Array,
+    type: Array as () => AppTab[],
     required: true,
   },
   randomId: {
@@ -35,121 +39,139 @@ const props = defineProps({
 
 const emit = defineEmits<Emit>()
 const router = useRouter()
-const componentKey = ref(0);
+const componentKey = ref(0)
 
-const activeTab = ref(null)
+const activeTab = ref<string | null>(null)
 const activeInnerTab = ref('')
-const { t } = useI18n();
+const { t } = useI18n()
 
-const defaultTabItems = ref([] as any[])
+const defaultTabItems = ref([] as AppTab[])
 
-const addTabToDefaultItems = (newValue: any) => {
+const items = computed(() => (props.tabItems ?? []) as AppTab[])
+
+const findTab = (key: string) =>
+  items.value.find(x => String(x.tab).toLowerCase() === key.toLowerCase())
+
+const addTabToDefaultItems = (newValue: AppTab) => {
   activeInnerTab.value = ''
 
-  const addTabItem = defaultTabItems.value?.some(x => x.tab == newValue.tab);
+  const alreadyOpen = defaultTabItems.value.some(x => x.tab === newValue.tab)
 
-  if (addTabItem) {
-    activeTab.value = newValue.tab;
+  if (alreadyOpen) {
+    activeTab.value = newValue.tab
 
-    return;
+    return
   }
 
-  const tempObj = newValue
+  const tempObj = { ...newValue, title: t(newValue.title) }
 
-  tempObj.title = t(newValue.title)
   defaultTabItems.value.push(tempObj)
   activeTab.value = newValue.tab
 }
 
-const addTab = (newValue: any) => {
-  pushHashIntoRoute(newValue.tab);
-  addTabToDefaultItems(newValue);
+const addTab = (newValue: AppTab) => {
+  pushHashIntoRoute(newValue.tab)
+  addTabToDefaultItems(newValue)
 }
 
-const addEntityTab = (newValue: any) => {
-  // can't be more then one fragment(hash) in url so do not use => pushHashIntoRoute
-
-  const item = defaultTabItems.value?.find(x => x.tab == newValue.tab);
+const addEntityTab = (newValue: AppTab) => {
+  // Linked entity tabs share one hash; do not call pushHashIntoRoute.
+  const item = defaultTabItems.value.find(x => x.tab === newValue.tab)
 
   if (item) {
-    activeTab.value = newValue.tab;
+    activeTab.value = newValue.tab
 
-    return;
+    return
   }
 
-  const tempObj = newValue
+  const tempObj = {
+    ...newValue,
+    title: t(newValue.title),
+    component: resolveComponent('QCEntityLinkedTab'),
+  }
 
-  tempObj.title = t(newValue.title)
-  tempObj.component = resolveComponent('QCEntityLinkedTab')
-  defaultTabItems.value.push(tempObj)
-
+  defaultTabItems.value.push(tempObj as AppTab)
   activeTab.value = defaultTabItems.value[defaultTabItems.value.length - 1].tab
 }
 
-const removeTab = async (newValue: Object) => {
-  activeTab.value = null;
+const removeTab = async (newValue: AppTab) => {
+  activeTab.value = null
 
   const index = defaultTabItems.value.indexOf(newValue)
 
-  defaultTabItems.value.splice(index, 1);
+  if (index >= 0)
+    defaultTabItems.value.splice(index, 1)
 
   setTimeout(() => {
-    activeTab.value = defaultTabItems.value[defaultTabItems.value.length - 1].tab;
-    pushHashIntoRoute(activeTab.value);
-  }, 0);
+    const last = defaultTabItems.value[defaultTabItems.value.length - 1]
+
+    activeTab.value = last?.tab ?? null
+    if (activeTab.value)
+      pushHashIntoRoute(activeTab.value)
+  }, 0)
 }
 
-const addInnerTab = (newValue: any, innertab: any = null, allInnerTabData: any = []) => {
-  pushHashIntoRoute(newValue.tab);
+const addInnerTab = (newValue: AppTab, innertab: any = null, allInnerTabData: any = []) => {
+  pushHashIntoRoute(newValue.tab)
 
-  const item = defaultTabItems.value?.find(x => x.tab === newValue.tab);
+  const item = defaultTabItems.value.find(x => x.tab === newValue.tab) as any
 
   if (item) {
-    activeTab.value = newValue.tab;
-    item.innertab = innertab.tab
-    item.allInnerTabData = allInnerTabData.tab
+    activeTab.value = newValue.tab
+    item.innertab = innertab?.tab
+    item.allInnerTabData = allInnerTabData?.tab
 
-    return;
+    return
   }
 
-  activeTab.value = newValue.tab;
+  const tempObj = {
+    ...newValue,
+    title: t(newValue.title),
+    innertab: innertab?.tab,
+  }
 
-  const tempObj = newValue
-
-  tempObj.title = t(newValue.title)
-  tempObj.innertab = innertab.tab
-  defaultTabItems.value.push(tempObj)
+  defaultTabItems.value.push(tempObj as AppTab)
   activeTab.value = defaultTabItems.value[defaultTabItems.value.length - 1].tab
 }
 
 const loadTabs = () => {
-  if (!props.tabItems?.length)
-    return;
+  if (!items.value.length)
+    return
 
-  defaultTabItems.value = props.tabItems?.filter(x => x.pinnedTab) || [];
+  defaultTabItems.value = items.value.filter(x => x.pinnedTab)
 
-  const hashUrl = router.currentRoute?.value.hash;
+  const hashUrl = router.currentRoute.value.hash
 
   if (hashUrl) {
-    const key = hashUrl.replace('#', '')?.toLowerCase();
-    const hashTab = props.tabItems.value?.find(x => x.tab.toLowerCase() == key);
+    const key = hashUrl.replace('#', '')
+    const hashTab = findTab(key)
+
     if (hashTab) {
-      addTabToDefaultItems(hashTab);
+      addTabToDefaultItems(hashTab)
 
       return
     }
   }
 
-  activeTab.value = defaultTabItems.value?.find(x => x.pinnedTab)?.tab;
-
-  // rerender tabs
-  componentKey.value++;
+  activeTab.value = defaultTabItems.value.find(x => x.pinnedTab)?.tab ?? null
+  componentKey.value++
 }
 
-// only for one watch
-watch(() => props.tabItems?.length, () => {
-  loadTabs();
-}, { immediate: true });
+watch(() => items.value.length, () => {
+  loadTabs()
+}, { immediate: true })
+
+// Keep open tab in sync when browser back/forward changes the hash.
+watch(() => router.currentRoute.value.hash, (hash) => {
+  if (!hash || !items.value.length)
+    return
+
+  const key = hash.replace('#', '')
+  const hashTab = findTab(key)
+
+  if (hashTab)
+    addTabToDefaultItems(hashTab)
+})
 </script>
 
 <template>
@@ -166,7 +188,7 @@ watch(() => props.tabItems?.length, () => {
             class="v-tabs-pill"
           >
             <VTab
-              v-for="item in tabItems"
+              v-for="item in items"
               :key="item.tab"
               :value="item.tab"
               @click="addTab(item)"
@@ -194,7 +216,7 @@ watch(() => props.tabItems?.length, () => {
               </div>
               <VMenu
                 v-if="item.expandable"
-                openOnHover
+                open-on-hover
                 class="tw-ml-8"
                 activator="parent"
                 location="end center"
@@ -205,7 +227,7 @@ watch(() => props.tabItems?.length, () => {
                     :key="item1.title"
                     v-model="activeInnerTab"
                   >
-                    <VListItem @click="addInnerTab(item, item1, item.expandData);">
+                    <VListItem @click="addInnerTab(item, item1, item.expandData)">
                       {{ item1.title }}
                       <VChip
                         v-if="item1.count"
@@ -224,7 +246,7 @@ watch(() => props.tabItems?.length, () => {
         </VCard>
       </div>
 
-      <div class="lg:tw-col-span-4 sm:tw-col-span-2 md:tw-col-span-4 ">
+      <div class="lg:tw-col-span-4 sm:tw-col-span-2 md:tw-col-span-4">
         <VCard>
           <VTabs v-model="activeTab">
             <VTab
@@ -250,7 +272,7 @@ watch(() => props.tabItems?.length, () => {
               <IconBtn
                 v-if="!item.pinnedTab"
                 size="20"
-                @click="removeTab(item)"
+                @click.stop="removeTab(item)"
               >
                 <VIcon
                   icon="tabler-x"
@@ -268,19 +290,20 @@ watch(() => props.tabItems?.length, () => {
         >
           <VWindowItem
             v-for="item in defaultTabItems"
+            :key="item.tab"
             :value="item.tab"
           >
             <component
               :is="item.component"
               v-if="item.tab === activeTab"
-              :key="item.tab + componentKey"
+              :key="`${item.tab}-${componentKey}`"
               v-bind="{ ...item }"
-              :itemData="item"
-              :entityRandomId="randomId"
-              :entityData="entityData"
-              :isShowDeleted="isShowDeleted"
-              @addEntityTab="addEntityTab"
-              @postSubmit="emit('postSubmit')"
+              :item-data="item"
+              :entity-random-id="randomId"
+              :entity-data="entityData"
+              :is-show-deleted="isShowDeleted"
+              @add-entity-tab="addEntityTab"
+              @post-submit="emit('postSubmit')"
             />
           </VWindowItem>
         </VWindow>

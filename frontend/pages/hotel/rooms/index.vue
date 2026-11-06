@@ -51,6 +51,7 @@ const fields: Array<HotelFormField> = [
     title="Rooms and chalets"
     subtitle="Rooms belong to a building and a room type. A chalet is booked exactly like a room."
     endpoint="hotel/rooms"
+    view-path="/hotel/rooms"
     :columns="columns"
     :fields="fields"
     :defaults="{ accommodation_type: 'room' }"

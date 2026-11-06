@@ -39,6 +39,7 @@ const fields: Array<HotelFormField> = [
     title="Hut dormitories"
     subtitle="Dormitory blocks inside a hut. Beds are booked individually."
     endpoint="hotel/hut-dormitories"
+    view-path="/hotel/hut-dormitories"
     :columns="columns"
     :fields="fields"
     add-label="New dormitory"

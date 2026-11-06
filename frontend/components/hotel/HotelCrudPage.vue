@@ -17,6 +17,11 @@ const props = withDefaults(defineProps<{
   canCreate?: boolean
   canDelete?: boolean
   canEdit?: boolean
+  canView?: boolean
+  /** Base path for EQMS-style view pages, e.g. `/hotel/room-types`. */
+  viewPath?: string
+  /** Column key rendered as NuxtLink to the view page. */
+  linkKey?: string
   listParams?: Record<string, unknown>
   addLabel?: string
 }>(), {
@@ -25,12 +30,35 @@ const props = withDefaults(defineProps<{
   canCreate: true,
   canDelete: true,
   canEdit: true,
+  canView: true,
+  viewPath: '',
+  linkKey: '',
   listParams: () => ({}),
   addLabel: 'Add',
 })
 
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 const client = useHotelApiClient()
+
+const resolvedLinkKey = computed(() => {
+  if (props.linkKey)
+    return props.linkKey
+
+  const preferred = ['name', 'room_number', 'bed_number', 'code', 'reference']
+
+  return preferred.find(key => props.columns.some(column => column.key === key))
+    ?? props.columns[0]?.key
+    ?? ''
+})
+
+const viewUrl = (row: Record<string, any>) => {
+  if (!props.viewPath || row.id === undefined || row.id === null)
+    return ''
+
+  return `${props.viewPath.replace(/\/$/, '')}/view/${row.id}`
+}
 
 const rows = ref<Array<Record<string, any>>>([])
 const initialLoading = ref(true)
@@ -77,19 +105,6 @@ const blankForm = () => {
   return base
 }
 
-const load = async () => {
-  loading.value = true
-  try {
-    const { data } = await client.list(props.endpoint, { page: 1, page_size: 100, ...props.listParams })
-
-    rows.value = (data as Array<Record<string, any>>) ?? []
-  }
-  finally {
-    loading.value = false
-    initialLoading.value = false
-  }
-}
-
 const loadOptions = async () => {
   const optionMap: Record<string, Array<HotelOption>> = {}
 
@@ -128,6 +143,39 @@ const openEdit = async (row: Record<string, any>) => {
   dialogOpen.value = true
   await nextTick()
   refForm.value?.resetValidation()
+}
+
+const openEditFromQuery = async () => {
+  const editId = route.query.edit
+  if (!editId || !props.viewPath)
+    return
+
+  const id = Number(editId)
+  const row = rows.value.find(item => Number(item.id) === id)
+    ?? await client.show<Record<string, any>>(props.endpoint, id)
+
+  if (row)
+    await openEdit(row)
+
+  const query = { ...route.query }
+
+  delete query.edit
+  await router.replace({ path: route.path, query })
+}
+
+const load = async () => {
+  loading.value = true
+  try {
+    const { data } = await client.list(props.endpoint, { page: 1, page_size: 100, ...props.listParams })
+
+    rows.value = (data as Array<Record<string, any>>) ?? []
+  }
+  finally {
+    loading.value = false
+    initialLoading.value = false
+  }
+
+  await openEditFromQuery()
 }
 
 const isBlank = (value: unknown) =>
@@ -197,7 +245,13 @@ const save = async () => {
 
     if (response) {
       dialogOpen.value = false
-      await load()
+
+      const savedId = Number((response as any).id ?? editingId.value)
+
+      if (props.viewPath && savedId)
+        await navigateTo(viewUrl({ id: savedId }))
+      else
+        await load()
     }
   }
   finally {
@@ -336,9 +390,24 @@ onMounted(async () => {
               >
                 {{ rawItem(item)[column.key] }}
               </VChip>
+              <NuxtLink
+                v-else-if="canView && viewPath && column.key === resolvedLinkKey && viewUrl(rawItem(item))"
+                :to="viewUrl(rawItem(item))"
+                class="text-primary text-decoration-none font-weight-medium"
+              >
+                {{ displayValue(rawItem(item), column) }}
+              </NuxtLink>
               <span v-else>{{ displayValue(rawItem(item), column) }}</span>
             </td>
             <td class="text-end">
+              <VBtn
+                v-if="canView && viewPath"
+                icon="tabler-eye"
+                size="small"
+                variant="text"
+                color="default"
+                @click="navigateTo(viewUrl(rawItem(item)))"
+              />
               <VBtn
                 v-if="canEdit"
                 icon="tabler-edit"

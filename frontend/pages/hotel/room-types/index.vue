@@ -22,6 +22,7 @@ const fields: Array<HotelFormField> = [
     title="Room types"
     subtitle="Capacity per room type. Hut beds use the dormitory room type price."
     endpoint="hotel/room-types"
+    view-path="/hotel/room-types"
     :columns="columns"
     :fields="fields"
     add-label="New room type"

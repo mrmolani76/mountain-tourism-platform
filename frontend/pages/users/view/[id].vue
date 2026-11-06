@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /**
- * Staff view — header, info tab, skeleton loading.
+ * Staff view — EQMS header + AppTabs (hash-linked) + info panel.
+ * Links: list email → view, view edit → form, form save → view.
  */
 
 const { t } = useI18n()
@@ -20,6 +21,34 @@ const uuid = ref(String(route.params.id))
 const user = ref<User | undefined>()
 const tabItems = ref([] as AppTab[])
 
+const displayName = computed(() =>
+  user.value?.fullName
+  || user.value?.email
+  || '—',
+)
+
+const roleLabel = computed(() =>
+  user.value?.role?.roleName
+  || user.value?.role?.name
+  || null,
+)
+
+const createdAtLabel = computed(() => {
+  const raw = (user.value as any)?.createdAt
+  if (!raw)
+    return null
+
+  return new Date(raw).toLocaleString()
+})
+
+const lastLoginLabel = computed(() => {
+  const raw = (user.value as any)?.lastLogin
+  if (!raw)
+    return '--'
+
+  return new Date(raw).toLocaleString()
+})
+
 const reloadData = async () => {
   const response = await getUserViewById(uuid.value)
 
@@ -36,6 +65,14 @@ const reloadData = async () => {
 }
 
 reloadData()
+
+watch(() => route.params.id, (id) => {
+  if (!id)
+    return
+
+  uuid.value = String(id)
+  reloadData()
+})
 </script>
 
 <template>
@@ -85,11 +122,11 @@ reloadData()
           />
           <div>
             <div class="tw-text-2xl tw-font-bold tw-mb-2">
-              {{ user?.fullName || user?.email }}
+              {{ displayName }}
             </div>
             <div class="tw-text-base tw-font-semibold">
               <VChip size="small">
-                {{ displayOrFallback(user?.role?.roleName) }}
+                {{ displayOrFallback(roleLabel) }}
               </VChip>
               |
               <VChip
@@ -107,8 +144,8 @@ reloadData()
         <div class="tw-flex tw-flex-col tw-gap-4 tw-justify-between">
           <div class="tw-flex tw-gap-2 tw-justify-end">
             <VTooltip :text="$t('edit')">
-              <template #activator="{ props }">
-                <div v-bind="props">
+              <template #activator="{ props: tip }">
+                <div v-bind="tip">
                   <VBtn
                     size="38"
                     color="primary"
@@ -134,6 +171,21 @@ reloadData()
               />
             </VBtn>
           </div>
+          <div class="tw-flex tw-justify-end tw-gap-1">
+            <VTooltip :text="$t('lastLogin') || 'Last login'">
+              <template #activator="{ props: tip }">
+                <VLabel>
+                  <VIcon
+                    v-bind="tip"
+                    icon="tabler-calendar"
+                    size="22"
+                    class="tw-mr-2"
+                  />
+                  {{ lastLoginLabel }}
+                </VLabel>
+              </template>
+            </VTooltip>
+          </div>
         </div>
       </VCard>
 
@@ -142,12 +194,31 @@ reloadData()
         :tab-items="tabItems"
         :random-id="uuid"
         :entity-data="user"
-      />
-
-      <UserViewInfo
-        v-else
-        :entity-data="user"
-      />
+      >
+        <template #middleColumnData>
+          <VCard width="100%">
+            <VCardText class="pl-2 pt-2">
+              <span class="d-flex mt-2 tw-items-center">
+                <VTooltip :text="$t('dateCreated') || 'Created'">
+                  <template #activator="{ props: tip }">
+                    <VIcon
+                      v-bind="tip"
+                      size="25"
+                      icon="tabler-calendar-plus"
+                      class="me-1"
+                    />
+                  </template>
+                </VTooltip>
+                <span class="text-body-1">
+                  <VLabel class="tw-font-semibold">
+                    {{ displayOrFallback(createdAtLabel) }}
+                  </VLabel>
+                </span>
+              </span>
+            </VCardText>
+          </VCard>
+        </template>
+      </AppTabs>
     </template>
   </div>
 </template>

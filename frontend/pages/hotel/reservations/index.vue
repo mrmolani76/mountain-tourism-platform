@@ -440,7 +440,12 @@ onMounted(async () => {
         <template #item="{ item }">
           <tr>
             <td class="font-weight-medium">
-              {{ rowOf(item).reference }}
+              <NuxtLink
+                class="text-primary text-decoration-none"
+                :to="`/hotel/reservations/view/${rowOf(item).id}`"
+              >
+                {{ rowOf(item).reference }}
+              </NuxtLink>
             </td>
             <td>{{ rowOf(item).guest_name }}</td>
             <td>{{ rowOf(item).check_in_on }}</td>
@@ -458,6 +463,12 @@ onMounted(async () => {
               </VChip>
             </td>
             <td class="text-end">
+              <VBtn
+                icon="tabler-eye"
+                size="small"
+                variant="text"
+                @click="navigateTo(`/hotel/reservations/view/${rowOf(item).id}`)"
+              />
               <VBtn
                 v-if="canOperate(rowOf(item))"
                 icon="tabler-edit"

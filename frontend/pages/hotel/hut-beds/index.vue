@@ -31,6 +31,7 @@ const fields: Array<HotelFormField> = [
     title="Hut beds"
     subtitle="Each bed is reservable on its own date range."
     endpoint="hotel/hut-beds"
+    view-path="/hotel/hut-beds"
     :columns="columns"
     :fields="fields"
     add-label="New bed"

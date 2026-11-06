@@ -45,6 +45,7 @@ const fields: Array<HotelFormField> = [
     title="Season prices"
     subtitle="Room type price per season. Nightly posting uses the season of each posted night."
     endpoint="hotel/room-season-prices"
+    view-path="/hotel/season-prices"
     :columns="columns"
     :fields="fields"
     add-label="New price"

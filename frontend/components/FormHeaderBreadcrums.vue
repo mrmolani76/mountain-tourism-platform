@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Form header crumbs. Listing title links back to the module index
+ * so create/edit stays connected to the list page.
+ */
 const props = defineProps({
   page: String,
   action: String,
@@ -8,17 +12,18 @@ const props = defineProps({
   },
 })
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 const breadcrumbs = computed(() => {
   return [
     {
-      title: t(props.page),
-      disabled: true,
+      title: t(props.page || ''),
+      disabled: false,
+      to: `/${props.page}`,
     },
     {
       title: props.action,
-      disabled: false,
+      disabled: true,
     },
   ]
 })

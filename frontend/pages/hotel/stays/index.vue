@@ -163,7 +163,12 @@ onMounted(async () => {
         <template #item="{ item }">
           <tr>
             <td class="text-end">
-              {{ rowOf(item).id }}
+              <NuxtLink
+                class="text-primary text-decoration-none"
+                :to="`/hotel/stays/view/${rowOf(item).id}`"
+              >
+                {{ rowOf(item).id }}
+              </NuxtLink>
             </td>
             <td class="font-weight-medium">
               {{ guestName(rowOf(item)) }}
@@ -177,6 +182,13 @@ onMounted(async () => {
               </VChip>
             </td>
             <td class="text-end">
+              <VBtn
+                icon="tabler-eye"
+                size="small"
+                variant="text"
+                title="View"
+                @click="navigateTo(`/hotel/stays/view/${rowOf(item).id}`)"
+              />
               <VBtn
                 icon="tabler-receipt"
                 size="small"

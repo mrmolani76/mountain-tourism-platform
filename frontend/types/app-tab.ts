@@ -17,4 +17,8 @@ export interface AppTab {
   selectedVersionId?: any
   selectedVersion?: any
   versions?: Array<object>
+  imgIcon?: string
+  count?: number | string
+  expandable?: boolean
+  expandData?: Array<{ title: string; tab: string; count?: number | string }>
 }

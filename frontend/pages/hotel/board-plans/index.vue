@@ -50,6 +50,7 @@ const fields: Array<HotelFormField> = [
     title="Board plans"
     subtitle="Board price is charged per person per night (adults plus children)."
     endpoint="hotel/board-plans"
+    view-path="/hotel/board-plans"
     :columns="columns"
     :fields="fields"
     add-label="New board plan"
