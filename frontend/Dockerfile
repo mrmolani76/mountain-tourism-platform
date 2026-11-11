@@ -46,10 +46,20 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copy custom nginx config that proxies /api to the backend
 COPY docker/nginx-spa-proxy.conf /etc/nginx/conf.d/default.conf
 
+# Generate self-signed SSL certificate for local dev HTTPS.
+# SAN covers lab.local.mtmtp.local, saas.mtmtp.local, localhost, 127.0.0.1.
+RUN mkdir -p /etc/nginx/ssl && \
+    apk add --no-cache openssl && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/nginx/ssl/mtmtp.local.key \
+    -out /etc/nginx/ssl/mtmtp.local.crt \
+    -subj "/CN=lab.local.mtmtp.local" \
+    -addext "subjectAltName=DNS:lab.local.mtmtp.local,DNS:saas.mtmtp.local,DNS:localhost,IP:127.0.0.1"
+
 # nitro.output.publicDir is overridden to `.output/` in nuxt.config.ts,
 # so the static site lands directly in /app/.output (not /app/.output/public).
 COPY --from=builder /app/.output /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]
