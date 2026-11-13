@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Phase 3 started (POS done). Next: Module E rental or F services. **72** verify when setup allowed. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Phase 3 POS migrations split. Next: Module E rental or F services. **72** verify when setup allowed. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **78** — Split Pos tenant migrations — one table per file (high, 2026-11-13).
 - **77** — Module D — Restaurants, huts and shop (Laravel POS) (high, 2026-11-13): artisan `module:make Pos`, catalog/shift/order/board/packed-lunch APIs.
 - **76** — Module 3 — Guest folio and checkout (Laravel) full contract (high, 2026-11-13): list, charge-to-room, invoice JSON, FolioAuthz.
 - **75** — Align Hotel/Core listings to EQMS DataTable pattern (high, 2026-11-06): `{resource}/list/config` + `/list`, server cells, no client listing mapper.
@@ -80,6 +81,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-13 — `work/changes/2026-11-13--78-split-pos-migrations.md` — item 78: one Pos migration per table
 - 2026-11-13 — `work/changes/2026-11-13--77-laravel-pos-module-d.md` — item 77: artisan Pos module + Module D POS APIs
 - 2026-11-13 — `work/changes/2026-11-13--76-laravel-folio-module-c.md` — item 76: Folio list, charge-to-room, invoice JSON, FolioAuthz
 - 2026-11-06 — `work/changes/2026-11-06--75-eqms-datatable-listing-align.md` — item 75: EQMS `list/config` + `list` for Hotel/Core; server cell rows; drop client listing-table
