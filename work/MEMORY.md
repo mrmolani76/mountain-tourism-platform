@@ -6,15 +6,16 @@
 ## Current focus
 - **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
-- **WIP empty** after **75** complete. Next: **72** (Hotel migrate + tests on setup machine) when user asks.
+- **WIP empty** after **76**. Next product: Phase 3 (POS/rental/services) or **72** verify when setup allowed.
 
 ## Next suggested pickups (kanban order)
-1. **72** — Module 2 Hotel Laravel + folio contract (high; migrate + test pending)
-2. Then next unfinished module feature from phases (WIP = 1)
+1. Next unfinished module feature from phases (D POS / E rental / F services) — create kanban item first
+2. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **76** — Module 3 Folio Laravel (charge-to-room, list, invoice JSON) (high, 2026-11-13)
 - **75** — EQMS DataTable listing align Hotel/Core (high, 2026-11-06)
 - **74** — EQMS menu + staff CRUD + Hotel DataTable listings (high, 2026-11-06)
 - **73** — Full platform DB schema design Modules A–I (high, 2026-11-05)

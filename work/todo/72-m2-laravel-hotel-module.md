@@ -10,7 +10,7 @@ effort: L
 dependencies: 71
 bug: none
 created: 2026-11-04
-updated: 2026-11-04
+updated: 2026-11-13
 ---
 
 # Module 2 — Hotel, chalets and huts (Laravel)
@@ -108,6 +108,11 @@ Module C (folio), Module D (board inclusion check) and Module G (arrival to pick
 
 ## Return to Pending Log (when work stops midway)
 
+### 2026-11-13
+
+- **Returned by**: agent
+- **Reason**: User asked for product/API work only (no setup). Item 72 product code already meets ACs; only migrate + `php artisan test` remain (setup). Picked Module 3 Folio (item 76) instead.
+- **Next step**: Run migrate + `php artisan test` when user allows setup; then complete 72.
 
 ### 2026-11-06
 

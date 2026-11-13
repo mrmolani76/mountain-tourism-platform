@@ -12,10 +12,11 @@ use Modules\Folio\App\Models\FolioVoid;
 use Modules\Folio\App\Models\Payment;
 
 /**
- * Minimal folio money core for Module B (Module C will extend it).
+ * Guest folio money core (Module C).
  *
  * Rules: integer minor units, append-only rows, void only with reason + actor,
  * balance = active charges - active payments, checkout requires zero balance.
+ * Charge-to-room and invoice payload live in sibling services.
  */
 class FolioService
 {
