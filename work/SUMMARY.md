@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **79** in progress — Module E Rental (artisan + product/API). PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Phase 3 D+E done. Next: Module F services. **72** verify when setup allowed. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -10,9 +10,10 @@ Refresh on every work / bug / change status update.
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
-- **79** — Module E — Equipment rental (Laravel) (high). Types, items, rent/return, late/damage via Folio.
+- (none)
 
 ### Completed
+- **79** — Module E — Equipment rental (Laravel) (high, 2026-11-13): artisan `module:make Rental`, rent/return/late/damage, one migration per table.
 - **78** — Split Pos tenant migrations — one table per file (high, 2026-11-13).
 - **77** — Module D — Restaurants, huts and shop (Laravel POS) (high, 2026-11-13): artisan `module:make Pos`, catalog/shift/order/board/packed-lunch APIs.
 - **76** — Module 3 — Guest folio and checkout (Laravel) full contract (high, 2026-11-13): list, charge-to-room, invoice JSON, FolioAuthz.
@@ -81,6 +82,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-13 — `work/changes/2026-11-13--79-laravel-rental-module-e.md` — item 79: artisan Rental + Module E APIs
 - 2026-11-13 — `work/changes/2026-11-13--78-split-pos-migrations.md` — item 78: one Pos migration per table
 - 2026-11-13 — `work/changes/2026-11-13--77-laravel-pos-module-d.md` — item 77: artisan Pos module + Module D POS APIs
 - 2026-11-13 — `work/changes/2026-11-13--76-laravel-folio-module-c.md` — item 76: Folio list, charge-to-room, invoice JSON, FolioAuthz

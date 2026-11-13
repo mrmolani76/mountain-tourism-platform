@@ -21,12 +21,12 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 79 | Module E — Equipment rental (Laravel) | high | E-rental | backend | L |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 79 | Module E — Equipment rental (Laravel) | high | E-rental | backend | L | 2026-11-13 |
 | 78 | Split Pos tenant migrations — one table per file | high | D-pos | backend | S | 2026-11-13 |
 | 77 | Module D — Restaurants, huts and shop (Laravel POS) | high | D-pos | backend | L | 2026-11-13 |
 | 76 | Module 3 — Guest folio and checkout (Laravel) full contract | high | C-folio | backend | L | 2026-11-13 |

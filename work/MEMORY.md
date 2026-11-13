@@ -6,17 +6,18 @@
 ## Current focus
 - **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
-- **79 in progress** — Module E Rental via artisan. Modules: Saas, Core, Hotel, Folio, Pos, Rental.
-- New modules: always `php artisan module:make <Name> --api` (never hand folders). One migration per table.
+- **WIP empty** after **79**. Modules: Saas, Core, Hotel, Folio, Pos, Rental.
+- New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. Finish **79** Rental
-2. Module F services
-3. **72** verify on setup machine when user allows
+1. Module F services (create kanban + artisan `module:make`)
+2. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **79** — Module E Rental Laravel via artisan + APIs (high, 2026-11-13)
+- **78** — Split Pos migrations one table per file (high, 2026-11-13)
 - **77** — Module D POS Laravel via artisan + APIs (high, 2026-11-13)
 - **76** — Module 3 Folio Laravel (charge-to-room, list, invoice JSON) (high, 2026-11-13)
 - **75** — EQMS DataTable listing align Hotel/Core (high, 2026-11-06)
