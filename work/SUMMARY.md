@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Phase 3 D+E+F done. Next: Phase 4 (Transport/Lifts/Weather) or **72** verify. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Phase 4 Module G done. Next: Module H Weather, Folio frontend (**82**), or **72** verify. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -10,9 +10,10 @@ Refresh on every work / bug / change status update.
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
-- (none)
+- **82** — Folio frontend — list, detail, charge-to-room, pay, void (high).
 
 ### Completed
+- **81** — Module G — Transport and lifts (Laravel) (high, 2026-11-13): artisan Transport, trips/lifts/pass, 10 migrations, 25 routes.
 - **80** — Module F — Hotel services and activities (Laravel) (high, 2026-11-13): artisan Services, slots/bookings/outings, 9 migrations.
 - **79** — Module E — Equipment rental (Laravel) (high, 2026-11-13): artisan `module:make Rental`, rent/return/late/damage, one migration per table.
 - **78** — Split Pos tenant migrations — one table per file (high, 2026-11-13).

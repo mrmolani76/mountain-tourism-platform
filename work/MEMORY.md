@@ -49,3 +49,4 @@ Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-no
 - Isolation = active tenant DB connection, not `tenant_id` filter
 - Money append-only; DRF ViewSets + services
 - Commit/push only after user says yes
+- 2026-11-13: Completed **81** Module G Transport (Laravel). Next: H Weather or 72 verify.

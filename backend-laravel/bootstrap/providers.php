@@ -7,6 +7,7 @@ use Modules\Hotel\App\Providers\HotelServiceProvider;
 use Modules\Pos\App\Providers\PosServiceProvider;
 use Modules\Rental\App\Providers\RentalServiceProvider;
 use Modules\Services\App\Providers\ServicesServiceProvider;
+use Modules\Transport\App\Providers\TransportServiceProvider;
 use Modules\Saas\App\Providers\SaasServiceProvider;
 
 return [
@@ -23,4 +24,6 @@ return [
     RentalServiceProvider::class,
     // Module F: hotel services and activities.
     ServicesServiceProvider::class,
+    // Module G: transport and lifts.
+    TransportServiceProvider::class,
 ];

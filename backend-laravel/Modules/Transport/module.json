@@ -1,0 +1,11 @@
+{
+    "name": "Transport",
+    "alias": "transport",
+    "description": "Mountain Tourism Module G - transport and lifts",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Transport\\App\\Providers\\TransportServiceProvider"
+    ],
+    "files": []
+}
