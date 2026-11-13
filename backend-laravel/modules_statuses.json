@@ -4,5 +4,6 @@
     "Hotel": true,
     "Folio": true,
     "Pos": true,
-    "Rental": true
+    "Rental": true,
+    "Services": true
 }

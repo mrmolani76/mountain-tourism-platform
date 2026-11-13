@@ -1,0 +1,11 @@
+{
+    "name": "Services",
+    "alias": "services",
+    "description": "Mountain Tourism Module F - hotel services and activities",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Services\\App\\Providers\\ServicesServiceProvider"
+    ],
+    "files": []
+}

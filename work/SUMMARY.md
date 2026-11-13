@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Phase 3 D+E done. Next: Module F services. **72** verify when setup allowed. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Phase 3 D+E+F done. Next: Phase 4 (Transport/Lifts/Weather) or **72** verify. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **80** — Module F — Hotel services and activities (Laravel) (high, 2026-11-13): artisan Services, slots/bookings/outings, 9 migrations.
 - **79** — Module E — Equipment rental (Laravel) (high, 2026-11-13): artisan `module:make Rental`, rent/return/late/damage, one migration per table.
 - **78** — Split Pos tenant migrations — one table per file (high, 2026-11-13).
 - **77** — Module D — Restaurants, huts and shop (Laravel POS) (high, 2026-11-13): artisan `module:make Pos`, catalog/shift/order/board/packed-lunch APIs.
@@ -82,6 +83,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-13 — `work/changes/2026-11-13--80-laravel-services-module-f.md` — item 80: artisan Services + Module F APIs
 - 2026-11-13 — `work/changes/2026-11-13--79-laravel-rental-module-e.md` — item 79: artisan Rental + Module E APIs
 - 2026-11-13 — `work/changes/2026-11-13--78-split-pos-migrations.md` — item 78: one Pos migration per table
 - 2026-11-13 — `work/changes/2026-11-13--77-laravel-pos-module-d.md` — item 77: artisan Pos module + Module D POS APIs

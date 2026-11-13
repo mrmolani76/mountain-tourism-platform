@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/services",
+    "description": "Mountain Tourism Services module",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Services\\App\\": "App/",
+            "Modules\\Services\\Database\\Factories\\": "Database/Factories/",
+            "Modules\\Services\\Database\\Seeders\\": "Database/Seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Services\\Tests\\": "tests/"
+        }
+    }
+}
