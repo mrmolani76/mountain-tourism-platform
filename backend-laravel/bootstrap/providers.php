@@ -5,6 +5,7 @@ use Modules\Core\App\Providers\CoreServiceProvider;
 use Modules\Folio\App\Providers\FolioServiceProvider;
 use Modules\Hotel\App\Providers\HotelServiceProvider;
 use Modules\Pos\App\Providers\PosServiceProvider;
+use Modules\Rental\App\Providers\RentalServiceProvider;
 use Modules\Saas\App\Providers\SaasServiceProvider;
 
 return [
@@ -17,4 +18,6 @@ return [
     HotelServiceProvider::class,
     // Module D: restaurants, huts and shop POS.
     PosServiceProvider::class,
+    // Module E: equipment rental.
+    RentalServiceProvider::class,
 ];

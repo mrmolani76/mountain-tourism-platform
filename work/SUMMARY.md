@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Phase 3 POS migrations split. Next: Module E rental or F services. **72** verify when setup allowed. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Item **79** in progress — Module E Rental (artisan + product/API). PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -10,7 +10,7 @@ Refresh on every work / bug / change status update.
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
-- (none)
+- **79** — Module E — Equipment rental (Laravel) (high). Types, items, rent/return, late/damage via Folio.
 
 ### Completed
 - **78** — Split Pos tenant migrations — one table per file (high, 2026-11-13).

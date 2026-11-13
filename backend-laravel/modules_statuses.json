@@ -3,5 +3,6 @@
     "Core": true,
     "Hotel": true,
     "Folio": true,
-    "Pos": true
+    "Pos": true,
+    "Rental": true
 }

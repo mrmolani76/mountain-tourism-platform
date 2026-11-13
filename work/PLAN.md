@@ -21,6 +21,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 79 | Module E — Equipment rental (Laravel) | high | E-rental | backend | L |
 
 ## Completed
 

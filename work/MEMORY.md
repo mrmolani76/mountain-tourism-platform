@@ -6,12 +6,13 @@
 ## Current focus
 - **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
-- **WIP empty** after **77**. Modules: Saas, Core, Hotel, Folio, Pos.
-- New modules: always `php artisan module:make <Name> --api` (never hand folders).
+- **79 in progress** — Module E Rental via artisan. Modules: Saas, Core, Hotel, Folio, Pos, Rental.
+- New modules: always `php artisan module:make <Name> --api` (never hand folders). One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. Module E rental or F services (create kanban item first)
-2. **72** verify on setup machine when user allows
+1. Finish **79** Rental
+2. Module F services
+3. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 

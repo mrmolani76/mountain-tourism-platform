@@ -1,0 +1,11 @@
+{
+    "name": "Rental",
+    "alias": "rental",
+    "description": "Mountain Tourism Module E - equipment rental",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Rental\\App\\Providers\\RentalServiceProvider"
+    ],
+    "files": []
+}
