@@ -6,15 +6,17 @@
 ## Current focus
 - **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
-- **WIP empty** after **76**. Next product: Phase 3 (POS/rental/services) or **72** verify when setup allowed.
+- **WIP empty** after **77**. Modules: Saas, Core, Hotel, Folio, Pos.
+- New modules: always `php artisan module:make <Name> --api` (never hand folders).
 
 ## Next suggested pickups (kanban order)
-1. Next unfinished module feature from phases (D POS / E rental / F services) — create kanban item first
+1. Module E rental or F services (create kanban item first)
 2. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **77** — Module D POS Laravel via artisan + APIs (high, 2026-11-13)
 - **76** — Module 3 Folio Laravel (charge-to-room, list, invoice JSON) (high, 2026-11-13)
 - **75** — EQMS DataTable listing align Hotel/Core (high, 2026-11-06)
 - **74** — EQMS menu + staff CRUD + Hotel DataTable listings (high, 2026-11-06)

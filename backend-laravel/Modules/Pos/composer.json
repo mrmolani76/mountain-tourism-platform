@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/pos",
+    "description": "Mountain Tourism Pos module",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Pos\\App\\": "App/",
+            "Modules\\Pos\\Database\\Factories\\": "Database/Factories/",
+            "Modules\\Pos\\Database\\Seeders\\": "Database/Seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Pos\\Tests\\": "tests/"
+        }
+    }
+}

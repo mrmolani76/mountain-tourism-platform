@@ -1,0 +1,11 @@
+{
+    "name": "Pos",
+    "alias": "pos",
+    "description": "Mountain Tourism Module D - restaurants, huts and shop POS",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Pos\\App\\Providers\\PosServiceProvider"
+    ],
+    "files": []
+}
