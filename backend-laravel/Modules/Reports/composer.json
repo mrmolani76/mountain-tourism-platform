@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/reports",
+    "description": "Mountain Tourism Reports module",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Reports\\App\\": "App/",
+            "Modules\\Reports\\Database\\Factories\\": "Database/Factories/",
+            "Modules\\Reports\\Database\\Seeders\\": "Database/Seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Reports\\Tests\\": "tests/"
+        }
+    }
+}

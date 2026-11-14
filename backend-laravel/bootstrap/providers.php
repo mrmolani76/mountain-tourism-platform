@@ -9,6 +9,7 @@ use Modules\Rental\App\Providers\RentalServiceProvider;
 use Modules\Services\App\Providers\ServicesServiceProvider;
 use Modules\Transport\App\Providers\TransportServiceProvider;
 use Modules\Weather\App\Providers\WeatherServiceProvider;
+use Modules\Reports\App\Providers\ReportsServiceProvider;
 use Modules\Saas\App\Providers\SaasServiceProvider;
 
 return [
@@ -29,4 +30,6 @@ return [
     TransportServiceProvider::class,
     // Module H: weather points, forecasts, limits, warnings.
     WeatherServiceProvider::class,
+    // Module I: owner dashboard and reports.
+    ReportsServiceProvider::class,
 ];

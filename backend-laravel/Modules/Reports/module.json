@@ -1,0 +1,11 @@
+{
+    "name": "Reports",
+    "alias": "reports",
+    "description": "Mountain Tourism Module I - owner dashboard and reports",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Reports\\App\\Providers\\ReportsServiceProvider"
+    ],
+    "files": []
+}

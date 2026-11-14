@@ -70,6 +70,14 @@ export const appModules: Array<AppModuleInfo> = [
     endpoint: '/api/weather/',
     features: ['MET fetch', 'Limits and warnings', 'Weather cancel voids'],
   },
+  {
+    key: 'reports',
+    title: 'Reports',
+    icon: 'tabler-report-analytics',
+    description: 'Owner today dashboard and date-range revenue reports.',
+    endpoint: '/api/reports/',
+    features: ['Today dashboard', 'Revenue by outlet/source/payment', 'Weather cancellations CSV'],
+  },
 ]
 
 export function getAppModule(key: string): AppModuleInfo | undefined {
@@ -220,6 +228,14 @@ export const weatherNavigation: Array<NavLink> = [
   { title: 'Avalanche', to: { path: '/weather/avalanche' }, icon: { icon: 'tabler-mountain' } },
 ]
 
+/** Reports screens (static fallback). Paths under /reports/... */
+export const reportsNavigation: Array<NavLink> = [
+  { title: 'Overview', to: { path: '/reports' }, icon: { icon: 'tabler-layout-grid' } },
+  { title: 'Today', to: { path: '/reports/today' }, icon: { icon: 'tabler-dashboard' } },
+  { title: 'Revenue', to: { path: '/reports/revenue' }, icon: { icon: 'tabler-chart-bar' } },
+  { title: 'Weather cancellations', to: { path: '/reports/weather-cancellations' }, icon: { icon: 'tabler-cloud-off' } },
+]
+
 /** Rental screens (static fallback). Paths under /rental/... */
 export const rentalNavigation: Array<NavLink> = [
   {
@@ -283,7 +299,7 @@ const coreNavigation: Array<NavLink> = [
 ]
 
 /**
- * Static fallback navigation (Core + Hotel + Folio + POS + Rental + Services + Transport + Weather).
+ * Static fallback navigation (Core + Hotel + Folio + POS + Rental + Services + Transport + Weather + Reports).
  * Prefer server menu from `GET /api/core/menus`.
  */
 export const appNavigation: VerticalNavItems = [
@@ -331,6 +347,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'Weather',
     icon: { icon: 'tabler-cloud' },
     children: weatherNavigation,
+  },
+  {
+    title: 'Reports',
+    icon: { icon: 'tabler-report-analytics' },
+    children: reportsNavigation,
   },
   {
     title: 'Profile',

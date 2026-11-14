@@ -7,5 +7,6 @@
     "Rental": true,
     "Services": true,
     "Transport": true,
-    "Weather": true
+    "Weather": true,
+    "Reports": true
 }

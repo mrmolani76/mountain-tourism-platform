@@ -26,6 +26,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 89 | Module I — Owner dashboard and reports (Laravel + Nuxt) | high | I-dashboard | backend | L | 2026-11-14 |
 | 88 | Weather frontend — points, limits, warnings, cancel | high | H-weather | frontend | M | 2026-11-14 |
 | 83 | Module H — Weather (Laravel) | high | H-weather | backend | L | 2026-11-14 |
 | 87 | Transport frontend — trips, lifts, passenger list, passes | high | G-transport | frontend | M | 2026-11-14 |
