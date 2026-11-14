@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Nexro-style local hosts (**93**) done (guide + hosts:sync; no machine sudo). Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Nexro-strict central tables (**94**) done (drop unused `users` on landlord; migrate later). Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **94** — Nexro-strict central DB tables (high, 2026-11-14): drop landlord `users` / `password_reset_tokens`; keep `saas_*` + sessions/cache/jobs/tokens.
 - **93** — Nexro-style mtmp.local setup guide + hosts sync scripts (high, 2026-11-14): `LOCAL_MTMP_SETUP.md`, `hosts:sync`, provision/env/`tenantHost` → `{slug}.mtmp.local`.
 - **92** — EQMS/Nexro-style tenancy routes + middleware (high, 2026-11-14): central domain-bound SaaS; tenant prevent_central + resolve; migration gate.
 - **91** — Multi-tenant local separation doc (EQMS + Nexro) (medium, 2026-11-14): `docs/MULTI_TENANT_LOCAL.md` only; no setup.
@@ -96,6 +97,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-14 — `work/changes/2026-11-14--94-nexro-strict-central-db-tables.md` — item 94: drop central users (Nexro-strict)
 - 2026-11-14 — `work/changes/2026-11-14--93-nexro-style-mtmp-local-setup.md` — item 93: mtmp.local guide + hosts:sync
 - 2026-11-14 — `work/changes/2026-11-14--89-laravel-reports-module-i.md` — item 89: Reports Module I
 - 2026-11-14 — `work/changes/2026-11-14--88-weather-frontend-module-h.md` — item 88: Weather Nuxt UI

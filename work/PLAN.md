@@ -27,6 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 94 | Nexro-strict central DB tables (no Laravel users on landlord) | high | A-core | backend | S | 2026-11-14 |
 | 93 | Nexro-style mtmp.local setup guide + hosts sync scripts | high | docs | docs | M | 2026-11-14 |
 | 92 | EQMS/Nexro-style tenancy routes + middleware | high | A-core | backend | M | 2026-11-14 |
 | 91 | Multi-tenant local separation doc (EQMS + Nexro) | medium | docs | docs | S | 2026-11-14 |
