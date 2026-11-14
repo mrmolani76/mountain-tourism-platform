@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Modules\Saas\App\Models\SaasUser;
 use App\Support\Http\Envelope;
+use App\Tenancy\TenantResolver;
 use Closure;
 use Illuminate\Http\Request;
+use Modules\Saas\App\Models\SaasUser;
 
 /**
  * Central SaaS session auth (Inventory auth:central equivalent).
@@ -14,6 +15,10 @@ class SaasSessionAuth
 {
     public function handle(Request $request, Closure $next)
     {
+        if (! TenantResolver::isCentralHost($request->getHost())) {
+            return Envelope::errorJson('error', 'Not found.', [], 404);
+        }
+
         $id = $request->session()->get('saas_user_id');
         if (! $id) {
             return Envelope::errorJson('error', 'Authentication credentials were not provided.', [], 401);

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 /**
  * Module route map for tenant Core APIs.
- * Tenancy Host resolve already runs on the global `api` middleware stack.
+ * EQMS/Nexro: prevent central hosts, then Host→tenant DB resolve.
  */
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,7 +26,12 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes(): void
     {
         Route::prefix('api')
-            ->middleware('api')
+            ->middleware([
+                'api',
+                'tenancy.prevent_central',
+                'resolve.tenant',
+                'tenancy.ensure_resolved',
+            ])
             ->namespace($this->moduleNamespace)
             ->group(base_path('Modules/Core/routes/api.php'));
     }

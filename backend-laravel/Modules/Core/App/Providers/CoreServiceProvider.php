@@ -16,10 +16,10 @@ class CoreServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerConfig();
-        // Landlord-only PHP files in Database/migrations/*.php (none for Core MVP).
-        // Tenant files live in Database/migrations/tenant/ and run via tenants:migrate.
+        // Landlord only: top-level *_*.php. Tenant schema under migrations/tenant/
+        // is applied by tenants:provision-local / tenancy.migration_parameters (EQMS).
         $landlordMigrations = base_path('Modules/Core/Database/migrations');
-        if (is_dir($landlordMigrations)) {
+        if (is_dir($landlordMigrations) && glob($landlordMigrations.'/*_*.php')) {
             $this->loadMigrationsFrom($landlordMigrations);
         }
     }

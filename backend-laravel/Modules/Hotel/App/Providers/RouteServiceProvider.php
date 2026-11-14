@@ -5,6 +5,10 @@ namespace Modules\Hotel\App\Providers;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * Module route map for tenant Hotel APIs.
+ * EQMS/Nexro: prevent central hosts, then Host→tenant DB resolve.
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     protected string $moduleNamespace = 'Modules\\Hotel\\App\\Http\\Controllers';
@@ -16,8 +20,18 @@ class RouteServiceProvider extends ServiceProvider
 
     public function map(): void
     {
+        $this->mapApiRoutes();
+    }
+
+    protected function mapApiRoutes(): void
+    {
         Route::prefix('api')
-            ->middleware('api')
+            ->middleware([
+                'api',
+                'tenancy.prevent_central',
+                'resolve.tenant',
+                'tenancy.ensure_resolved',
+            ])
             ->namespace($this->moduleNamespace)
             ->group(base_path('Modules/Hotel/routes/api.php'));
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Support\Tenancy\TenantResolver;
+use App\Tenancy\TenantResolver;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
  * BEFORE staff session auth (audit §4: registry on central DB, then per-tenant
  * connection). Unknown/inactive hosts abort with 404 envelope, mirroring
  * current DRF behaviour.
+ *
+ * Apply on tenant route groups only (not global api) so SaaS central hosts
+ * skip tenant DB activation (EQMS/Nexro split).
  */
 class ResolveTenant
 {

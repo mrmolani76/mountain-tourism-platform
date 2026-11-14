@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureTenantResolved;
+use App\Http\Middleware\PreventAccessFromCentralDomains;
+use App\Http\Middleware\PreventAccessFromTenantDomains;
 use App\Http\Middleware\ResolveTenant;
 use App\Http\Middleware\StaffSessionAuth;
 use Illuminate\Foundation\Application;
@@ -19,13 +22,16 @@ return Application::configure(basePath: dirname(__DIR__))
         // SPA cookie session (Nuxt) — Sanctum stateful domains + CSRF.
         $middleware->statefulApi();
 
-        // Tenant resolution must run before any tenant auth/query.
+        // Session only on api; tenant resolve is on tenant module route groups
+        // (EQMS/Nexro: SaaS central routes must not activate a tenant DB).
         $middleware->api(prepend: [
             \Illuminate\Session\Middleware\StartSession::class,
-            ResolveTenant::class,
         ]);
         $middleware->alias([
             'resolve.tenant' => ResolveTenant::class,
+            'tenancy.prevent_central' => PreventAccessFromCentralDomains::class,
+            'tenancy.prevent_tenant' => PreventAccessFromTenantDomains::class,
+            'tenancy.ensure_resolved' => EnsureTenantResolved::class,
             'staff.auth' => StaffSessionAuth::class,
             // Inventory `auth:central` equivalent for SaaS session.
             'saas.auth' => \App\Http\Middleware\SaasSessionAuth::class,

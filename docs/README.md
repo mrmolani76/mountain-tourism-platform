@@ -12,6 +12,7 @@ PDF remains the legal contract. If docs and PDF disagree, **PDF wins** until hum
 | [../work/phases/](../work/phases/) | Phase plans with **complete** module descriptions |
 | [MILESTONES.md](MILESTONES.md) | Payment milestones 1–5 |
 | [HOSTING.md](HOSTING.md) | VPS / CI/CD constraints (§6) |
+| [MULTI_TENANT_LOCAL.md](MULTI_TENANT_LOCAL.md) | Central vs tenant separation (EQMS + Nexro + MTMTP); docs only |
 | [APACHE_LOCAL_SETUP.md](APACHE_LOCAL_SETUP.md) | Local Apache multi-tenant (Complere-style; no Docker) |
 | [CI.md](CI.md) | GitHub Actions testing workflow |
 | [ROLES.md](ROLES.md) | Staff roles |

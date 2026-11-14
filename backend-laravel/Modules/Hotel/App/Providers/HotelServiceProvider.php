@@ -13,8 +13,10 @@ class HotelServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+                // Landlord only: top-level *_*.php. Tenant schema under migrations/tenant/
+        // is applied by tenants:provision-local / tenancy.migration_parameters (EQMS).
         $landlordMigrations = base_path('Modules/Hotel/Database/migrations');
-        if (is_dir($landlordMigrations)) {
+        if (is_dir($landlordMigrations) && glob($landlordMigrations.'/*_*.php')) {
             $this->loadMigrationsFrom($landlordMigrations);
         }
     }

@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Module I (**89**) done. Pending setup: Local MySQL (**90**) on another machine. Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Tenancy route/middleware (**92**) done. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,8 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **92** — EQMS/Nexro-style tenancy routes + middleware (high, 2026-11-14): central domain-bound SaaS; tenant prevent_central + resolve; migration gate.
+- **91** — Multi-tenant local separation doc (EQMS + Nexro) (medium, 2026-11-14): `docs/MULTI_TENANT_LOCAL.md` only; no setup.
 - **89** — Module I — Owner dashboard and reports (Laravel + Nuxt) (high, 2026-11-14): Today + range/CSV + Nuxt.
 - **88** — Weather frontend — points, limits, warnings, cancel (high, 2026-11-14): Nuxt weather desk + menu.
 - **83** — Module H — Weather (Laravel) (high, 2026-11-14): points/fetch/limits/warnings/cancel-for-weather voids.

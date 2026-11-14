@@ -16,6 +16,7 @@ class SaasServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerConfig();
+        // Central/landlord migrations (top-level only; no tenant/ subdir).
         $this->loadMigrationsFrom(base_path('Modules/Saas/Database/migrations'));
     }
 
