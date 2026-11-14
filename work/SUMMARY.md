@@ -2,11 +2,12 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Module I (**89**) done. Leftovers: Hotel **72** setup verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Module I (**89**) done. Pending setup: Local MySQL (**90**) on another machine. Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
 ### Todo
+- **90** — Local MySQL switch for browser testing (high). Returned 2026-11-14; finish on another machine (EQMS hosts, DB-per-tenant).
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
