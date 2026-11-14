@@ -220,8 +220,16 @@ return [
         |
         | This option for register migration automatically.
         |
+        | Must stay false: the package would auto-register every module's
+        | Database/migrations/tenant folder on the central connection too.
+        | Central migrate then runs the tenant schema (78 tables). The split
+        | stays explicit:
+        |   central = root database/migrations + Modules/Saas/Database/migrations
+        |   tenant  = per-module Database/migrations/tenant, applied only via
+        |             tenancy.migration_parameters (tenants:provision-local)
+        |
         */
-        'migrations' => true,
+        'migrations' => false,
 
         /*
         |--------------------------------------------------------------------------

@@ -68,6 +68,21 @@ export function getEnvAndTenantFromHost(hostname?: string): {
     }
   }
 
+  // Docker dev scheme: lab.local.mtmtp.local / saas.mtmtp.local
+  if (host.endsWith('.local.mtmtp.local') || host.endsWith('.mtmtp.local')) {
+    const prefix = host
+      .replace(/\.local\.mtmtp\.local$/, '')
+      .replace(/\.mtmtp\.local$/, '')
+    const slug = prefix.split('.')[0] || null
+
+    return {
+      TENANT_SLUG: slug === 'saas' ? null : slug,
+      ENVIRONMENT: 'local',
+      IS_SAAS_ADMIN_HOST: slug === 'saas',
+      API_ORIGIN: origin,
+    }
+  }
+
   // Legacy: lab.localhost / saas.localhost
   if (host.endsWith('.localhost') || host === 'localhost' || host === '127.0.0.1') {
     const slug = host.includes('.') ? host.split('.')[0] : 'lab'

@@ -96,6 +96,8 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-14 — `work/changes/2026-11-14--central-tenant-migration-split.md` — central/tenant migration split (modules auto-discover off)
+- 2026-11-14 — `work/changes/2026-11-14--local-docker-fresh-setup.md` — local Docker fresh setup (pull + rebuild + tenant login verified)
 - 2026-11-14 — `work/changes/2026-11-14--93-nexro-style-mtmp-local-setup.md` — item 93: mtmp.local guide + hosts:sync
 - 2026-11-14 — `work/changes/2026-11-14--89-laravel-reports-module-i.md` — item 89: Reports Module I
 - 2026-11-14 — `work/changes/2026-11-14--88-weather-frontend-module-h.md` — item 88: Weather Nuxt UI
