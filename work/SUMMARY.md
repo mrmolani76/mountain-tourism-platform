@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Rental frontend (**85**) done. Next frontend: Services / Transport. Weather (**83**) parked. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Services frontend (**86**) done. Next frontend: Transport. Weather (**83**) parked. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **86** — Services frontend — catalog, slots, bookings, outings (high, 2026-11-14): Nuxt services desk + menu.
 - **85** — Rental frontend — types, items, rent out, return (high, 2026-11-14): Nuxt rental desk + menu.
 - **84** — POS frontend — catalog, shifts, orders, settle (high, 2026-11-14): Nuxt POS desk + menu.
 - **82** — Folio frontend — list, detail, charge-to-room, pay, void (high, 2026-11-13): Nuxt pages + menu for Module C.

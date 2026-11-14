@@ -3,7 +3,7 @@
 /**
  * Tenant vertical nav items for GET /api/core/menus.
  *
- * MVP slice: Core + Hotel + Folio + POS + Rental. Other modules stay out until ported.
+ * MVP slice: Core + Hotel + Folio + POS + Rental + Services. Other modules stay out until ported.
  *
  * `allowed_roles` false = any authenticated staff.
  * List of role codes = only those roles see the entry (Owner always sees Core admin items).
@@ -284,6 +284,55 @@ return [
                     'allowed_roles' => ['owner', 'manager', 'rental_desk'],
                     'page' => '/rental/prices',
                     'iconClass' => 'tabler-currency-euro',
+                ],
+            ],
+        ],
+        [
+            'label' => 'Services',
+            'uniqueKey' => 'services',
+            'allowed_roles' => ['owner', 'manager', 'service_staff', 'front_desk'],
+            'page' => '',
+            'iconClass' => 'tabler-spa',
+            'submenu_items' => [
+                [
+                    'label' => 'Overview',
+                    'uniqueKey' => 'services_overview',
+                    'submodule' => 'services',
+                    'allowed_roles' => ['owner', 'manager', 'service_staff', 'front_desk'],
+                    'page' => '/services',
+                    'iconClass' => 'tabler-layout-grid',
+                ],
+                [
+                    'label' => 'Slots',
+                    'uniqueKey' => 'services_slots',
+                    'submodule' => 'services',
+                    'allowed_roles' => ['owner', 'manager', 'service_staff', 'front_desk'],
+                    'page' => '/services/slots',
+                    'iconClass' => 'tabler-calendar-time',
+                ],
+                [
+                    'label' => 'Bookings',
+                    'uniqueKey' => 'services_bookings',
+                    'submodule' => 'services',
+                    'allowed_roles' => ['owner', 'manager', 'service_staff', 'front_desk'],
+                    'page' => '/services/bookings',
+                    'iconClass' => 'tabler-ticket',
+                ],
+                [
+                    'label' => 'Catalog',
+                    'uniqueKey' => 'services_catalog',
+                    'submodule' => 'services',
+                    'allowed_roles' => ['owner', 'manager', 'service_staff'],
+                    'page' => '/services/catalog',
+                    'iconClass' => 'tabler-list-details',
+                ],
+                [
+                    'label' => 'Schedule rules',
+                    'uniqueKey' => 'services_schedule_rules',
+                    'submodule' => 'services',
+                    'allowed_roles' => ['owner', 'manager', 'service_staff'],
+                    'page' => '/services/schedule-rules',
+                    'iconClass' => 'tabler-calendar-repeat',
                 ],
             ],
         ],

@@ -11,7 +11,7 @@ export interface AppModuleInfo {
 
 /**
  * Live modules for dashboard cards + fallback nav.
- * MVP focus: Core + Hotel + Folio + POS + Rental (root page paths, no /modules prefix).
+ * MVP focus: Core + Hotel + Folio + POS + Rental + Services.
  */
 export const appModules: Array<AppModuleInfo> = [
   {
@@ -45,6 +45,14 @@ export const appModules: Array<AppModuleInfo> = [
     description: 'Equipment rent out, returns, late and damage fees.',
     endpoint: '/api/rental/',
     features: ['Rent out desk', 'Currently out', 'Season day rates'],
+  },
+  {
+    key: 'services',
+    title: 'Services',
+    icon: 'tabler-spa',
+    description: 'Spa, sports and activity slots, bookings and outings.',
+    endpoint: '/api/services/',
+    features: ['Catalog and slots', 'Bookings', 'Guided outings'],
   },
 ]
 
@@ -140,6 +148,40 @@ export const posNavigation: Array<NavLink> = [
   },
 ]
 
+/** Services screens (static fallback). Paths under /services/... */
+export const servicesNavigation: Array<NavLink> = [
+  {
+    title: 'Overview',
+    to: { path: '/services' },
+    icon: { icon: 'tabler-layout-grid' },
+  },
+  {
+    title: 'Bookings',
+    to: { path: '/services/bookings' },
+    icon: { icon: 'tabler-calendar-plus' },
+  },
+  {
+    title: 'Slots',
+    to: { path: '/services/slots' },
+    icon: { icon: 'tabler-clock' },
+  },
+  {
+    title: 'Outings',
+    to: { path: '/services/outings' },
+    icon: { icon: 'tabler-trekking' },
+  },
+  {
+    title: 'Catalog',
+    to: { path: '/services/catalog' },
+    icon: { icon: 'tabler-list' },
+  },
+  {
+    title: 'Schedule rules',
+    to: { path: '/services/schedule-rules' },
+    icon: { icon: 'tabler-calendar-repeat' },
+  },
+]
+
 /** Rental screens (static fallback). Paths under /rental/... */
 export const rentalNavigation: Array<NavLink> = [
   {
@@ -203,7 +245,7 @@ const coreNavigation: Array<NavLink> = [
 ]
 
 /**
- * Static fallback navigation (Core + Hotel + Folio + POS + Rental).
+ * Static fallback navigation (Core + Hotel + Folio + POS + Rental + Services).
  * Prefer server menu from `GET /api/core/menus`.
  */
 export const appNavigation: VerticalNavItems = [
@@ -236,6 +278,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'Rental',
     icon: { icon: 'tabler-skiing' },
     children: rentalNavigation,
+  },
+  {
+    title: 'Services',
+    icon: { icon: 'tabler-spa' },
+    children: servicesNavigation,
   },
   {
     title: 'Profile',
