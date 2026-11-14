@@ -32,5 +32,6 @@ User: central has too many tables; make strictly like Nexro; code only.
 
 ## 6. Verification / Status
 
-- [ ] Migrate not run on this machine (code-only)
-- [ ] Notes: on setup machine run `php artisan migrate` so the drop applies
+- [x] Migrate run on setup machine (Docker central): drop applied 2026-11-14
+- [x] Central now 11 tables: sessions, cache, jobs, tokens + `saas_*`
+- Notes: verified on Docker central (`mountain_tourism`); tenant `lab_local` intact (8 staff), `/api/health/` 200.
