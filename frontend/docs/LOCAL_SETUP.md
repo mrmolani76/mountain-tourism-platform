@@ -8,14 +8,16 @@ How local multi-tenant hosting works for the Nuxt SPA against Laravel.
 
 ## Hosts
 
+**Preferred (Nexro-style):** see [`docs/LOCAL_MTMP_SETUP.md`](../../docs/LOCAL_MTMP_SETUP.md).
+
 | Host | Role | DB | Purpose |
 |------|------|----|---------|
-| `saas.localhost` | **Central** (landlord) | central SaaS | Super admin: tenants, domains, activate/deactivate (`Modules/Saas`) |
-| `lab.localhost` | Tenant | tenant DB for `lab` | Day-to-day SPA + Core staff auth |
-| `*.localhost` | Tenant | that slug’s DB | First DNS label = tenant slug |
+| `saas.mtmp.local` | **Central** (landlord) | central SaaS | Super admin: tenants, domains, activate/deactivate |
+| `demo.mtmp.local` / `{slug}.mtmp.local` | Tenant | that slug’s DB | Day-to-day SPA + Core staff auth |
+| `saas.localhost` / `lab.localhost` | Legacy local | same idea | Still parsed in `utils/tenantHost.ts` |
 
-Optional dotted form (later): `lab.local.mountain.local`, `saas.local.mountain.local`.
-Parser already understands both schemes in `utils/tenantHost.ts`.
+Optional dotted form: `lab.local.mountain.local`, `saas.local.mountain.local`.
+Parser: `mtmp.local`, `.localhost`, and `.mountain.local` in `utils/tenantHost.ts`.
 
 - **Central host is not a tenant.** Tenant Core routes must not be called from `saas.*`.
 - **Tenant host** resolves Domain → Tenant → tenant connection.

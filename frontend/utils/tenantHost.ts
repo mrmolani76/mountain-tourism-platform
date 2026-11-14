@@ -1,12 +1,15 @@
 /**
  * Host → tenant / SaaS detection for local and multi-tenant hosts.
  *
- * Local scheme (Module 1):
- *   lab.localhost     → tenant `lab`
- *   saas.localhost    → central SaaS admin
- *   *.localhost       → tenant slug = first label
+ * Preferred local (Nexro-style — docs/LOCAL_MTMP_SETUP.md):
+ *   demo.mtmp.local   → tenant `demo`
+ *   saas.mtmp.local   → central SaaS admin
+ *   mtmp.local        → base (not a tenant slug)
  *
- * Optional later: `{slug}.local.mountain.local` (module-style dots).
+ * Legacy:
+ *   lab.localhost / saas.localhost / *.localhost
+ *
+ * Optional: `{slug}.local.mountain.local` (module-style dots).
  */
 
 export function getEnvAndTenantFromHost(hostname?: string): {
@@ -29,6 +32,27 @@ export function getEnvAndTenantFromHost(hostname?: string): {
     ? window.location.origin
     : ''
 
+  // Preferred: demo.mtmp.local / saas.mtmp.local
+  if (host === 'mtmp.local' || host.endsWith('.mtmp.local')) {
+    if (host === 'mtmp.local') {
+      return {
+        TENANT_SLUG: null,
+        ENVIRONMENT: 'local',
+        IS_SAAS_ADMIN_HOST: false,
+        API_ORIGIN: origin,
+      }
+    }
+
+    const slug = host.slice(0, -('.mtmp.local'.length)).split('.')[0] || null
+
+    return {
+      TENANT_SLUG: slug === 'saas' ? null : slug,
+      ENVIRONMENT: 'local',
+      IS_SAAS_ADMIN_HOST: slug === 'saas',
+      API_ORIGIN: origin,
+    }
+  }
+
   // lab.local.mountain.local / saas.local.mountain.local
   if (host.endsWith('.local.mountain.local') || host.endsWith('.mountain.local')) {
     const prefix = host
@@ -44,7 +68,7 @@ export function getEnvAndTenantFromHost(hostname?: string): {
     }
   }
 
-  // Dev shorthand: lab.localhost / saas.localhost
+  // Legacy: lab.localhost / saas.localhost
   if (host.endsWith('.localhost') || host === 'localhost' || host === '127.0.0.1') {
     const slug = host.includes('.') ? host.split('.')[0] : 'lab'
 

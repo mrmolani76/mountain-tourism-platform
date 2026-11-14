@@ -17,16 +17,16 @@ use Modules\Saas\App\Models\Tenant;
  * Does NOT call AWS. Guarded to APP_ENV=local.
  *
  * DB name = "{slug}_local".
- * Host    = "{slug}.localhost".
+ * Host    = "{slug}." + APP_BASE_DOMAIN (default mtmp.local; legacy: {slug}.localhost via --host).
  */
 class ProvisionLocalTenantCommand extends Command
 {
     protected $signature = 'tenants:provision-local
                             {slug=lab : Tenant slug / url_prefix}
-                            {--name= : Display name (default: "{slug} Complex")}
+                            {--name= : Display name (default: Slug Complex)}
                             {--reset : Drop and recreate the tenant DB + re-seed staff}
                             {--with-saas-admin : Ensure super@saas.test exists on central}
-                            {--host= : Override tenant hostname (default: {slug}.localhost)}';
+                            {--host= : Override tenant hostname (default: slug.APP_BASE_DOMAIN)}';
 
     protected $description = 'Provision a local tenant DB + registry row + fixture staff (APP_ENV=local only)';
 
@@ -53,7 +53,8 @@ class ProvisionLocalTenantCommand extends Command
 
         $name = (string) ($this->option('name') ?: ucfirst($slug).' Complex');
         $dbName = $slug.'_local';
-        $hostname = (string) ($this->option('host') ?: $slug.'.localhost');
+        $baseDomain = (string) env('APP_BASE_DOMAIN', 'mtmp.local');
+        $hostname = (string) ($this->option('host') ?: $slug.'.'.$baseDomain);
         $reset = (bool) $this->option('reset');
         $central = config('tenancy.central_connection', config('database.default'));
 

@@ -2,7 +2,7 @@
 
 **Purpose:** One place that separates **central (SaaS)** vs **tenant (complex/shop)** the way EQMS and Nexro do it.
 
-**Not this doc:** Apache install, Docker runbooks, or machine setup. See `APACHE_LOCAL_SETUP.md`, `LARAVEL_LOCAL_SETUP.md`, Nexro `docs/DOCKER_SETUP.md`.
+**Not this doc:** Apache install, Docker runbooks, or machine setup. See `LOCAL_MTMP_SETUP.md` (preferred `{slug}.mtmp.local` + `hosts:sync`), `APACHE_LOCAL_SETUP.md`, `LARAVEL_LOCAL_SETUP.md`, Nexro `docs/DOCKER_SETUP.md`.
 
 **Product decision:** Mountain Tourism = **DB-per-tenant** + **Host → Domain** resolve. No `tenant_id` on business rows. (`docs/DECISIONS.md`)
 
@@ -95,16 +95,18 @@ Sources: Nexro `CLAUDE.md`, `docs/DOCKER_SETUP.md`, stancl/tenancy.
 
 Align with EQMS + Nexro **ideas**, product names from `CLAUDE.md`.
 
-### Hosts (current local names)
+### Hosts (preferred local names)
 
 | Host | Role | DB (local example) |
 |------|------|---------------------|
-| `saas.localhost` | Central (super admin) | Central DB (e.g. `mountain_tourism`) |
-| `lab.localhost` | Pilot complex (tenant) | `lab_local` |
+| `saas.mtmp.local` | Central (super admin) | Central DB (e.g. `mountain_tourism`) |
+| `demo.mtmp.local` / `{slug}.mtmp.local` | Pilot complex (tenant) | `{slug}_local` |
 
-Optional later (EQMS-like dots): `lab.local.mountain.local` — only with explicit hosts agreement.
+Setup + `hosts:sync`: `docs/LOCAL_MTMP_SETUP.md` (`APP_BASE_DOMAIN=mtmp.local`).
 
-Config hints: `TENANCY_CENTRAL_HOSTS`, `CENTRAL_DOMAIN`, `central_host_pattern` = `/^saas\./`  
+Legacy still OK: `saas.localhost` / `lab.localhost`. Optional EQMS-like dots: `lab.local.mountain.local`.
+
+Config hints: `APP_BASE_DOMAIN`, `TENANCY_CENTRAL_HOSTS`, `CENTRAL_DOMAIN`, `central_host_pattern` = `/^saas\./`  
 (`backend-laravel/config/tenancy.php`)
 
 ### What must stay separate

@@ -5,18 +5,20 @@
 
 ## Current focus
 - **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
-- **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
-- **WIP empty** after **84**. Frontend live: Core + Hotel + Folio + POS. Backend includes Transport; Weather (**83**) parked.
+- **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
+- **WIP empty** after **93**. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. Frontend Rental / Services / Transport
-2. Module H Weather (**83**)
+1. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
+2. **90** Local MySQL (if browser test on that machine)
 3. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **93** — Nexro-style mtmp.local guide + hosts:sync (high, 2026-11-14)
+- **92** — EQMS/Nexro tenancy routes + middleware (high, 2026-11-14)
 - **84** — POS frontend Module D (high, 2026-11-14)
 - **82** — Folio frontend Module C (high, 2026-11-13)
 - **80** — Module F Services Laravel via artisan + APIs (high, 2026-11-13)
