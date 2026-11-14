@@ -49,7 +49,32 @@ Prefix `mtmtp-` = Mountain Tourism on this machine only.
 
 ## One-time machine setup (only when human asks)
 
-Needs root. Do **not** run these steps just because this file exists.
+Needs root **on the host** (not inside a read-only agent/container). Do **not**
+run these steps just because this file exists.
+
+### Quick install (preferred)
+
+From the repo root on the host machine:
+
+```bash
+sudo bash scripts/apache-local-install.sh
+```
+
+This copies `docs/apache/mtmtp-*.conf`, enables sites, updates `/etc/hosts`, and
+reloads Apache. Then start apps:
+
+```bash
+cd backend-laravel && php artisan serve --host=127.0.0.1 --port=8000
+cd frontend && npm run dev -- --host 127.0.0.1 --port 3000
+```
+
+Remove later (when human asks):
+
+```bash
+sudo bash scripts/apache-local-remove.sh
+```
+
+### Manual steps (same as the script)
 
 ### 1. `/etc/hosts`
 
