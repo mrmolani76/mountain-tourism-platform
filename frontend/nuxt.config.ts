@@ -23,6 +23,19 @@ export default defineNuxtConfig({
     output: {
       publicDir: '.output/',
     },
+    // Dev-only proxy. Nuxt 4's dev listener is Nitro, so vite.server.proxy is
+    // bypassed here; nginx handles /api in production. changeOrigin stays off
+    // so the backend still sees the tenant Host (lab.local.mtmtp.local).
+    devProxy: {
+      '/api': {
+        target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
+        changeOrigin: false,
+      },
+      '/sanctum': {
+        target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
+        changeOrigin: false,
+      },
+    },
   },
   // Bind all interfaces so lab.localhost:3000 works.
   // strictPort + HMR clientPort keep :3000 on hard refresh (Apache owns :80 here).
@@ -66,6 +79,8 @@ export default defineNuxtConfig({
       './@core/composable/',
       './plugins/*/composables/*',
       './composables/api-clients',
+      './composables/auth',
+      './composables/core',
       './composables',
       './stores',
       './utils/**',
@@ -139,7 +154,9 @@ export default defineNuxtConfig({
         '/api': {
           // Must match frontend/.env.example BACKEND_URL (Laravel artisan serve / docker 8000|8010)
           target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
-          changeOrigin: true,
+          // Keep the browser Host (lab.local.mtmtp.local) — the backend resolves
+          // the tenant from it. changeOrigin would rewrite it to 127.0.0.1.
+          changeOrigin: false,
           secure: false,
           // Dead Laravel used to hang the browser for minutes; fail in ~8s.
           timeout: 8_000,
@@ -147,7 +164,7 @@ export default defineNuxtConfig({
         },
         '/sanctum': {
           target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
-          changeOrigin: true,
+          changeOrigin: false,
           secure: false,
           timeout: 8_000,
           proxyTimeout: 8_000,

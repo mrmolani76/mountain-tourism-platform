@@ -79,7 +79,7 @@ export const useAuthService = () => {
   const login = async (body: { email: string; password: string }) => {
     const staff = await API.post<StaffUser>('auth/login', body)
 
-    if (!staff)
+    if (!staff || typeof staff.email !== 'string')
       return null
 
     return {
