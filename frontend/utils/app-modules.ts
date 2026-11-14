@@ -11,7 +11,7 @@ export interface AppModuleInfo {
 
 /**
  * Live modules for dashboard cards + fallback nav.
- * MVP focus: Core + Hotel + Folio (root page paths, no /modules prefix).
+ * MVP focus: Core + Hotel + Folio + POS (root page paths, no /modules prefix).
  */
 export const appModules: Array<AppModuleInfo> = [
   {
@@ -29,6 +29,14 @@ export const appModules: Array<AppModuleInfo> = [
     description: 'Guest bills, charge to room, payments and voids.',
     endpoint: '/api/folios/',
     features: ['Open folios', 'Charge to room', 'Payments and voids'],
+  },
+  {
+    key: 'pos',
+    title: 'POS',
+    icon: 'tabler-tools-kitchen-2',
+    description: 'Restaurant and shop orders, shifts and catalog.',
+    endpoint: '/api/pos/',
+    features: ['Cashier shifts', 'Orders and settle', 'Board-included meals'],
   },
 ]
 
@@ -95,6 +103,35 @@ export const folioNavigation: Array<NavLink> = [
   },
 ]
 
+/** POS screens (static fallback). Paths under /pos/... */
+export const posNavigation: Array<NavLink> = [
+  {
+    title: 'Overview',
+    to: { path: '/pos' },
+    icon: { icon: 'tabler-layout-grid' },
+  },
+  {
+    title: 'Orders',
+    to: { path: '/pos/orders' },
+    icon: { icon: 'tabler-receipt-2' },
+  },
+  {
+    title: 'Shifts',
+    to: { path: '/pos/shifts' },
+    icon: { icon: 'tabler-clock' },
+  },
+  {
+    title: 'Products',
+    to: { path: '/pos/products' },
+    icon: { icon: 'tabler-shopping-bag' },
+  },
+  {
+    title: 'Packed lunches',
+    to: { path: '/pos/packed-lunches' },
+    icon: { icon: 'tabler-backpack' },
+  },
+]
+
 const coreNavigation: Array<NavLink> = [
   {
     title: 'Staff',
@@ -119,7 +156,7 @@ const coreNavigation: Array<NavLink> = [
 ]
 
 /**
- * Static fallback navigation (Core + Hotel + Folio).
+ * Static fallback navigation (Core + Hotel + Folio + POS).
  * Prefer server menu from `GET /api/core/menus`.
  */
 export const appNavigation: VerticalNavItems = [
@@ -142,6 +179,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'Folio',
     icon: { icon: 'tabler-receipt' },
     children: folioNavigation,
+  },
+  {
+    title: 'POS',
+    icon: { icon: 'tabler-tools-kitchen-2' },
+    children: posNavigation,
   },
   {
     title: 'Profile',

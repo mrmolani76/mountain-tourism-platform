@@ -3,7 +3,7 @@
 /**
  * Tenant vertical nav items for GET /api/core/menus.
  *
- * MVP slice: Core + Hotel + Folio. Other modules stay out of the menu until ported.
+ * MVP slice: Core + Hotel + Folio + POS. Other modules stay out of the menu until ported.
  *
  * `allowed_roles` false = any authenticated staff.
  * List of role codes = only those roles see the entry (Owner always sees Core admin items).
@@ -170,6 +170,55 @@ return [
                     'allowed_roles' => ['owner', 'manager', 'front_desk', 'cashier'],
                     'page' => '/folios/charge-to-room',
                     'iconClass' => 'tabler-door',
+                ],
+            ],
+        ],
+        [
+            'label' => 'POS',
+            'uniqueKey' => 'pos',
+            'allowed_roles' => ['owner', 'manager', 'cashier', 'front_desk'],
+            'page' => '',
+            'iconClass' => 'tabler-tools-kitchen-2',
+            'submenu_items' => [
+                [
+                    'label' => 'Overview',
+                    'uniqueKey' => 'pos_overview',
+                    'submodule' => 'pos',
+                    'allowed_roles' => ['owner', 'manager', 'cashier', 'front_desk'],
+                    'page' => '/pos',
+                    'iconClass' => 'tabler-layout-grid',
+                ],
+                [
+                    'label' => 'Orders',
+                    'uniqueKey' => 'pos_orders',
+                    'submodule' => 'pos',
+                    'allowed_roles' => ['owner', 'manager', 'cashier', 'front_desk'],
+                    'page' => '/pos/orders',
+                    'iconClass' => 'tabler-receipt-2',
+                ],
+                [
+                    'label' => 'Shifts',
+                    'uniqueKey' => 'pos_shifts',
+                    'submodule' => 'pos',
+                    'allowed_roles' => ['owner', 'manager', 'cashier'],
+                    'page' => '/pos/shifts',
+                    'iconClass' => 'tabler-clock',
+                ],
+                [
+                    'label' => 'Products',
+                    'uniqueKey' => 'pos_products',
+                    'submodule' => 'pos',
+                    'allowed_roles' => ['owner', 'manager', 'cashier'],
+                    'page' => '/pos/products',
+                    'iconClass' => 'tabler-shopping-bag',
+                ],
+                [
+                    'label' => 'Packed lunches',
+                    'uniqueKey' => 'pos_packed_lunches',
+                    'submodule' => 'pos',
+                    'allowed_roles' => ['owner', 'manager', 'cashier'],
+                    'page' => '/pos/packed-lunches',
+                    'iconClass' => 'tabler-backpack',
                 ],
             ],
         ],

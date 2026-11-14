@@ -2,17 +2,19 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Folio frontend (**82**) done. Next frontend: POS / Rental / Services. Backend: Module H Weather or **72** verify. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** POS frontend (**84**) done. Next frontend: Rental / Services / Transport. Weather (**83**) parked. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
 ### Todo
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
+- **83** — Module H — Weather (Laravel) (high). Parked for POS frontend.
 
 ### In Progress
 - (none)
 
 ### Completed
+- **84** — POS frontend — catalog, shifts, orders, settle (high, 2026-11-14): Nuxt POS desk + menu.
 - **82** — Folio frontend — list, detail, charge-to-room, pay, void (high, 2026-11-13): Nuxt pages + menu for Module C.
 - **81** — Module G — Transport and lifts (Laravel) (high, 2026-11-13): artisan Transport, trips/lifts/pass, 10 migrations, 25 routes.
 - **80** — Module F — Hotel services and activities (Laravel) (high, 2026-11-13): artisan Services, slots/bookings/outings, 9 migrations.
@@ -85,6 +87,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-14 — `work/changes/2026-11-14--84-pos-frontend-module-d.md` — item 84: POS Nuxt UI (catalog/shifts/orders/settle)
 - 2026-11-13 — `work/changes/2026-11-13--82-folio-frontend-module-c.md` — item 82: Folio Nuxt UI (list/detail/charge-to-room/pay/void)
 - 2026-11-13 — `work/changes/2026-11-13--80-laravel-services-module-f.md` — item 80: artisan Services + Module F APIs
 - 2026-11-13 — `work/changes/2026-11-13--79-laravel-rental-module-e.md` — item 79: artisan Rental + Module E APIs
