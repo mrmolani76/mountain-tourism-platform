@@ -26,6 +26,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 88 | Weather frontend — points, limits, warnings, cancel | high | H-weather | frontend | M | 2026-11-14 |
 | 83 | Module H — Weather (Laravel) | high | H-weather | backend | L | 2026-11-14 |
 | 87 | Transport frontend — trips, lifts, passenger list, passes | high | G-transport | frontend | M | 2026-11-14 |
 | 86 | Services frontend — catalog, slots, bookings, outings | high | F-services | frontend | M | 2026-11-14 |

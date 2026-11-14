@@ -62,6 +62,14 @@ export const appModules: Array<AppModuleInfo> = [
     endpoint: '/api/transport/',
     features: ['Trips and passenger lists', 'Lift status', 'Lift pass sell'],
   },
+  {
+    key: 'weather',
+    title: 'Weather',
+    icon: 'tabler-cloud',
+    description: 'Points, limits, warnings and cancel-for-weather.',
+    endpoint: '/api/weather/',
+    features: ['MET fetch', 'Limits and warnings', 'Weather cancel voids'],
+  },
 ]
 
 export function getAppModule(key: string): AppModuleInfo | undefined {
@@ -203,6 +211,15 @@ export const transportNavigation: Array<NavLink> = [
   { title: 'Lift passes', to: { path: '/transport/passes' }, icon: { icon: 'tabler-ticket' } },
 ]
 
+/** Weather screens (static fallback). Paths under /weather/... */
+export const weatherNavigation: Array<NavLink> = [
+  { title: 'Overview', to: { path: '/weather' }, icon: { icon: 'tabler-layout-grid' } },
+  { title: 'Points', to: { path: '/weather/points' }, icon: { icon: 'tabler-map-pin' } },
+  { title: 'Limits', to: { path: '/weather/limits' }, icon: { icon: 'tabler-ruler' } },
+  { title: 'Warnings', to: { path: '/weather/warnings' }, icon: { icon: 'tabler-alert-triangle' } },
+  { title: 'Avalanche', to: { path: '/weather/avalanche' }, icon: { icon: 'tabler-mountain' } },
+]
+
 /** Rental screens (static fallback). Paths under /rental/... */
 export const rentalNavigation: Array<NavLink> = [
   {
@@ -266,7 +283,7 @@ const coreNavigation: Array<NavLink> = [
 ]
 
 /**
- * Static fallback navigation (Core + Hotel + Folio + POS + Rental + Services).
+ * Static fallback navigation (Core + Hotel + Folio + POS + Rental + Services + Transport + Weather).
  * Prefer server menu from `GET /api/core/menus`.
  */
 export const appNavigation: VerticalNavItems = [
@@ -309,6 +326,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'Transport',
     icon: { icon: 'tabler-bus' },
     children: transportNavigation,
+  },
+  {
+    title: 'Weather',
+    icon: { icon: 'tabler-cloud' },
+    children: weatherNavigation,
   },
   {
     title: 'Profile',

@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Weather (**83**) backend done. Next: Hotel (**72**) or Weather frontend. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Weather frontend (**88**) done. Next: Hotel (**72**) setup verify, or reports/dashboard. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -13,6 +13,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **88** — Weather frontend — points, limits, warnings, cancel (high, 2026-11-14): Nuxt weather desk + menu.
 - **83** — Module H — Weather (Laravel) (high, 2026-11-14): points/fetch/limits/warnings/cancel-for-weather voids.
 - **87** — Transport frontend — trips, lifts, passenger list, passes (high, 2026-11-14): Nuxt transport desk + lifts + menu.
 - **86** — Services frontend — catalog, slots, bookings, outings (high, 2026-11-14): Nuxt services desk + menu.
@@ -90,6 +91,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-14 — `work/changes/2026-11-14--88-weather-frontend-module-h.md` — item 88: Weather Nuxt UI
 - 2026-11-14 — `work/changes/2026-11-14--83-laravel-weather-module-h.md` — item 83: Weather Module H APIs
 - 2026-11-14 — `work/changes/2026-11-14--87-transport-frontend-module-g.md` — item 87: Transport Nuxt UI
 - 2026-11-14 — `work/changes/2026-11-14--84-pos-frontend-module-d.md` — item 84: POS Nuxt UI (catalog/shifts/orders/settle)
