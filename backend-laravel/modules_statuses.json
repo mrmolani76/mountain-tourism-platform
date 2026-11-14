@@ -6,5 +6,6 @@
     "Pos": true,
     "Rental": true,
     "Services": true,
-    "Transport": true
+    "Transport": true,
+    "Weather": true
 }

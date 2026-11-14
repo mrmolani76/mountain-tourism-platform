@@ -1,0 +1,11 @@
+{
+    "name": "Weather",
+    "alias": "weather",
+    "description": "Mountain Tourism Module H - weather points, forecasts, limits, warnings",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Weather\\App\\Providers\\WeatherServiceProvider"
+    ],
+    "files": []
+}

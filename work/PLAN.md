@@ -16,7 +16,6 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
 | 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
-| 83 | Module H — Weather (Laravel) | high | H-weather | backend | L |
 
 ## In Progress
 
@@ -27,6 +26,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 83 | Module H — Weather (Laravel) | high | H-weather | backend | L | 2026-11-14 |
 | 87 | Transport frontend — trips, lifts, passenger list, passes | high | G-transport | frontend | M | 2026-11-14 |
 | 86 | Services frontend — catalog, slots, bookings, outings | high | F-services | frontend | M | 2026-11-14 |
 | 85 | Rental frontend — types, items, rent out, return | high | E-rental | frontend | M | 2026-11-14 |

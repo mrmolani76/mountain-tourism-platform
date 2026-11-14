@@ -8,6 +8,7 @@ use Modules\Pos\App\Providers\PosServiceProvider;
 use Modules\Rental\App\Providers\RentalServiceProvider;
 use Modules\Services\App\Providers\ServicesServiceProvider;
 use Modules\Transport\App\Providers\TransportServiceProvider;
+use Modules\Weather\App\Providers\WeatherServiceProvider;
 use Modules\Saas\App\Providers\SaasServiceProvider;
 
 return [
@@ -26,4 +27,6 @@ return [
     ServicesServiceProvider::class,
     // Module G: transport and lifts.
     TransportServiceProvider::class,
+    // Module H: weather points, forecasts, limits, warnings.
+    WeatherServiceProvider::class,
 ];

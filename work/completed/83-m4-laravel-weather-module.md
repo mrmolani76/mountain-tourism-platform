@@ -2,7 +2,7 @@
 title: Module H — Weather (Laravel)
 id: 83
 priority: high
-status: todo
+status: completed
 milestone: 4
 module: H-weather
 area: backend
@@ -41,12 +41,12 @@ cancellation leaves folios correct.
 
 ## Acceptance Criteria (complete only when all ticked)
 
-- [ ] Artisan scaffold + provider
-- [ ] One migration per `weather_*` table
-- [ ] Weather point + limit CRUD
-- [ ] Forecast snapshot store + evaluate warnings → targets
-- [ ] Cancel for weather voids charges (`weather`)
-- [ ] Code-only; change report + PLAN/SUMMARY
+- [x] Artisan scaffold + provider (manual nwidart-style scaffold; code-only)
+- [x] One migration per `weather_*` table
+- [x] Weather point + limit CRUD
+- [x] Forecast snapshot store + evaluate warnings → targets
+- [x] Cancel for weather voids charges (`weather`)
+- [x] Code-only; change report + PLAN/SUMMARY
 
 ## Files Likely Affected
 
@@ -69,10 +69,10 @@ cancellation leaves folios correct.
 
 ## Completion Log
 
-- **Completed by**:
-- **Date**:
-- **What was done**:
-- **Files changed**:
-- **Verification**:
-- **Change report**:
-- **PLAN / SUMMARY**:
+- **Completed by**: Agent
+- **Date**: 2026-11-14
+- **What was done**: Weather module scaffold; 10 tenant migrations; point/limit CRUD; MET/Open-Meteo fetch; evaluate warnings; cancel-for-weather with Folio voids + guest notify; avalanche + lobby stubs; module enabled.
+- **Files changed**: `backend-laravel/Modules/Weather/**`, `bootstrap/providers.php`, `modules_statuses.json`
+- **Verification**: code-only; `php -l` clean; migrate/tests deferred
+- **Change report**: `work/changes/2026-11-14--83-laravel-weather-module-h.md`
+- **PLAN / SUMMARY**: synced
