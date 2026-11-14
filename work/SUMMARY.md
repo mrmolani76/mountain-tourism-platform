@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** POS frontend (**84**) done. Next frontend: Rental / Services / Transport. Weather (**83**) parked. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Rental frontend (**85**) done. Next frontend: Services / Transport. Weather (**83**) parked. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **85** — Rental frontend — types, items, rent out, return (high, 2026-11-14): Nuxt rental desk + menu.
 - **84** — POS frontend — catalog, shifts, orders, settle (high, 2026-11-14): Nuxt POS desk + menu.
 - **82** — Folio frontend — list, detail, charge-to-room, pay, void (high, 2026-11-13): Nuxt pages + menu for Module C.
 - **81** — Module G — Transport and lifts (Laravel) (high, 2026-11-13): artisan Transport, trips/lifts/pass, 10 migrations, 25 routes.

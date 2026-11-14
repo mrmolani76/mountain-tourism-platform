@@ -11,7 +11,7 @@ export interface AppModuleInfo {
 
 /**
  * Live modules for dashboard cards + fallback nav.
- * MVP focus: Core + Hotel + Folio + POS (root page paths, no /modules prefix).
+ * MVP focus: Core + Hotel + Folio + POS + Rental (root page paths, no /modules prefix).
  */
 export const appModules: Array<AppModuleInfo> = [
   {
@@ -37,6 +37,14 @@ export const appModules: Array<AppModuleInfo> = [
     description: 'Restaurant and shop orders, shifts and catalog.',
     endpoint: '/api/pos/',
     features: ['Cashier shifts', 'Orders and settle', 'Board-included meals'],
+  },
+  {
+    key: 'rental',
+    title: 'Rental',
+    icon: 'tabler-skiing',
+    description: 'Equipment rent out, returns, late and damage fees.',
+    endpoint: '/api/rental/',
+    features: ['Rent out desk', 'Currently out', 'Season day rates'],
   },
 ]
 
@@ -132,6 +140,45 @@ export const posNavigation: Array<NavLink> = [
   },
 ]
 
+/** Rental screens (static fallback). Paths under /rental/... */
+export const rentalNavigation: Array<NavLink> = [
+  {
+    title: 'Overview',
+    to: { path: '/rental' },
+    icon: { icon: 'tabler-layout-grid' },
+  },
+  {
+    title: 'Rent out',
+    to: { path: '/rental/rent-out' },
+    icon: { icon: 'tabler-skiing' },
+  },
+  {
+    title: 'Currently out',
+    to: { path: '/rental/out' },
+    icon: { icon: 'tabler-list-check' },
+  },
+  {
+    title: 'Contracts',
+    to: { path: '/rental/contracts' },
+    icon: { icon: 'tabler-file-text' },
+  },
+  {
+    title: 'Equipment types',
+    to: { path: '/rental/types' },
+    icon: { icon: 'tabler-category' },
+  },
+  {
+    title: 'Items',
+    to: { path: '/rental/items' },
+    icon: { icon: 'tabler-barcode' },
+  },
+  {
+    title: 'Season prices',
+    to: { path: '/rental/prices' },
+    icon: { icon: 'tabler-currency-euro' },
+  },
+]
+
 const coreNavigation: Array<NavLink> = [
   {
     title: 'Staff',
@@ -156,7 +203,7 @@ const coreNavigation: Array<NavLink> = [
 ]
 
 /**
- * Static fallback navigation (Core + Hotel + Folio + POS).
+ * Static fallback navigation (Core + Hotel + Folio + POS + Rental).
  * Prefer server menu from `GET /api/core/menus`.
  */
 export const appNavigation: VerticalNavItems = [
@@ -184,6 +231,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'POS',
     icon: { icon: 'tabler-tools-kitchen-2' },
     children: posNavigation,
+  },
+  {
+    title: 'Rental',
+    icon: { icon: 'tabler-skiing' },
+    children: rentalNavigation,
   },
   {
     title: 'Profile',

@@ -27,6 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 85 | Rental frontend — types, items, rent out, return | high | E-rental | frontend | M | 2026-11-14 |
 | 84 | POS frontend — catalog, shifts, orders, settle | high | D-pos | frontend | M | 2026-11-14 |
 | 82 | Folio frontend — list, detail, charge-to-room, pay, void | high | C-folio | frontend | M | 2026-11-13 |
 | 81 | Module G — Transport and lifts (Laravel) | high | G-transport | backend | L | 2026-11-13 |

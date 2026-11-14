@@ -3,7 +3,7 @@
 /**
  * Tenant vertical nav items for GET /api/core/menus.
  *
- * MVP slice: Core + Hotel + Folio + POS. Other modules stay out of the menu until ported.
+ * MVP slice: Core + Hotel + Folio + POS + Rental. Other modules stay out until ported.
  *
  * `allowed_roles` false = any authenticated staff.
  * List of role codes = only those roles see the entry (Owner always sees Core admin items).
@@ -219,6 +219,71 @@ return [
                     'allowed_roles' => ['owner', 'manager', 'cashier'],
                     'page' => '/pos/packed-lunches',
                     'iconClass' => 'tabler-backpack',
+                ],
+            ],
+        ],
+        [
+            'label' => 'Rental',
+            'uniqueKey' => 'rental',
+            'allowed_roles' => ['owner', 'manager', 'rental_desk', 'front_desk'],
+            'page' => '',
+            'iconClass' => 'tabler-skiing',
+            'submenu_items' => [
+                [
+                    'label' => 'Overview',
+                    'uniqueKey' => 'rental_overview',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk', 'front_desk'],
+                    'page' => '/rental',
+                    'iconClass' => 'tabler-layout-grid',
+                ],
+                [
+                    'label' => 'Rent out',
+                    'uniqueKey' => 'rental_rent_out',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk', 'front_desk'],
+                    'page' => '/rental/rent-out',
+                    'iconClass' => 'tabler-skiing',
+                ],
+                [
+                    'label' => 'Currently out',
+                    'uniqueKey' => 'rental_out',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk', 'front_desk'],
+                    'page' => '/rental/out',
+                    'iconClass' => 'tabler-list-check',
+                ],
+                [
+                    'label' => 'Contracts',
+                    'uniqueKey' => 'rental_contracts',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk', 'front_desk'],
+                    'page' => '/rental/contracts',
+                    'iconClass' => 'tabler-file-text',
+                ],
+                [
+                    'label' => 'Equipment types',
+                    'uniqueKey' => 'rental_types',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk'],
+                    'page' => '/rental/types',
+                    'iconClass' => 'tabler-category',
+                ],
+                [
+                    'label' => 'Items',
+                    'uniqueKey' => 'rental_items',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk'],
+                    'page' => '/rental/items',
+                    'iconClass' => 'tabler-barcode',
+                ],
+                [
+                    'label' => 'Season prices',
+                    'uniqueKey' => 'rental_prices',
+                    'submodule' => 'rental',
+                    'allowed_roles' => ['owner', 'manager', 'rental_desk'],
+                    'page' => '/rental/prices',
+                    'iconClass' => 'tabler-currency-euro',
                 ],
             ],
         ],
