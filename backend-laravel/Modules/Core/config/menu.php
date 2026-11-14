@@ -319,6 +319,14 @@ return [
                     'iconClass' => 'tabler-ticket',
                 ],
                 [
+                    'label' => 'Outings',
+                    'uniqueKey' => 'services_outings',
+                    'submodule' => 'services',
+                    'allowed_roles' => ['owner', 'manager', 'service_staff'],
+                    'page' => '/services/outings',
+                    'iconClass' => 'tabler-trekking',
+                ],
+                [
                     'label' => 'Catalog',
                     'uniqueKey' => 'services_catalog',
                     'submodule' => 'services',

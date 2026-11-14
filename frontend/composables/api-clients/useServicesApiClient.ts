@@ -99,13 +99,17 @@ export const useServicesApiClient = () => {
     listSlots,
     createSlot,
     listSlotStaff,
+    slotStaff: listSlotStaff,
     assignSlotStaff,
+    assignStaff: assignSlotStaff,
     listBookings,
     createBooking,
     cancelBooking,
     openOuting,
     markParticipantOut,
     markParticipantBack,
+    markOut: markParticipantOut,
+    markBack: markParticipantBack,
     closeOuting,
   }
 }
