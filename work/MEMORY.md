@@ -6,16 +6,18 @@
 ## Current focus
 - **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. No SSO.
-- **WIP empty** after **80**. Modules: Saas, Core, Hotel, Folio, Pos, Rental, Services.
+- **WIP empty** after **82**. Frontend live: Core + Hotel + Folio. Backend: Saas/Core/Hotel/Folio/Pos/Rental/Services/Transport.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. Phase 4 Module G Transport/Lifts or H Weather
-2. **72** verify on setup machine when user allows
+1. Frontend POS / Rental / Services
+2. Module H Weather backend
+3. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **82** — Folio frontend Module C (high, 2026-11-13)
 - **80** — Module F Services Laravel via artisan + APIs (high, 2026-11-13)
 - **79** — Module E Rental Laravel via artisan + APIs (high, 2026-11-13)
 - **78** — Split Pos migrations one table per file (high, 2026-11-13)

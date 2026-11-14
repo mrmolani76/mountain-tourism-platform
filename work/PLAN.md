@@ -21,12 +21,12 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 82 | Folio frontend — list, detail, charge-to-room, pay, void | high | C-folio | frontend | M |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 82 | Folio frontend — list, detail, charge-to-room, pay, void | high | C-folio | frontend | M | 2026-11-13 |
 | 81 | Module G — Transport and lifts (Laravel) | high | G-transport | backend | L | 2026-11-13 |
 | 80 | Module F — Hotel services and activities (Laravel) | high | F-services | backend | L | 2026-11-13 |
 | 79 | Module E — Equipment rental (Laravel) | high | E-rental | backend | L | 2026-11-13 |

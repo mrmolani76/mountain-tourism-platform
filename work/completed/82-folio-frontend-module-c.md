@@ -2,7 +2,7 @@
 title: Folio frontend — list, detail, charge-to-room, pay, void
 id: 82
 priority: high
-status: inprogress
+status: completed
 milestone: 2
 module: C-folio
 area: frontend
@@ -40,13 +40,13 @@ User: frontend for completed modules, one module complete + commit.
 Folio is the money hub after Hotel.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Folio list + detail pages
-- [ ] Charge-to-room search + post
-- [ ] Payment + void (reason) from detail
-- [ ] Invoice JSON view / printable section
-- [ ] Menu + app navigation updated
-- [ ] Change report + PLAN/SUMMARY
-- [ ] N/A tests (code-only frontend)
+- [x] Folio list + detail pages
+- [x] Charge-to-room search + post
+- [x] Payment + void (reason) from detail
+- [x] Invoice JSON view / printable section
+- [x] Menu + app navigation updated
+- [x] Change report + PLAN/SUMMARY
+- [x] N/A tests (code-only frontend)
 
 ## Files Likely Affected
 - `frontend/pages/folios/**`
@@ -62,10 +62,10 @@ Folio is the money hub after Hotel.
 
 ## Completion Log
 
-- **Completed by**:
-- **Date**:
-- **What was done**:
-- **Files changed**:
-- **Verification**:
-- **Change report**:
-- **PLAN / SUMMARY**:
+- **Completed by**: Agent
+- **Date**: 2026-11-13
+- **What was done**: Folio list/detail/charge-to-room pages, API client, menu + nav, stay folio deep links
+- **Files changed**: `frontend/pages/folios/**`, `useFolioApiClient.ts`, `app-modules.ts`, `StayViewFolio.vue`, `hotel/stays/index.vue`, `Core/config/menu.php`
+- **Verification**: code-only; no npm run (coding-agent default)
+- **Change report**: `work/changes/2026-11-13--82-folio-frontend-module-c.md`
+- **PLAN / SUMMARY**: updated yes

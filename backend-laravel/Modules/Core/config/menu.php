@@ -3,7 +3,7 @@
 /**
  * Tenant vertical nav items for GET /api/core/menus.
  *
- * MVP slice: Core + Hotel only. Other modules stay out of the menu until ported.
+ * MVP slice: Core + Hotel + Folio. Other modules stay out of the menu until ported.
  *
  * `allowed_roles` false = any authenticated staff.
  * List of role codes = only those roles see the entry (Owner always sees Core admin items).
@@ -145,6 +145,31 @@ return [
                     'allowed_roles' => ['owner', 'manager', 'front_desk'],
                     'page' => '/hotel/availability',
                     'iconClass' => 'tabler-calendar-check',
+                ],
+            ],
+        ],
+        [
+            'label' => 'Folio',
+            'uniqueKey' => 'folio',
+            'allowed_roles' => ['owner', 'manager', 'front_desk', 'cashier'],
+            'page' => '',
+            'iconClass' => 'tabler-receipt',
+            'submenu_items' => [
+                [
+                    'label' => 'All folios',
+                    'uniqueKey' => 'folios',
+                    'submodule' => 'folio',
+                    'allowed_roles' => ['owner', 'manager', 'front_desk', 'cashier'],
+                    'page' => '/folios',
+                    'iconClass' => 'tabler-list',
+                ],
+                [
+                    'label' => 'Charge to room',
+                    'uniqueKey' => 'folios_charge_to_room',
+                    'submodule' => 'folio',
+                    'allowed_roles' => ['owner', 'manager', 'front_desk', 'cashier'],
+                    'page' => '/folios/charge-to-room',
+                    'iconClass' => 'tabler-door',
                 ],
             ],
         ],

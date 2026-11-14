@@ -11,7 +11,7 @@ export interface AppModuleInfo {
 
 /**
  * Live modules for dashboard cards + fallback nav.
- * MVP focus: Core + Hotel only (root page paths, no /modules prefix).
+ * MVP focus: Core + Hotel + Folio (root page paths, no /modules prefix).
  */
 export const appModules: Array<AppModuleInfo> = [
   {
@@ -21,6 +21,14 @@ export const appModules: Array<AppModuleInfo> = [
     description: 'Rooms, board plans and guest stays across the complex.',
     endpoint: '/api/hotel/',
     features: ['Board plans and room types', 'Rooms per building', 'Check-in and check-out'],
+  },
+  {
+    key: 'folio',
+    title: 'Folio',
+    icon: 'tabler-receipt',
+    description: 'Guest bills, charge to room, payments and voids.',
+    endpoint: '/api/folios/',
+    features: ['Open folios', 'Charge to room', 'Payments and voids'],
   },
 ]
 
@@ -73,6 +81,20 @@ export const hotelNavigation: Array<NavLink> = [
   },
 ]
 
+/** Folio screens (static fallback). Paths under /folios/... */
+export const folioNavigation: Array<NavLink> = [
+  {
+    title: 'All folios',
+    to: { path: '/folios' },
+    icon: { icon: 'tabler-list' },
+  },
+  {
+    title: 'Charge to room',
+    to: { path: '/folios/charge-to-room' },
+    icon: { icon: 'tabler-door' },
+  },
+]
+
 const coreNavigation: Array<NavLink> = [
   {
     title: 'Staff',
@@ -97,7 +119,7 @@ const coreNavigation: Array<NavLink> = [
 ]
 
 /**
- * Static fallback navigation (Core + Hotel only).
+ * Static fallback navigation (Core + Hotel + Folio).
  * Prefer server menu from `GET /api/core/menus`.
  */
 export const appNavigation: VerticalNavItems = [
@@ -115,6 +137,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'Hotel',
     icon: { icon: 'tabler-bed' },
     children: hotelNavigation,
+  },
+  {
+    title: 'Folio',
+    icon: { icon: 'tabler-receipt' },
+    children: folioNavigation,
   },
   {
     title: 'Profile',

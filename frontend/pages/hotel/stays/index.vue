@@ -368,6 +368,14 @@ onMounted(async () => {
             Close
           </VBtn>
           <VBtn
+            v-if="folio?.folio?.id"
+            color="primary"
+            variant="tonal"
+            :to="`/folios/view/${folio.folio.id}`"
+          >
+            Open folio page
+          </VBtn>
+          <VBtn
             v-if="folioStay && folioStay.status === 'in_house'"
             color="error"
             variant="tonal"

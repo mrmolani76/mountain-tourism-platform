@@ -43,7 +43,7 @@ watch(() => props.entityRandomId, load)
     </div>
 
     <template v-else-if="folio">
-      <div class="d-flex align-center justify-space-between mb-4">
+      <div class="d-flex align-center justify-space-between mb-4 flex-wrap gap-2">
         <VChip
           size="small"
           variant="tonal"
@@ -51,8 +51,19 @@ watch(() => props.entityRandomId, load)
         >
           {{ folio.folio.reference }} / {{ folio.folio.status }}
         </VChip>
-        <div class="text-h6">
-          Balance {{ formatCents(folio.balance_cents ?? 0) }}
+        <div class="d-flex align-center gap-3">
+          <div class="text-h6">
+            Balance {{ formatCents(folio.balance_cents ?? 0) }}
+          </div>
+          <VBtn
+            v-if="folio.folio?.id"
+            size="small"
+            color="primary"
+            variant="tonal"
+            :to="`/folios/view/${folio.folio.id}`"
+          >
+            Open folio
+          </VBtn>
         </div>
       </div>
 
