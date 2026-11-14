@@ -27,6 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 87 | Transport frontend — trips, lifts, passenger list, passes | high | G-transport | frontend | M | 2026-11-14 |
 | 86 | Services frontend — catalog, slots, bookings, outings | high | F-services | frontend | M | 2026-11-14 |
 | 85 | Rental frontend — types, items, rent out, return | high | E-rental | frontend | M | 2026-11-14 |
 | 84 | POS frontend — catalog, shifts, orders, settle | high | D-pos | frontend | M | 2026-11-14 |

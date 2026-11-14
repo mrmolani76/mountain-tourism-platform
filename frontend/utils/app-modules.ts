@@ -54,6 +54,14 @@ export const appModules: Array<AppModuleInfo> = [
     endpoint: '/api/services/',
     features: ['Catalog and slots', 'Bookings', 'Guided outings'],
   },
+  {
+    key: 'transport',
+    title: 'Transport',
+    icon: 'tabler-bus',
+    description: 'Fleet trips, pickups, lift status and pass sales.',
+    endpoint: '/api/transport/',
+    features: ['Trips and passenger lists', 'Lift status', 'Lift pass sell'],
+  },
 ]
 
 export function getAppModule(key: string): AppModuleInfo | undefined {
@@ -182,6 +190,19 @@ export const servicesNavigation: Array<NavLink> = [
   },
 ]
 
+/** Transport screens (static fallback). Paths under /transport/... */
+export const transportNavigation: Array<NavLink> = [
+  { title: 'Overview', to: { path: '/transport' }, icon: { icon: 'tabler-layout-grid' } },
+  { title: 'Trips', to: { path: '/transport/trips' }, icon: { icon: 'tabler-bus' } },
+  { title: 'Pickup', to: { path: '/transport/pickup' }, icon: { icon: 'tabler-train' } },
+  { title: 'Vehicles', to: { path: '/transport/vehicles' }, icon: { icon: 'tabler-car' } },
+  { title: 'Drivers', to: { path: '/transport/drivers' }, icon: { icon: 'tabler-user' } },
+  { title: 'Routes', to: { path: '/transport/routes' }, icon: { icon: 'tabler-route' } },
+  { title: 'Lifts', to: { path: '/transport/lifts' }, icon: { icon: 'tabler-building-bridge' } },
+  { title: 'Lobby board', to: { path: '/transport/lobby' }, icon: { icon: 'tabler-device-tv' } },
+  { title: 'Lift passes', to: { path: '/transport/passes' }, icon: { icon: 'tabler-ticket' } },
+]
+
 /** Rental screens (static fallback). Paths under /rental/... */
 export const rentalNavigation: Array<NavLink> = [
   {
@@ -283,6 +304,11 @@ export const appNavigation: VerticalNavItems = [
     title: 'Services',
     icon: { icon: 'tabler-spa' },
     children: servicesNavigation,
+  },
+  {
+    title: 'Transport',
+    icon: { icon: 'tabler-bus' },
+    children: transportNavigation,
   },
   {
     title: 'Profile',

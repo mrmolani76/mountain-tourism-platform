@@ -3,7 +3,7 @@
 /**
  * Tenant vertical nav items for GET /api/core/menus.
  *
- * MVP slice: Core + Hotel + Folio + POS + Rental + Services. Other modules stay out until ported.
+ * MVP slice: Core + Hotel + Folio + POS + Rental + Services + Transport.
  *
  * `allowed_roles` false = any authenticated staff.
  * List of role codes = only those roles see the entry (Owner always sees Core admin items).
@@ -341,6 +341,87 @@ return [
                     'allowed_roles' => ['owner', 'manager', 'service_staff'],
                     'page' => '/services/schedule-rules',
                     'iconClass' => 'tabler-calendar-repeat',
+                ],
+            ],
+        ],
+        [
+            'label' => 'Transport',
+            'uniqueKey' => 'transport',
+            'allowed_roles' => ['owner', 'manager', 'transport_desk', 'lift_operator', 'front_desk'],
+            'page' => '',
+            'iconClass' => 'tabler-bus',
+            'submenu_items' => [
+                [
+                    'label' => 'Overview',
+                    'uniqueKey' => 'transport_overview',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'transport_desk', 'lift_operator', 'front_desk'],
+                    'page' => '/transport',
+                    'iconClass' => 'tabler-layout-grid',
+                ],
+                [
+                    'label' => 'Trips',
+                    'uniqueKey' => 'transport_trips',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'transport_desk', 'front_desk'],
+                    'page' => '/transport/trips',
+                    'iconClass' => 'tabler-bus',
+                ],
+                [
+                    'label' => 'Pickup',
+                    'uniqueKey' => 'transport_pickup',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'transport_desk', 'front_desk'],
+                    'page' => '/transport/pickup',
+                    'iconClass' => 'tabler-train',
+                ],
+                [
+                    'label' => 'Vehicles',
+                    'uniqueKey' => 'transport_vehicles',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'transport_desk'],
+                    'page' => '/transport/vehicles',
+                    'iconClass' => 'tabler-car',
+                ],
+                [
+                    'label' => 'Drivers',
+                    'uniqueKey' => 'transport_drivers',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'transport_desk'],
+                    'page' => '/transport/drivers',
+                    'iconClass' => 'tabler-user',
+                ],
+                [
+                    'label' => 'Routes',
+                    'uniqueKey' => 'transport_routes',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'transport_desk'],
+                    'page' => '/transport/routes',
+                    'iconClass' => 'tabler-route',
+                ],
+                [
+                    'label' => 'Lifts',
+                    'uniqueKey' => 'transport_lifts',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'lift_operator', 'transport_desk'],
+                    'page' => '/transport/lifts',
+                    'iconClass' => 'tabler-building-bridge',
+                ],
+                [
+                    'label' => 'Lobby board',
+                    'uniqueKey' => 'transport_lobby',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'lift_operator', 'transport_desk', 'front_desk'],
+                    'page' => '/transport/lobby',
+                    'iconClass' => 'tabler-device-tv',
+                ],
+                [
+                    'label' => 'Lift passes',
+                    'uniqueKey' => 'transport_passes',
+                    'submodule' => 'transport',
+                    'allowed_roles' => ['owner', 'manager', 'front_desk', 'cashier', 'transport_desk'],
+                    'page' => '/transport/passes',
+                    'iconClass' => 'tabler-ticket',
                 ],
             ],
         ],
