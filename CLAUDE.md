@@ -9,7 +9,7 @@
 - **Money** → Charge and Payment are append-only; void only (Rule 5)
 - **Tenant** → DB-per-tenant; no cross-tenant DB access (Rule 3)
 - **Scope** → `document/Mountain_MVP_Scope_v1.pdf` is the contract; out-of-scope needs written agreement
-- **Focus** → Write product/API **code** only. **No project setup** (Docker, Compose, VPS, CI, env, seed/dev stack, infra) unless the user explicitly asks in that message. Backend/API first (`work/phases/`); no frontend unless user asks
+- **Focus** → Write product **code** (Laravel API + Nuxt UI together when a feature needs both). **No project setup** (Docker, Compose, VPS, CI, env, seed/dev stack, infra) unless the user explicitly asks in that message
 - **Chat output** → Response Style table below. Chat = Hinglish, repo = English, no em-dash
 - **Engineering standards** → `.cursor/rules/nexro-engineering.mdc` + `.opencode/rules.md` (keep twins in sync)
 
@@ -46,22 +46,23 @@ Contract scope: `document/Mountain_MVP_Scope_v1.pdf`.
 | Layer | Choice |
 |-------|--------|
 | Backend | PHP, Laravel, nwidart Modules |
-| Frontend | Nuxt, Vue.js, Vuetify (**deferred** until user opens frontend focus) |
-| Layout | `backend-laravel/` (Laravel API) first; `frontend/` later |
+| Frontend | Nuxt, Vue.js, Vuetify (staff SPA in `frontend/`) |
+| Layout | `backend-laravel/` (Laravel API) + `frontend/` (Nuxt). Deliver **together** for a feature |
 | Auth (MVP) | Email + password; owners/managers reset staff passwords; no email sending in MVP |
 | Tenancy | DB-per-tenant (one Postgres DB per complex); Host/`Domain` resolve; central Saas module |
 | Money | Append-only charges and payments; voids only |
 
-**Current delivery focus: product/API code only (backend first).**
+**Current delivery focus: product code (backend + frontend together). No setup by default.**
 
 | Do | Do not (unless user explicitly asks) |
 |----|--------------------------------------|
-| Domain models, services, API controllers, policies, migrations for features | Docker / Compose / nginx / Dockerfile |
-| Business rules (folio, voids, tenancy, capacity) | VPS, deploy scripts, CI/CD workflows |
-| Bug fixes in application code | Dev env / seed / stack "verify" setup |
-| Tests as code when the testing agent is asked | Package installs, env wiring, infra docs as the main task |
+| Domain models, services, API controllers, policies, migrations | Docker / Compose / nginx / Dockerfile |
+| Matching Nuxt pages, composables, menus for those APIs | VPS, deploy scripts, CI/CD workflows |
+| Business rules (folio, voids, tenancy, capacity) | Dev env / seed / stack "verify" setup |
+| Bug fixes in application code (API and/or UI) | Package installs, env wiring, infra docs as the main task |
+| Tests as code when the testing agent is asked | |
 
-Do not scaffold or build Nuxt unless the user explicitly asks. Phase plans: `work/phases/`. Prefer the next unfinished **module feature** over any setup task.
+Ship API and UI for the same module feature in one work item when both are needed. Phase plans: `work/phases/`. Prefer unfinished **module features** over setup.
 
 Confirm frameworks from real project files when they exist. Do not invent another stack.
 

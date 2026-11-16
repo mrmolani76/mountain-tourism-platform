@@ -127,12 +127,18 @@ export const useUserApiClient = () => {
   }
 
   const saveUserTableFilters = async (filterData: any) => {
-    const params = {
-      identifier: USER_LISTING_FILTER_IDENTIFIER,
-      filterData,
-    }
+    // Preference persistence is optional; Core listing works without it.
+    try {
+      const params = {
+        identifier: USER_LISTING_FILTER_IDENTIFIER,
+        filterData,
+      }
 
-    return await saveUserPreference(params)
+      return await saveUserPreference(params)
+    }
+    catch {
+      return null
+    }
   }
 
   const enableUsers = async (data: Record<string, any>) => {
@@ -160,8 +166,9 @@ export const useUserApiClient = () => {
       return response
   }
 
-  const userPasswordReset = async (params: object) => {
-    return await post<ApiResponse<any>>('/user/passwordReset', params)
+  const userPasswordReset = async (params: { staff_id: number; new_password: string }) => {
+    // Laravel Core: POST /api/auth/reset-password (manager+)
+    return await post<ApiResponse<any>>('/auth/reset-password', params)
   }
 
   const formInitaldata = async () => {

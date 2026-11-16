@@ -4,7 +4,7 @@ Rows move between tables. An ID appears in **exactly one** table, matching its f
 
 ## Phases
 
-See `work/phases/`. **Current focus: backend / API only** (frontend deferred). Laravel switch: Module 1 (central Saas + tenant Core) first.
+See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together). Module features end-to-end.
 
 | Phase | File | Status |
 |-------|------|--------|
@@ -27,6 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 98 | Core menu UI+backend parity + allow fullstack delivery | high | A-core | backend | M | 2026-11-16 |
 | 97 | Redesign staff home dashboard (today operations) | high | I-dashboard | frontend | M | 2026-11-16 |
 | 96 | Core UI complete — settings, outlets, owner permissions | high | A-core | frontend | M | 2026-11-16 |
 | 95 | Fix SPA API timeout — proxy target 127.0.0.1 (keep Host) | high | A-core | frontend | S | 2026-11-16 |

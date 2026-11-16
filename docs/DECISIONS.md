@@ -12,7 +12,8 @@ Record choices that differ from or extend the MVP PDF preferences.
 | 2026-11-02 | MVP deploy = **VPS direct (no Docker required)**; optional local Docker only for dx | MVP §6 | Accepted |
 | 2026-11-02 | Weather = MET Norway server-side cache only | MVP §7 / §5H | Accepted |
 | 2026-11-02 | Maps = Leaflet or MapLibre + free OSM tiles | MVP §7 | Accepted |
-| 2026-11-02 | **Delivery order = API/backend first**; Nuxt UI deferred | User: work API-base pehle; phases/todos backend-only for now | Accepted |
+| 2026-11-02 | **Delivery order = API/backend first**; Nuxt UI deferred | User: work API-base pehle; phases/todos backend-only for now | **Superseded** 2026-11-16 |
+| 2026-11-16 | **Delivery = fullstack** (Laravel API + Nuxt UI together per feature) | User: remove backend-only rule; work both layers together | Accepted |
 | 2026-11-02 | Tenant isolation = **scoped manager** (custom Django manager + base model), not Postgres RLS | Simpler, Django-idiomatic, testable without DB setup; single layer per TECHNICAL_RULES §2 | **Superseded** by connection-based isolation |
 | 2026-11-02 | API auth = **session-based** (DRF SessionAuthentication), email/password | MVP simplest; Nuxt deferred; token can be added later if cross-origin | Accepted |
 | 2026-11-02 | Tenancy = **DB-per-tenant** (one Postgres DB per complex); Host/`Domain` resolve; central `modules.saas` registry | User: EQMS-style; supersedes shared-DB + `tenant_id` row filter for MVP | Accepted |

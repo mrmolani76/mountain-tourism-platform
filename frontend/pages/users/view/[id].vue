@@ -15,11 +15,15 @@ useHead({
   title: t('userDetail') || 'Staff detail',
 })
 
-const { getUserViewById, loading } = useUserApiClient()
+const { $toast } = useNuxtApp()
+const { getUserViewById, userPasswordReset, loading } = useUserApiClient()
 const route = useRoute()
 const uuid = ref(String(route.params.id))
 const user = ref<User | undefined>()
 const tabItems = ref([] as AppTab[])
+const resetOpen = ref(false)
+const resetSaving = ref(false)
+const newPassword = ref('')
 
 const displayName = computed(() =>
   user.value?.fullName
@@ -62,6 +66,37 @@ const reloadData = async () => {
       component: markRaw(resolveComponent('UserViewInfo') as object),
     },
   ]
+}
+
+const openReset = () => {
+  newPassword.value = ''
+  resetOpen.value = true
+}
+
+const submitReset = async () => {
+  const staffId = Number(user.value?.id || uuid.value)
+  if (!staffId || String(newPassword.value).length < 8) {
+    $toast.error('Password must be at least 8 characters.')
+
+    return
+  }
+
+  resetSaving.value = true
+  try {
+    const response = await userPasswordReset({
+      staff_id: staffId,
+      new_password: newPassword.value,
+    })
+
+    if (response) {
+      $toast.success('Password reset.')
+      resetOpen.value = false
+      newPassword.value = ''
+    }
+  }
+  finally {
+    resetSaving.value = false
+  }
 }
 
 reloadData()
@@ -143,6 +178,23 @@ watch(() => route.params.id, (id) => {
 
         <div class="tw-flex tw-flex-col tw-gap-4 tw-justify-between">
           <div class="tw-flex tw-gap-2 tw-justify-end">
+            <VTooltip text="Reset password">
+              <template #activator="{ props: tip }">
+                <div v-bind="tip">
+                  <VBtn
+                    size="38"
+                    color="warning"
+                    variant="tonal"
+                    @click="openReset"
+                  >
+                    <VIcon
+                      icon="tabler-key"
+                      size="22"
+                    />
+                  </VBtn>
+                </div>
+              </template>
+            </VTooltip>
             <VTooltip :text="$t('edit')">
               <template #activator="{ props: tip }">
                 <div v-bind="tip">
@@ -220,5 +272,41 @@ watch(() => route.params.id, (id) => {
         </template>
       </AppTabs>
     </template>
+
+    <VDialog
+      v-model="resetOpen"
+      max-width="420"
+      persistent
+    >
+      <VCard>
+        <VCardTitle>Reset password</VCardTitle>
+        <VCardText>
+          <AppTextField
+            v-model="newPassword"
+            type="password"
+            label="New password"
+            autocomplete="new-password"
+            hint="Min 8 characters"
+            persistent-hint
+          />
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn
+            variant="text"
+            @click="resetOpen = false"
+          >
+            Cancel
+          </VBtn>
+          <VBtn
+            color="primary"
+            :loading="resetSaving"
+            @click="submitReset"
+          >
+            Save
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>

@@ -117,7 +117,7 @@ class MountainApi {
       headers['Content-Type'] = 'application/json'
 
     try {
-      return await $fetch<T>(`${origin}/api/${path}`, {
+      const result = await $fetch<T>(`${origin}/api/${path}`, {
         method,
         body: method === 'GET' ? undefined : body,
         credentials: 'include',
@@ -125,6 +125,11 @@ class MountainApi {
         signal: timeoutSignal(REQUEST_TIMEOUT_MS),
         timeout: REQUEST_TIMEOUT_MS,
       })
+
+      // 204 No Content → undefined; treat as success token for DELETE callers.
+      return (result === undefined || result === null) && method === 'DELETE'
+        ? ({ ok: true } as T)
+        : result
     }
     catch (error: any) {
       await this.errorHandler(error)

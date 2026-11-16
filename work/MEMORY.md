@@ -4,7 +4,7 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **Product/API code only** (Laravel + Nuxt). No Docker/VPS/CI/env/setup unless user asks.
+- **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
 - **WIP empty** after **93**. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.

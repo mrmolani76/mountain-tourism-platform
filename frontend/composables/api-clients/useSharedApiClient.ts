@@ -1,8 +1,9 @@
 export const useSharedApiClient = () => {
   const { post, get } = useApiClient()
 
-  const saveUserPreference = async (body: { identifier: string; filterData: { [key: string]: any } }) => {
-    return await post<ApiResponse<any>>('/saveUserPreference', body)
+  const saveUserPreference = async (_body: { identifier: string; filterData: { [key: string]: any } }) => {
+    // Mountain Core has no preference API yet. Avoid 404 noise; filters stay session-local.
+    return { status: true } as ApiResponse<any>
   }
 
   const getDatatableListingConfig = async (body: { holders: Array<ColumnListing> }) => {

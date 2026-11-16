@@ -9,8 +9,9 @@ import { API } from '@/composables/core/useApi'
  */
 
 const ROLE_PERMISSIONS: Record<string, Array<string>> = {
-  owner: ['*'],
-  manager: ['hotel', 'staff'],
+  // Owner: full UI access (* plus explicit Core staff codes for meta checks).
+  owner: ['*', 'users.view', 'users.add', 'users.edit', 'staff', 'hotel'],
+  manager: ['hotel', 'staff', 'users.view'],
   front_desk: ['hotel'],
   cashier: [],
   rental_desk: [],

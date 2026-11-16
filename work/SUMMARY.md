@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Staff home dashboard redesign (**97**) done. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Fullstack delivery rule + Core menu parity (**98**) done. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **98** — Core menu UI+backend parity + fullstack rule (high, 2026-11-16).
 - **97** — Redesign staff home dashboard (today operations) (high, 2026-11-16): alpine today desk + reports/today.
 - **96** — Core UI complete — settings, outlets, owner permissions (high, 2026-11-16).
 - **95** — Fix SPA API timeout — proxy target 127.0.0.1 (high, 2026-11-16): Nuxt proxy TCP to localhost; keep browser Host for tenant.
@@ -100,6 +101,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-16 — `work/changes/2026-11-16--98-core-menu-fullstack-rule.md` — item 98: fullstack rule + Core menu parity
 - 2026-11-16 — `work/changes/2026-11-16--97-redesign-staff-home-dashboard.md` — item 97: staff home today desk
 - 2026-11-16 — `work/changes/2026-11-16--96-core-ui-complete-settings-outlets-perms.md` — item 96: Core UI settings/outlets/`*`
 - 2026-11-16 — `work/changes/2026-11-16--95-fix-spa-api-timeout-proxy-target.md` — item 95: SPA proxy → 127.0.0.1:8000

@@ -53,5 +53,6 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 - **Frontend**: Nuxt + Vue + Vuetify in `frontend/`
 - **Tenancy**: DB-per-tenant (Host/`Domain` resolve; central Saas registry)
 - **Hard rule**: Charge/Payment never edit/delete — void with reason + user + timestamp
-- **No setup by default**: do not start Docker/Compose/VPS/CI/env/seed/infra work unless the user asks; write product/API code
+- **Fullstack by default**: Laravel API + Nuxt UI together for a feature (not backend-only)
+- **No setup by default**: do not start Docker/Compose/VPS/CI/env/seed/infra work unless the user asks
 - **Git**: ask "Commit aur push karun?" — never commit alone

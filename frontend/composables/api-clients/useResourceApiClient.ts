@@ -92,12 +92,20 @@ export const useResourceApiClient = () => {
 
   const remove = async (endpoint: string, id: number): Promise<boolean> => {
     loading.value = true
-    const response = await del(`${endpoint}/${id}`)
+    try {
+      // Laravel destroy often returns 204 No Content → null body on success.
+      // MountainApi also returns null on HTTP errors, so treat "no throw" as OK
+      // and let the listing reload reveal whether the row is gone.
+      await del(`${endpoint}/${id}`)
 
-    loading.value = false
-
-    // 204 → null body still counts as success (API returns null on catch only for errors)
-    return response !== undefined
+      return true
+    }
+    catch {
+      return false
+    }
+    finally {
+      loading.value = false
+    }
   }
 
   return { loading, list, show, create, update, remove }
