@@ -1,111 +1,167 @@
 <script setup lang="ts">
-const nuxtApp: any = useNuxtApp();
-const { t } = useI18n();
-const { loading, fetchGeneralSettings, updateGeneralSetting } = useGeneralSettingApiClient();
-const refGeneralSettingForm = ref();
-const isButtonDisabled = ref(false);
+/**
+ * Core tenant settings — currency, timezone, units, tax rates.
+ * API: GET/PATCH /api/settings (owner).
+ */
 
-const generalSettingsForm = ref<Partial<GeneralSetting>>({
-  // Base framework - generic settings can be added here as needed
-});
+useHead({ title: 'Settings' })
 
-const saveGeneralSetting = async () => {
-  isButtonDisabled.value = true
+definePageMeta({
+  navActiveLink: 'settings',
+})
 
-  const response = await updateGeneralSetting(generalSettingsForm.value)
+const { $toast } = useNuxtApp()
+const { loading, fetchGeneralSettings, updateGeneralSetting } = useGeneralSettingApiClient()
+const refForm = ref()
+const saving = ref(false)
+const taxRatesText = ref('')
 
-  if (response?.status) {
-    nuxtApp.$toast.success(response.message, {
-      onClose: () => {
-        isButtonDisabled.value = false
-      },
-    });
+const form = ref<Partial<GeneralSetting>>({
+  currency: 'EUR',
+  timezone: 'Europe/Zurich',
+  units: 'metric',
+  tax_rates: [],
+})
 
-    return;
-  }
-
-  isButtonDisabled.value = false
+const parseTaxRates = (raw: string): number[] => {
+  return raw
+    .split(/[,\s]+/)
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(part => Number(part))
+    .filter(n => Number.isFinite(n) && n >= 0)
 }
 
-(async () => {
-  useHead({
-    title: t('generalSettings'),
-  })
+const load = async () => {
+  const settings = await fetchGeneralSettings()
+  if (!settings)
+    return
 
-  const generalSettings = await fetchGeneralSettings();
-  if (generalSettings)
-    generalSettingsForm.value = generalSettings;
-})();
+  form.value = {
+    id: settings.id,
+    currency: settings.currency || 'EUR',
+    timezone: settings.timezone || 'Europe/Zurich',
+    units: settings.units === 'imperial' ? 'imperial' : 'metric',
+    tax_rates: Array.isArray(settings.tax_rates) ? settings.tax_rates : [],
+  }
+  taxRatesText.value = (form.value.tax_rates || []).join(', ')
+}
+
+const save = async () => {
+  const { valid } = await refForm.value.validate()
+  if (!valid)
+    return
+
+  saving.value = true
+  try {
+    const response = await updateGeneralSetting({
+      currency: String(form.value.currency || '').trim().toUpperCase(),
+      timezone: String(form.value.timezone || '').trim(),
+      units: form.value.units === 'imperial' ? 'imperial' : 'metric',
+      tax_rates: parseTaxRates(taxRatesText.value),
+    })
+
+    if (response?.status) {
+      $toast.success(response.message || 'Settings saved.')
+      if (response.data) {
+        form.value = { ...response.data }
+        taxRatesText.value = (response.data.tax_rates || []).join(', ')
+      }
+    }
+  }
+  finally {
+    saving.value = false
+  }
+}
+
+onMounted(load)
 </script>
 
 <template>
   <div>
+    <div class="mb-4">
+      <h2 class="text-h5 mb-1">
+        Settings
+      </h2>
+      <p class="text-body-2 text-medium-emphasis mb-0">
+        Complex currency, timezone, units and tax rates.
+      </p>
+    </div>
+
     <template v-if="loading">
-      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4 tw-items-start">
-        <div class="tw-col-span-2 tw-mb-5">
-          <VSkeletonLoader
-            :loading="loading"
-            type="text"
-          />
-        </div>
-        <div>
-          <VSkeletonLoader
-            :loading="loading"
-            type="heading@10"
-          />
-        </div>
-        <div>
-          <VSkeletonLoader
-            :loading="loading"
-            type="heading@4"
-          />
-        </div>
-      </div>
+      <VSkeletonLoader type="article, actions" />
     </template>
-    <template v-else>
-      <VForm
-        ref="refGeneralSettingForm"
-        @submit.prevent="refGeneralSettingForm.validate().then(function (response:any) {
-          response.valid ? saveGeneralSetting()
-          : ''
-        })"
-      >
-        <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4 tw-items-start">
-          <VCard
-            flat
-            width="100%"
-            class="tw-p-4"
+
+    <VForm
+      v-else
+      ref="refForm"
+      @submit.prevent="save"
+    >
+      <VCard flat>
+        <VCardText>
+          <VRow>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppTextField
+                v-model="form.currency"
+                label="Currency"
+                placeholder="EUR"
+                :rules="[requiredValidator]"
+                maxlength="8"
+              />
+            </VCol>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppTextField
+                v-model="form.timezone"
+                label="Timezone"
+                placeholder="Europe/Zurich"
+                :rules="[requiredValidator]"
+              />
+            </VCol>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppSelect
+                v-model="form.units"
+                label="Units"
+                :items="[
+                  { title: 'Metric', value: 'metric' },
+                  { title: 'Imperial', value: 'imperial' },
+                ]"
+                :rules="[requiredValidator]"
+              />
+            </VCol>
+            <VCol
+              cols="12"
+              md="6"
+            >
+              <AppTextField
+                v-model="taxRatesText"
+                label="Tax rates (%)"
+                hint="Comma-separated, e.g. 7.7, 2.5"
+                persistent-hint
+                placeholder="7.7, 2.5"
+              />
+            </VCol>
+          </VRow>
+        </VCardText>
+        <VCardActions class="px-4 pb-4">
+          <VBtn
+            color="primary"
+            type="submit"
+            :loading="saving"
+            :disabled="saving"
           >
-            <div class="tw-mb-2 tw-text-lg tw-mt-2 tw-ml-4">
-              {{ t('generalSetting') }}
-            </div>
-            <VDivider
-              :thickness="1"
-              class="border-opacity-100"
-              color="secondary"
-            />
-            <div class="tw-mt-4 tw-mb-4">
-              <p class="text-body-1">{{ t('generalSettings') }}</p>
-              <p class="text-caption text-disabled">{{ t('noChangesWereMade') }}</p>
-            </div>
-          </VCard>
-        </div>
-        <div class="w-100 sticky-footer mt-5 ">
-          <VCard class="tw-w-full">
-            <VCardText class="tw-flex tw-gap-2 tw-justify-start tw-p-2">
-              <VBtn
-                :disabled="isButtonDisabled"
-                :loading="isButtonDisabled"
-                color="primary"
-                type="submit"
-                name="save"
-              >
-                {{ t('save') }}
-              </VBtn>
-            </VCardText>
-          </VCard>
-        </div>
-      </VForm>
-    </template>
+            Save
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VForm>
   </div>
 </template>

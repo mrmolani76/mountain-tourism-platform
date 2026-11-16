@@ -49,14 +49,14 @@ php artisan serve --host=0.0.0.0 --port=8000
 ```bash
 cd frontend
 cp .env.example .env
-# BACKEND_URL=http://lab.localhost:8000
+# BACKEND_URL=http://127.0.0.1:8000  (TCP only; browser Host stays for tenant)
 npm install
 npm run dev -- --host 0.0.0.0 --port 3000
 ```
 
-Open `http://lab.localhost:3000`.
+Open `http://demo.mtmp.local:3000` (or `http://lab.localhost:3000`).
 
-Vite proxies `/api` and `/sanctum` to `BACKEND_URL`.
+Nuxt proxies `/api` and `/sanctum` to `BACKEND_URL` with `changeOrigin: false`.
 
 ---
 

@@ -71,9 +71,24 @@ class MountainApi {
           this.csrfTokenPromise = null
           this.csrfCooldownUntil = 0
         })
-        .catch(() => {
+        .catch((err: unknown) => {
           this.csrfTokenPromise = null
           this.csrfCooldownUntil = Date.now() + CSRF_FAIL_COOLDOWN_MS
+          // Surface once per cooldown so a dead proxy is visible (not silent hang).
+          try {
+            const { $toast } = useNuxtApp()
+            const msg = err && typeof err === 'object' && 'message' in err
+              ? String((err as { message?: unknown }).message || '')
+              : ''
+            const timedOut = msg.toLowerCase().includes('timeout')
+              || (err && typeof err === 'object' && 'name' in err && (err as { name?: string }).name === 'TimeoutError')
+            $toast.error(timedOut
+              ? 'API timed out reaching Laravel (check BACKEND_URL=http://127.0.0.1:8000 and artisan serve).'
+              : 'Could not reach Laravel CSRF (/sanctum). Is the API running on :8000?')
+          }
+          catch {
+            // Outside Nuxt setup.
+          }
         })
     }
 

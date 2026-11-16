@@ -110,4 +110,21 @@ return [
             'default_sort' => ['key' => 'starts_on', 'order' => 'desc'],
         ],
     ],
+
+    'outlets' => [
+        'model' => \Modules\Core\App\Models\Outlet::class,
+        'table' => 'core_outlet',
+        'link_key' => 'name',
+        'search_columns' => ['name'],
+        'headers' => [
+            'fields' => [
+                $field('Name', 'name', 'name', ['disabled' => true]),
+                $field('Type', 'outlet_type', 'outlet_type', ['search_field' => 'Dropdown']),
+                $field('Building', 'building_id', 'building_id', ['search_field' => 'Number']),
+                $status,
+                $actions,
+            ],
+            'default_sort' => ['key' => 'name', 'order' => 'asc'],
+        ],
+    ],
 ];

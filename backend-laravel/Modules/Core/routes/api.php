@@ -37,6 +37,10 @@ Route::middleware('staff.auth')->group(function () {
         ->defaults('resource', 'seasons');
     Route::post('seasons/list', [CoreListingController::class, 'list'])
         ->defaults('resource', 'seasons');
+    Route::get('outlets/list/config', [CoreListingController::class, 'listingConfig'])
+        ->defaults('resource', 'outlets');
+    Route::post('outlets/list', [CoreListingController::class, 'list'])
+        ->defaults('resource', 'outlets');
 
     Route::get('buildings', [BuildingController::class, 'index']);
     Route::post('buildings', [BuildingController::class, 'store']);

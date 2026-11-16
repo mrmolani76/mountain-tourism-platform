@@ -1,6 +1,10 @@
 <script setup lang="ts">
 useHead({ title: 'Buildings' })
 
+definePageMeta({
+  navActiveLink: 'buildings',
+})
+
 const fields: Array<HotelFormField> = [
   { key: 'name', label: 'Name', required: true, col: 12 },
   {

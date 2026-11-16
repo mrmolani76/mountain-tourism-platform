@@ -75,11 +75,12 @@ SANCTUM_STATEFUL_DOMAINS=mtmp.local,mtmp.local:3000,saas.mtmp.local,saas.mtmp.lo
 
 ```env
 NUXT_PUBLIC_API_BASE_URL=
-BACKEND_URL=http://demo.mtmp.local:8000
+BACKEND_URL=http://127.0.0.1:8000
 ENV=local
 ```
 
-Empty `NUXT_PUBLIC_API_BASE_URL` → same-origin `/api` when SPA and API share host (Apache) or Nuxt proxies `/api`.
+Empty `NUXT_PUBLIC_API_BASE_URL` → same-origin `/api` (Nuxt proxies to `BACKEND_URL`).  
+`BACKEND_URL` is the **TCP** target only. Keep browser URL as `http://demo.mtmp.local:3000` so Laravel sees that Host for tenant resolve.
 
 ### 3.2 Hosts file (Nexro `hosts:sync`)
 

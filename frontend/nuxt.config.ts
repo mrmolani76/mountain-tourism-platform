@@ -24,20 +24,23 @@ export default defineNuxtConfig({
       publicDir: '.output/',
     },
     // Dev-only proxy. Nuxt 4's dev listener is Nitro, so vite.server.proxy is
-    // bypassed here; nginx handles /api in production. changeOrigin stays off
-    // so the backend still sees the tenant Host (lab.local.mtmtp.local).
+    // bypassed here; nginx handles /api in production.
+    // Target = TCP reachability (127.0.0.1). changeOrigin stays false so Laravel
+    // still sees browser Host (demo.mtmp.local) and resolves the tenant.
+    // Pointing target at *.mtmp.local / *.localhost causes API timeouts when
+    // that hostname does not resolve on the machine.
     devProxy: {
       '/api': {
-        target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
+        target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
         changeOrigin: false,
       },
       '/sanctum': {
-        target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
+        target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
         changeOrigin: false,
       },
     },
   },
-  // Bind all interfaces so lab.localhost:3000 works.
+  // Bind all interfaces so *.mtmp.local:3000 / lab.localhost:3000 work.
   // strictPort + HMR clientPort keep :3000 on hard refresh (Apache owns :80 here).
   devServer: {
     host: '0.0.0.0',
@@ -152,10 +155,8 @@ export default defineNuxtConfig({
       },
       proxy: {
         '/api': {
-          // Must match frontend/.env.example BACKEND_URL (Laravel artisan serve / docker 8000|8010)
-          target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
-          // Keep the browser Host (lab.local.mtmtp.local) — the backend resolves
-          // the tenant from it. changeOrigin would rewrite it to 127.0.0.1.
+          // TCP target for artisan serve. Keep browser Host for tenant resolve.
+          target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
           changeOrigin: false,
           secure: false,
           // Dead Laravel used to hang the browser for minutes; fail in ~8s.
@@ -163,7 +164,7 @@ export default defineNuxtConfig({
           proxyTimeout: 8_000,
         },
         '/sanctum': {
-          target: process.env.BACKEND_URL || 'http://lab.localhost:8000',
+          target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
           changeOrigin: false,
           secure: false,
           timeout: 8_000,

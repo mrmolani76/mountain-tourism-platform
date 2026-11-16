@@ -31,13 +31,14 @@ export default defineNuxtRouteMiddleware(async to => {
   }
 
   if (isLoggedIn && to.meta?.checkPermission) {
-    const userPermissions = store.getUserPermissions
+    const userPermissions = store.getUserPermissions || []
 
     const checkPermission = (to.meta.form && to.params.id
       ? to.meta.checkPermissionEdit
       : to.meta.checkPermission) as string
 
-    if (userPermissions && userPermissions.includes(checkPermission))
+    // Owner / full access uses ['*'] from auth service ROLE_PERMISSIONS.
+    if (userPermissions.includes('*') || userPermissions.includes(checkPermission))
       return
 
     return navigateTo('/unauthorized')

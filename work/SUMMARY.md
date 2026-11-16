@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Nexro-strict central tables (**94**) done (drop unused `users` on landlord; migrate later). Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Core UI (**96**) done (settings/outlets/owner `*`). Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,8 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **96** — Core UI complete — settings, outlets, owner permissions (high, 2026-11-16).
+- **95** — Fix SPA API timeout — proxy target 127.0.0.1 (high, 2026-11-16): Nuxt proxy TCP to localhost; keep browser Host for tenant.
 - **94** — Nexro-strict central DB tables (high, 2026-11-14): drop landlord `users` / `password_reset_tokens`; keep `saas_*` + sessions/cache/jobs/tokens.
 - **93** — Nexro-style mtmp.local setup guide + hosts sync scripts (high, 2026-11-14): `LOCAL_MTMP_SETUP.md`, `hosts:sync`, provision/env/`tenantHost` → `{slug}.mtmp.local`.
 - **92** — EQMS/Nexro-style tenancy routes + middleware (high, 2026-11-14): central domain-bound SaaS; tenant prevent_central + resolve; migration gate.
@@ -97,6 +99,8 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-16 — `work/changes/2026-11-16--96-core-ui-complete-settings-outlets-perms.md` — item 96: Core UI settings/outlets/`*`
+- 2026-11-16 — `work/changes/2026-11-16--95-fix-spa-api-timeout-proxy-target.md` — item 95: SPA proxy → 127.0.0.1:8000
 - 2026-11-14 — `work/changes/2026-11-14--94-nexro-strict-central-db-tables.md` — item 94: drop central users (Nexro-strict)
 - 2026-11-14 — `work/changes/2026-11-14--central-tenant-migration-split.md` — central/tenant migration split (modules auto-discover off)
 - 2026-11-14 — `work/changes/2026-11-14--local-docker-fresh-setup.md` — local Docker fresh setup (pull + rebuild + tenant login verified)

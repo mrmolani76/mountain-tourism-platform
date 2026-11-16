@@ -1,6 +1,10 @@
 <script setup lang="ts">
 useHead({ title: 'Seasons' })
 
+definePageMeta({
+  navActiveLink: 'seasons',
+})
+
 const fields: Array<HotelFormField> = [
   {
     key: 'kind',

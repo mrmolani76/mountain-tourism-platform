@@ -42,6 +42,14 @@ return [
                     'iconClass' => 'tabler-building',
                 ],
                 [
+                    'label' => 'Outlets',
+                    'uniqueKey' => 'outlets',
+                    'submodule' => 'outlets',
+                    'allowed_roles' => ['owner'],
+                    'page' => '/outlets',
+                    'iconClass' => 'tabler-building-store',
+                ],
+                [
                     'label' => 'Seasons',
                     'uniqueKey' => 'seasons',
                     'submodule' => 'seasons',

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\App\Models\Building;
+use Modules\Core\App\Models\Outlet;
 use Modules\Core\App\Models\Season;
 use Modules\Core\App\Support\StaffAuthz;
 
@@ -152,6 +153,21 @@ class CoreListingController extends Controller
             ];
         }
 
+        if ($resource === 'outlets') {
+            $types = [];
+            foreach (Outlet::TYPES as $code => $label) {
+                $types[] = ['value' => $code, 'title' => $label];
+            }
+
+            return [
+                'outlet_type' => $types,
+                'status' => [
+                    ['value' => 1, 'title' => 'Active'],
+                    ['value' => 0, 'title' => 'Inactive'],
+                ],
+            ];
+        }
+
         return [];
     }
 
@@ -182,6 +198,13 @@ class CoreListingController extends Controller
         if (! empty($columnSearch['kind'])) {
             $kinds = is_array($columnSearch['kind']) ? $columnSearch['kind'] : [$columnSearch['kind']];
             $q->whereIn('kind', $kinds);
+        }
+
+        if (! empty($columnSearch['outlet_type'])) {
+            $types = is_array($columnSearch['outlet_type'])
+                ? $columnSearch['outlet_type']
+                : [$columnSearch['outlet_type']];
+            $q->whereIn('outlet_type', $types);
         }
 
         if (array_key_exists('status', $columnSearch) && $columnSearch['status'] !== '' && $columnSearch['status'] !== null) {
@@ -238,6 +261,14 @@ class CoreListingController extends Controller
                 'altitude_m' => $model->getAttribute('altitude_m'),
                 'is_active' => (bool) $model->getAttribute('is_active'),
             ];
+        } elseif ($model instanceof Outlet) {
+            $api = [
+                'id' => $id,
+                'name' => $model->getAttribute('name'),
+                'outlet_type' => $model->getAttribute('outlet_type'),
+                'building_id' => $model->getAttribute('building_id'),
+                'is_active' => (bool) $model->getAttribute('is_active'),
+            ];
         } else {
             $starts = $model->getAttribute('starts_on');
             $ends = $model->getAttribute('ends_on');
@@ -282,6 +313,14 @@ class CoreListingController extends Controller
             if ($key === 'building_type') {
                 $code = (string) ($api['building_type'] ?? '');
                 $label = Building::TYPES[$code] ?? ($code !== '' ? $code : '--');
+                $row[$key] = ['label' => $label, 'type' => 'text'];
+
+                continue;
+            }
+
+            if ($key === 'outlet_type') {
+                $code = (string) ($api['outlet_type'] ?? '');
+                $label = Outlet::TYPES[$code] ?? ($code !== '' ? $code : '--');
                 $row[$key] = ['label' => $label, 'type' => 'text'];
 
                 continue;
