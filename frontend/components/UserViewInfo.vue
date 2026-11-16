@@ -1,7 +1,19 @@
 <script setup lang="ts">
-defineProps<{
-  entityData?: User
+const props = defineProps<{
+  entityData?: User & { outlet_ids?: number[]; is_active?: boolean }
 }>()
+
+const isActive = computed(() =>
+  props.entityData?.active ?? props.entityData?.is_active ?? false,
+)
+
+const outletIdsLabel = computed(() => {
+  const ids = props.entityData?.outlet_ids
+  if (!Array.isArray(ids) || !ids.length)
+    return '—'
+
+  return ids.join(', ')
+})
 </script>
 
 <template>
@@ -26,7 +38,7 @@ defineProps<{
           <VListItem>
             <LabelValueDisplay
               label="status"
-              :value="entityData?.active ? ($t('enabled') || 'Enabled') : ($t('disabled') || 'Disabled')"
+              :value="isActive ? ($t('enabled') || 'Enabled') : ($t('disabled') || 'Disabled')"
             />
           </VListItem>
         </VList>
@@ -48,6 +60,12 @@ defineProps<{
             <LabelValueDisplay
               label="role"
               :value="entityData?.role?.roleName"
+            />
+          </VListItem>
+          <VListItem>
+            <LabelValueDisplay
+              label="Outlet access"
+              :value="outletIdsLabel"
             />
           </VListItem>
         </VList>

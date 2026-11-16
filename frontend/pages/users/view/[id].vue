@@ -88,8 +88,8 @@ const submitReset = async () => {
       new_password: newPassword.value,
     })
 
-    if (response) {
-      $toast.success('Password reset.')
+    if (response && (response as any).status !== false) {
+      $toast.success((response as any).message || 'Password reset.')
       resetOpen.value = false
       newPassword.value = ''
     }

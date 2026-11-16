@@ -11,7 +11,9 @@ use Modules\Core\App\Enums\StaffRole;
 use Modules\Core\App\Http\Requests\StoreStaffRequest;
 use Modules\Core\App\Http\Requests\UpdateStaffRequest;
 use Modules\Core\App\Models\AuditEvent;
+use Modules\Core\App\Models\Outlet;
 use Modules\Core\App\Models\Staff;
+use Modules\Core\App\Models\StaffOutletAccess;
 use Modules\Core\App\Support\CoreAudit;
 use Modules\Core\App\Support\StaffAuthz;
 
@@ -39,6 +41,10 @@ class UserListingController extends Controller
         }
 
         $table = config('listing.users');
+        if (! is_array($table) || empty($table['fields'])) {
+            $module = require base_path('Modules/Core/config/listing.php');
+            $table = is_array($module['users'] ?? null) ? $module['users'] : ['fields' => []];
+        }
         $roles = [];
         foreach (StaffRole::LABELS as $code => $label) {
             $roles[] = ['value' => $code, 'title' => $label];
@@ -91,7 +97,7 @@ class UserListingController extends Controller
         $columnSearch = $request->input('columnSearch', []);
         if (is_array($columnSearch)) {
             if (! empty($columnSearch['email'])) {
-                $q->where('email', 'ilike', '%'.$columnSearch['email'].'%');
+                $q->where('email', 'like', '%'.$columnSearch['email'].'%');
             }
             if (! empty($columnSearch['role'])) {
                 $roles = is_array($columnSearch['role']) ? $columnSearch['role'] : [$columnSearch['role']];
@@ -138,12 +144,17 @@ class UserListingController extends Controller
         }
 
         $data = $request->validated();
+        $outletIds = $data['outlet_ids'] ?? null;
+        unset($data['outlet_ids']);
         $data['password'] = Hash::make($data['password']);
         if (! array_key_exists('is_active', $data)) {
             $data['is_active'] = true;
         }
 
         $s = Staff::on(config('tenancy.connection_name'))->create($data);
+        if (is_array($outletIds)) {
+            $this->syncOutletAccess((int) $s->getKey(), $outletIds);
+        }
         CoreAudit::record(AuditEvent::ACTION_CREATE, 'staff', (int) $s->getKey(), newValues: $this->detail($s));
 
         return response()->json([
@@ -206,6 +217,8 @@ class UserListingController extends Controller
 
         $old = $this->detail($s);
         $data = $request->validated();
+        $outletIds = array_key_exists('outlet_ids', $data) ? $data['outlet_ids'] : null;
+        unset($data['outlet_ids'], $data['uuid'], $data['id'], $data['active']);
         if (isset($data['password']) && $data['password'] !== '') {
             $data['password'] = Hash::make($data['password']);
         } else {
@@ -218,6 +231,9 @@ class UserListingController extends Controller
         }
 
         $s->fill($data)->save();
+        if (is_array($outletIds)) {
+            $this->syncOutletAccess((int) $s->getKey(), $outletIds);
+        }
         CoreAudit::record(
             AuditEvent::ACTION_UPDATE,
             'staff',
@@ -375,6 +391,13 @@ class UserListingController extends Controller
     {
         $email = (string) $s->email;
         $roleCode = (string) $s->role;
+        $outletIds = StaffOutletAccess::on(config('tenancy.connection_name'))
+            ->where('staff_id', $s->getKey())
+            ->orderBy('outlet_id')
+            ->pluck('outlet_id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
 
         return [
             'id' => (int) $s->getKey(),
@@ -387,6 +410,7 @@ class UserListingController extends Controller
             'role_display' => $s->roleDisplay(),
             'is_active' => (bool) $s->is_active,
             'active' => (bool) $s->is_active,
+            'outlet_ids' => $outletIds,
             'lastLogin' => $s->last_login?->toIso8601String(),
             'createdAt' => $s->created_at?->toIso8601String(),
             'updatedAt' => null,
@@ -406,6 +430,27 @@ class UserListingController extends Controller
         ];
     }
 
+    /**
+     * Replace staff outlet access rows with the given outlet IDs.
+     *
+     * @param  list<int>  $outletIds
+     */
+    private function syncOutletAccess(int $staffId, array $outletIds): void
+    {
+        $conn = config('tenancy.connection_name');
+        $wanted = array_values(array_unique(array_map('intval', $outletIds)));
+        StaffOutletAccess::on($conn)->where('staff_id', $staffId)->delete();
+        foreach ($wanted as $outletId) {
+            if ($outletId < 1) {
+                continue;
+            }
+            StaffOutletAccess::on($conn)->create([
+                'staff_id' => $staffId,
+                'outlet_id' => $outletId,
+            ]);
+        }
+    }
+
     public function formInitialData(): JsonResponse
     {
         if ($d = StaffAuthz::denyUnlessOwner()) {
@@ -421,10 +466,21 @@ class UserListingController extends Controller
             ];
         }
 
+        $outlets = Outlet::on(config('tenancy.connection_name'))
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (Outlet $o) => [
+                'id' => (int) $o->getKey(),
+                'name' => (string) $o->name,
+            ])
+            ->values()
+            ->all();
+
         return response()->json([
             'status' => true,
             'data' => [
                 'roles' => $roles,
+                'outlets' => $outlets,
             ],
         ]);
     }

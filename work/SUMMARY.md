@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Fullstack delivery rule + Core menu parity (**98**) done. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Core Staff complete (**99**) + listing config fix. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **99** — Complete Core Staff (CRUD, reset, outlet access + listing fix) (high, 2026-11-16).
 - **98** — Core menu UI+backend parity + fullstack rule (high, 2026-11-16).
 - **97** — Redesign staff home dashboard (today operations) (high, 2026-11-16): alpine today desk + reports/today.
 - **96** — Core UI complete — settings, outlets, owner permissions (high, 2026-11-16).
@@ -85,6 +86,7 @@ Refresh on every work / bug / change status update.
 - **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
+- **BUG-API-001** — Core listing config shadowed — Unknown listing resource 404 (high, 2026-11-16)
 - **BUG-APP-004** — Staff login bad credentials 403 → 401 (low, 2026-11-03)
 - **BUG-APP-003** — Season overlap same-kind only (medium, 2026-11-03)
 - **BUG-APP-002** — All list endpoints 500 — pagination AttributeError (high, 2026-11-03)
@@ -101,6 +103,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-16 — `work/changes/2026-11-16--99-core-staff-complete.md` — item 99: Staff complete + listing config fix
 - 2026-11-16 — `work/changes/2026-11-16--98-core-menu-fullstack-rule.md` — item 98: fullstack rule + Core menu parity
 - 2026-11-16 — `work/changes/2026-11-16--97-redesign-staff-home-dashboard.md` — item 97: staff home today desk
 - 2026-11-16 — `work/changes/2026-11-16--96-core-ui-complete-settings-outlets-perms.md` — item 96: Core UI settings/outlets/`*`

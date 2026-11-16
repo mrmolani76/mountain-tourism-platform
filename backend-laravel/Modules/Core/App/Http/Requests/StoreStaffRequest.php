@@ -30,6 +30,11 @@ class StoreStaffRequest extends FormRequest
             'password' => ['required', 'string', 'min:8', 'max:128'],
             'role' => ['required', 'string', 'in:' . implode(',', StaffRole::codes())],
             'is_active' => ['sometimes', 'boolean'],
+            'outlet_ids' => ['sometimes', 'array'],
+            'outlet_ids.*' => [
+                'integer',
+                Rule::exists($conn.'.core_outlet', 'id'),
+            ],
         ];
     }
 }

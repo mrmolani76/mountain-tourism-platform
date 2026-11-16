@@ -10,6 +10,7 @@
 
 | ID | Title | Severity | Status | Verified |
 |----|-------|----------|--------|----------|
+| BUG-API-001 | Core listing config shadowed — Unknown listing resource 404 | high | VERIFIED | 2026-11-16 |
 | BUG-APP-005 | Domain ViewSets use empty authentication_classes (auth bypass risk) | high | VERIFIED | 2026-11-03 |
 | BUG-APP-004 | Staff login bad credentials → 403 instead of 401 | low | VERIFIED | 2026-11-03 |
 | BUG-APP-003 | Season overlap rejected same-kind only | medium | VERIFIED | 2026-11-03 |

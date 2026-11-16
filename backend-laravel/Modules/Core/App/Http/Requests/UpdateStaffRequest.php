@@ -37,6 +37,11 @@ class UpdateStaffRequest extends FormRequest
             'active' => ['sometimes', 'boolean'],
             'uuid' => ['sometimes'],
             'id' => ['sometimes'],
+            'outlet_ids' => ['sometimes', 'array'],
+            'outlet_ids.*' => [
+                'integer',
+                Rule::exists($conn.'.core_outlet', 'id'),
+            ],
         ];
     }
 }

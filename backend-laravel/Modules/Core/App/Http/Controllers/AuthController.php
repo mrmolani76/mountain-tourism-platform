@@ -95,7 +95,11 @@ class AuthController extends Controller
             newValues: ['id' => $target->getKey(), 'email' => $target->email],
         );
 
-        return response()->json(['detail' => 'Password reset.'], 200);
+        return response()->json([
+            'status' => true,
+            'message' => 'Password reset.',
+            'detail' => 'Password reset.',
+        ], 200);
     }
 
     private function mePayload(Staff $staff, object $tenant): array

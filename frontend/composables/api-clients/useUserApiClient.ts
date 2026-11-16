@@ -174,7 +174,10 @@ export const useUserApiClient = () => {
   const formInitaldata = async () => {
     loading.value = true
     try {
-      const response = await get<ApiResponse<{ roles: Array<{ id: string; name: string; roleName: string }> }>>('/user/formInitialData')
+      const response = await get<ApiResponse<{
+        roles: Array<{ id: string; name: string; roleName: string }>
+        outlets?: Array<{ id: number; name: string }>
+      }>>('/user/formInitialData')
 
       if (response?.status)
         return response?.data

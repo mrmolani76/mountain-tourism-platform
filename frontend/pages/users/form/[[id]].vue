@@ -29,6 +29,7 @@ const isButtonDisabled = ref(false)
 const loading = ref(true)
 const refUserForm = ref<InstanceType<typeof VForm>>()
 const roles = ref<Array<{ id: string; name: string; roleName: string }>>([])
+const outlets = ref<Array<{ id: number; name: string }>>([])
 
 const userForm = ref({
   uuid: '',
@@ -36,7 +37,12 @@ const userForm = ref({
   password: '',
   role: 'front_desk',
   is_active: true,
+  outlet_ids: [] as number[],
 })
+
+const showOutletAccess = computed(() =>
+  ['manager', 'cashier', 'rental_desk', 'service_staff', 'transport_desk', 'front_desk'].includes(userForm.value.role),
+)
 
 const emailRules = computed(() => [
   requiredValidator,
@@ -67,6 +73,7 @@ const saveUser = async () => {
     email: userForm.value.email,
     role: userForm.value.role,
     is_active: userForm.value.is_active,
+    outlet_ids: showOutletAccess.value ? userForm.value.outlet_ids : [],
   }
 
   if (userForm.value.password)
@@ -97,9 +104,10 @@ const saveUser = async () => {
 ;(async () => {
   loading.value = true
 
-  const initial = await formInitaldata()
+  const initial = await formInitaldata() as { roles?: typeof roles.value; outlets?: typeof outlets.value } | undefined
 
   roles.value = initial?.roles ?? []
+  outlets.value = initial?.outlets ?? []
 
   if (!uuid) {
     loading.value = false
@@ -117,6 +125,7 @@ const saveUser = async () => {
       password: '',
       role: user.roleCode || user.role?.name || 'front_desk',
       is_active: user.is_active ?? user.active ?? true,
+      outlet_ids: Array.isArray(user.outlet_ids) ? user.outlet_ids.map(Number) : [],
     }
   }
 
@@ -230,6 +239,28 @@ const saveUser = async () => {
                 v-model="userForm.is_active"
                 :label="$t('enabled') || 'Active'"
                 hide-details
+              />
+            </VCol>
+
+            <VCol
+              v-if="showOutletAccess"
+              cols="12"
+              md="6"
+            >
+              <VLabel class="mb-1 text-body-2">
+                Outlet access
+              </VLabel>
+              <AppSelect
+                v-model="userForm.outlet_ids"
+                :items="outlets"
+                item-title="name"
+                item-value="id"
+                chips
+                multiple
+                clearable
+                density="comfortable"
+                hint="Assign outlets for this role"
+                persistent-hint
               />
             </VCol>
           </VRow>

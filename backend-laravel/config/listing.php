@@ -1,52 +1,11 @@
 <?php
 
 /**
- * DataTable listing configs (module listing.php merged here).
- * Example for Module 1 buildings; controllers pass this into DataTableService.
+ * DataTable listing configs.
+ *
+ * Module files merge here via ServiceProviders (e.g. Core → Modules/Core/config/listing.php).
+ * Do not define resource stubs here: a shallow array_merge keeps app keys over module keys,
+ * and stubs without `model`/`headers` break CoreListingController (404 Unknown listing resource).
  */
 
-return [
-
-    // Staff users listing lives in Modules/Core/config/listing.php
-    // (merged via CoreServiceProvider → config('listing.users')).
-
-    'buildings' => [
-        'default_order' => [
-            'field' => 'name',
-            'dir' => 'asc',
-        ],
-        'fields' => [
-            [
-                'key' => 'name',
-                'db_field' => 'core_building.name',
-                'search_field' => 'Text',
-                'orderByField' => 'core_building.name',
-            ],
-            [
-                'key' => 'buildingType',
-                'db_field' => 'core_building.building_type',
-                'search_field' => 'Dropdown',
-                'orderByField' => 'core_building.building_type',
-            ],
-            [
-                'key' => 'altitudeM',
-                'db_field' => 'core_building.altitude_m',
-                'search_field' => 'Numeric',
-                'orderByField' => 'core_building.altitude_m',
-            ],
-            [
-                'key' => 'isActive',
-                'db_field' => 'core_building.is_active',
-                'search_field' => 'Dropdown',
-                'orderByField' => 'core_building.is_active',
-            ],
-            [
-                'key' => 'dateCreated',
-                'db_field' => 'core_building.created_at',
-                'search_field' => 'Date',
-                'orderByField' => 'core_building.created_at',
-            ],
-        ],
-    ],
-
-];
+return [];

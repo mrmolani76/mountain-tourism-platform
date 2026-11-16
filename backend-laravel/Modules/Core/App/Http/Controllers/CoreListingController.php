@@ -113,10 +113,23 @@ class CoreListingController extends Controller
     private function resourceConfig(string $resource): ?array
     {
         $all = config('listing', []);
+        $cfg = is_array($all[$resource] ?? null) ? $all[$resource] : null;
+        if (is_array($cfg) && isset($cfg['model'], $cfg['headers'])) {
+            return $cfg;
+        }
 
-        return is_array($all[$resource] ?? null) && isset($all[$resource]['model'])
-            ? $all[$resource]
-            : null;
+        // Fallback when app config/listing.php stubs shadow the Core module file.
+        $modulePath = base_path('Modules/Core/config/listing.php');
+        if (is_file($modulePath)) {
+            /** @var array<string, mixed> $module */
+            $module = require $modulePath;
+            $fallback = $module[$resource] ?? null;
+            if (is_array($fallback) && isset($fallback['model'], $fallback['headers'])) {
+                return $fallback;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -184,7 +197,7 @@ class CoreListingController extends Controller
 
         foreach ($cfg['search_columns'] ?? [] as $col) {
             if (! empty($columnSearch[$col])) {
-                $q->where($col, 'ilike', '%'.$columnSearch[$col].'%');
+                $q->where($col, 'like', '%'.$columnSearch[$col].'%');
             }
         }
 

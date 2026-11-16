@@ -117,7 +117,7 @@ loadConfig()
 
 <template>
   <div>
-    <template v-if="configLoading">
+    <template v-if="configLoading || !userDataTableConfig?.headers">
       <VSkeletonLoader
         :loading="configLoading"
         type="table"
