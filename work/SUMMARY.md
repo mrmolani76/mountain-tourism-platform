@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Core UI (**96**) done (settings/outlets/owner `*`). Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Staff home dashboard redesign (**97**) done. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **97** — Redesign staff home dashboard (today operations) (high, 2026-11-16): alpine today desk + reports/today.
 - **96** — Core UI complete — settings, outlets, owner permissions (high, 2026-11-16).
 - **95** — Fix SPA API timeout — proxy target 127.0.0.1 (high, 2026-11-16): Nuxt proxy TCP to localhost; keep browser Host for tenant.
 - **94** — Nexro-strict central DB tables (high, 2026-11-14): drop landlord `users` / `password_reset_tokens`; keep `saas_*` + sessions/cache/jobs/tokens.
@@ -99,6 +100,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-16 — `work/changes/2026-11-16--97-redesign-staff-home-dashboard.md` — item 97: staff home today desk
 - 2026-11-16 — `work/changes/2026-11-16--96-core-ui-complete-settings-outlets-perms.md` — item 96: Core UI settings/outlets/`*`
 - 2026-11-16 — `work/changes/2026-11-16--95-fix-spa-api-timeout-proxy-target.md` — item 95: SPA proxy → 127.0.0.1:8000
 - 2026-11-14 — `work/changes/2026-11-14--94-nexro-strict-central-db-tables.md` — item 94: drop central users (Nexro-strict)

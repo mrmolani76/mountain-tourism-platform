@@ -27,6 +27,7 @@ See `work/phases/`. **Current focus: backend / API only** (frontend deferred). L
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 97 | Redesign staff home dashboard (today operations) | high | I-dashboard | frontend | M | 2026-11-16 |
 | 96 | Core UI complete — settings, outlets, owner permissions | high | A-core | frontend | M | 2026-11-16 |
 | 95 | Fix SPA API timeout — proxy target 127.0.0.1 (keep Host) | high | A-core | frontend | S | 2026-11-16 |
 | 94 | Nexro-strict central DB tables (no Laravel users on landlord) | high | A-core | backend | S | 2026-11-14 |
