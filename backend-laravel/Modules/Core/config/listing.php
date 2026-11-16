@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Listing column configs for EQMS DataTable.
- * users: staff listing. buildings / seasons: Core CRUD listings.
+ * EQMS Complere-style DataTable listing configs.
+ *
+ * Shape (same as eQMS Modules/Core/config/listing.php):
+ *   {resource} => [
+ *     'fields' => [ title, key, db_field, search_field, … ],
+ *     'default_order' => [ 'field' => key, 'dir' => asc|desc ],
+ *     'default_sort'  => [ 'key' => key, 'order' => asc|desc ],  // SPA DataTable
+ *   ]
+ *
+ * Model / query meta lives in CoreListingController (not here).
  */
 
 $field = static function (
@@ -78,53 +86,38 @@ return [
     ],
 
     'buildings' => [
-        'model' => \Modules\Core\App\Models\Building::class,
-        'table' => 'core_building',
-        'link_key' => 'name',
-        'search_columns' => ['name'],
-        'headers' => [
-            'fields' => [
-                $field('Name', 'name', 'name', ['disabled' => true]),
-                $field('Type', 'building_type', 'building_type', ['search_field' => 'Dropdown']),
-                $field('Altitude (m)', 'altitude_m', 'altitude_m', ['search_field' => 'Number']),
-                $status,
-                $actions,
-            ],
-            'default_sort' => ['key' => 'name', 'order' => 'asc'],
+        'fields' => [
+            $field('Name', 'name', 'name', ['disabled' => true]),
+            $field('Type', 'building_type', 'building_type', ['search_field' => 'Dropdown']),
+            $field('Altitude (m)', 'altitude_m', 'altitude_m', ['search_field' => 'Number']),
+            $status,
+            $actions,
         ],
+        'default_sort' => ['key' => 'name', 'order' => 'asc'],
+        'default_order' => ['field' => 'name', 'dir' => 'asc'],
     ],
 
     'seasons' => [
-        'model' => \Modules\Core\App\Models\Season::class,
-        'table' => 'core_season',
-        'link_key' => 'kind',
-        'search_columns' => [],
-        'headers' => [
-            'fields' => [
-                $field('Kind', 'kind', 'kind', ['disabled' => true, 'search_field' => 'Dropdown']),
-                $field('Starts', 'starts_on', 'starts_on', ['search_field' => 'Date']),
-                $field('Ends', 'ends_on', 'ends_on', ['search_field' => 'Date']),
-                $status,
-                $actions,
-            ],
-            'default_sort' => ['key' => 'starts_on', 'order' => 'desc'],
+        'fields' => [
+            $field('Kind', 'kind', 'kind', ['disabled' => true, 'search_field' => 'Dropdown']),
+            $field('Starts', 'starts_on', 'starts_on', ['search_field' => 'Date']),
+            $field('Ends', 'ends_on', 'ends_on', ['search_field' => 'Date']),
+            $status,
+            $actions,
         ],
+        'default_sort' => ['key' => 'starts_on', 'order' => 'desc'],
+        'default_order' => ['field' => 'starts_on', 'dir' => 'desc'],
     ],
 
     'outlets' => [
-        'model' => \Modules\Core\App\Models\Outlet::class,
-        'table' => 'core_outlet',
-        'link_key' => 'name',
-        'search_columns' => ['name'],
-        'headers' => [
-            'fields' => [
-                $field('Name', 'name', 'name', ['disabled' => true]),
-                $field('Type', 'outlet_type', 'outlet_type', ['search_field' => 'Dropdown']),
-                $field('Building', 'building_id', 'building_id', ['search_field' => 'Number']),
-                $status,
-                $actions,
-            ],
-            'default_sort' => ['key' => 'name', 'order' => 'asc'],
+        'fields' => [
+            $field('Name', 'name', 'name', ['disabled' => true]),
+            $field('Type', 'outlet_type', 'outlet_type', ['search_field' => 'Dropdown']),
+            $field('Building', 'building_id', 'building_id', ['search_field' => 'Number']),
+            $status,
+            $actions,
         ],
+        'default_sort' => ['key' => 'name', 'order' => 'asc'],
+        'default_order' => ['field' => 'name', 'dir' => 'asc'],
     ],
 ];

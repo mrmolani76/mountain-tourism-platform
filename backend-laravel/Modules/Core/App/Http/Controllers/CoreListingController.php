@@ -10,16 +10,42 @@ use Illuminate\Http\Request;
 use Modules\Core\App\Models\Building;
 use Modules\Core\App\Models\Outlet;
 use Modules\Core\App\Models\Season;
+use Modules\Core\App\Services\ListingConfigService;
 use Modules\Core\App\Support\StaffAuthz;
 
 /**
- * EQMS DataTable listing for Core resources.
+ * EQMS DataTable listing for Core resources (buildings / seasons / outlets).
  *
- *   GET  /api/{resource}/list/config
- *   POST /api/{resource}/list
+ * Pattern (eQMS Complere):
+ *   GET  /api/{resource}/list/config  → ListingConfigService envelope
+ *   POST /api/{resource}/list         → paged rows
+ *
+ * Listing columns: Modules/Core/config/listing.php (flat fields + default_order).
+ * Model meta: RESOURCES map below (EQMS keeps model in the controller, not listing.php).
  */
 class CoreListingController extends Controller
 {
+    /**
+     * @var array<string, array{model: class-string<\Illuminate\Database\Eloquent\Model>, link_key: string, search_columns: list<string>}>
+     */
+    private const RESOURCES = [
+        'buildings' => [
+            'model' => Building::class,
+            'link_key' => 'name',
+            'search_columns' => ['name'],
+        ],
+        'seasons' => [
+            'model' => Season::class,
+            'link_key' => 'kind',
+            'search_columns' => [],
+        ],
+        'outlets' => [
+            'model' => Outlet::class,
+            'link_key' => 'name',
+            'search_columns' => ['name'],
+        ],
+    ];
+
     public function listingConfig(Request $request): JsonResponse
     {
         if ($denied = StaffAuthz::denyUnlessOwner()) {
@@ -27,25 +53,23 @@ class CoreListingController extends Controller
         }
 
         $resource = $this->resolveResource($request);
-        $cfg = $this->resourceConfig($resource);
-        if ($cfg === null) {
+        if (! isset(self::RESOURCES[$resource])) {
+            return Envelope::errorJson('not_found', 'Unknown listing resource.', [], 404);
+        }
+
+        $table = ListingConfigService::table($resource);
+        if ($table === null) {
             return Envelope::errorJson('not_found', 'Unknown listing resource.', [], 404);
         }
 
         return response()->json([
             'status' => true,
-            'data' => [
-                'headers' => $cfg['headers'],
-                'bulkActions' => [],
-                'columnSearchable' => $this->columnSearchable($resource),
-                'showCheckbox' => false,
-                'selectedColumns' => [],
-                'showAddButton' => true,
-                'advanceFilters' => new \stdClass(),
-                'showExportButton' => false,
-                'exportColumns' => $cfg['headers']['fields'],
-                'externalFilters' => new \stdClass(),
-            ],
+            'data' => ListingConfigService::build(
+                $table,
+                $this->columnSearchable($resource),
+                bulkActions: [],
+                showAddButton: true,
+            ),
         ]);
     }
 
@@ -56,17 +80,18 @@ class CoreListingController extends Controller
         }
 
         $resource = $this->resolveResource($request);
-        $cfg = $this->resourceConfig($resource);
-        if ($cfg === null) {
+        $meta = self::RESOURCES[$resource] ?? null;
+        $table = ListingConfigService::table($resource);
+        if ($meta === null || $table === null) {
             return Envelope::errorJson('not_found', 'Unknown listing resource.', [], 404);
         }
 
         /** @var class-string<\Illuminate\Database\Eloquent\Model> $modelClass */
-        $modelClass = $cfg['model'];
+        $modelClass = $meta['model'];
         $q = $modelClass::on(config('tenancy.connection_name'));
 
-        $this->applySearch($q, $request, $cfg);
-        $this->applySort($q, $request, $cfg);
+        $this->applySearch($q, $request, $meta['search_columns']);
+        $this->applySort($q, $request, $table);
 
         $page = max(1, (int) $request->input('page', 1));
         $size = (int) $request->input('itemsPerPage', $request->input('page_size', 10));
@@ -83,7 +108,9 @@ class CoreListingController extends Controller
         $total = (clone $q)->count();
         $items = (clone $q)->skip(($page - 1) * $size)->take($size)->get();
 
-        $rows = $items->map(fn ($model) => $this->listRow($model, $cfg))->values()->all();
+        $rows = $items->map(
+            fn ($model) => $this->listRow($model, $table, $meta['link_key'])
+        )->values()->all();
 
         return response()->json([
             'status' => true,
@@ -100,36 +127,12 @@ class CoreListingController extends Controller
         }
 
         $path = trim($request->path(), '/');
-        if (preg_match('#^([^/]+)/list#', $path, $matches) === 1) {
+        if (preg_match('#^api/([^/]+)/list#', $path, $matches) === 1
+            || preg_match('#^([^/]+)/list#', $path, $matches) === 1) {
             return $matches[1];
         }
 
         return '';
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function resourceConfig(string $resource): ?array
-    {
-        $all = config('listing', []);
-        $cfg = is_array($all[$resource] ?? null) ? $all[$resource] : null;
-        if (is_array($cfg) && isset($cfg['model'], $cfg['headers'])) {
-            return $cfg;
-        }
-
-        // Fallback when app config/listing.php stubs shadow the Core module file.
-        $modulePath = base_path('Modules/Core/config/listing.php');
-        if (is_file($modulePath)) {
-            /** @var array<string, mixed> $module */
-            $module = require $modulePath;
-            $fallback = $module[$resource] ?? null;
-            if (is_array($fallback) && isset($fallback['model'], $fallback['headers'])) {
-                return $fallback;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -186,16 +189,16 @@ class CoreListingController extends Controller
 
     /**
      * @param  Builder<\Illuminate\Database\Eloquent\Model>  $q
-     * @param  array<string, mixed>  $cfg
+     * @param  list<string>  $searchColumns
      */
-    private function applySearch(Builder $q, Request $request, array $cfg): void
+    private function applySearch(Builder $q, Request $request, array $searchColumns): void
     {
         $columnSearch = $request->input('columnSearch', []);
         if (! is_array($columnSearch)) {
             return;
         }
 
-        foreach ($cfg['search_columns'] ?? [] as $col) {
+        foreach ($searchColumns as $col) {
             if (! empty($columnSearch[$col])) {
                 $q->where($col, 'like', '%'.$columnSearch[$col].'%');
             }
@@ -227,13 +230,13 @@ class CoreListingController extends Controller
 
     /**
      * @param  Builder<\Illuminate\Database\Eloquent\Model>  $q
-     * @param  array<string, mixed>  $cfg
+     * @param  array<string, mixed>  $table
      */
-    private function applySort(Builder $q, Request $request, array $cfg): void
+    private function applySort(Builder $q, Request $request, array $table): void
     {
         $sortBy = $request->input('sortBy');
-        $key = $cfg['headers']['default_sort']['key'] ?? 'id';
-        $order = $cfg['headers']['default_sort']['order'] ?? 'asc';
+        $key = $table['default_sort']['key'] ?? $table['default_order']['field'] ?? 'id';
+        $order = $table['default_sort']['order'] ?? $table['default_order']['dir'] ?? 'asc';
 
         if (is_array($sortBy)) {
             if (isset($sortBy['key'])) {
@@ -249,21 +252,21 @@ class CoreListingController extends Controller
             $key = 'is_active';
         }
 
-        $allowed = collect($cfg['headers']['fields'] ?? [])->pluck('key')->all();
+        $allowed = collect($table['fields'] ?? [])->pluck('key')->all();
         $allowed[] = 'is_active';
         if (! in_array($key, $allowed, true)) {
             $key = 'id';
         }
 
-        $order = strtolower($order) === 'desc' ? 'desc' : 'asc';
+        $order = strtolower((string) $order) === 'desc' ? 'desc' : 'asc';
         $q->orderBy($key, $order);
     }
 
     /**
-     * @param  array<string, mixed>  $cfg
+     * @param  array<string, mixed>  $table
      * @return array<string, mixed>
      */
-    private function listRow(object $model, array $cfg): array
+    private function listRow(object $model, array $table, string $linkKey): array
     {
         $id = (int) $model->getKey();
         if ($model instanceof Building) {
@@ -294,7 +297,6 @@ class CoreListingController extends Controller
             ];
         }
 
-        $linkKey = (string) ($cfg['link_key'] ?? 'name');
         $row = [
             'uuid' => (string) $id,
             'id' => $id,
@@ -306,7 +308,7 @@ class CoreListingController extends Controller
             ],
         ];
 
-        foreach ($cfg['headers']['fields'] as $field) {
+        foreach ($table['fields'] as $field) {
             $key = $field['key'];
             if ($key === 'actions') {
                 continue;

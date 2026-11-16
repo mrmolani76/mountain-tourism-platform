@@ -14,6 +14,7 @@ use Modules\Core\App\Models\AuditEvent;
 use Modules\Core\App\Models\Outlet;
 use Modules\Core\App\Models\Staff;
 use Modules\Core\App\Models\StaffOutletAccess;
+use Modules\Core\App\Services\ListingConfigService;
 use Modules\Core\App\Support\CoreAudit;
 use Modules\Core\App\Support\StaffAuthz;
 
@@ -40,11 +41,7 @@ class UserListingController extends Controller
             return $d;
         }
 
-        $table = config('listing.users');
-        if (! is_array($table) || empty($table['fields'])) {
-            $module = require base_path('Modules/Core/config/listing.php');
-            $table = is_array($module['users'] ?? null) ? $module['users'] : ['fields' => []];
-        }
+        $table = ListingConfigService::table('users') ?? ['fields' => []];
         $roles = [];
         foreach (StaffRole::LABELS as $code => $label) {
             $roles[] = ['value' => $code, 'title' => $label];
@@ -52,24 +49,18 @@ class UserListingController extends Controller
 
         return response()->json([
             'status' => true,
-            'data' => [
-                'headers' => $table,
-                'bulkActions' => ['delete', 'enable', 'disable'],
-                'columnSearchable' => [
+            'data' => ListingConfigService::build(
+                $table,
+                [
                     'role' => $roles,
                     'status' => [
                         ['value' => 1, 'title' => 'Enabled'],
                         ['value' => 0, 'title' => 'Disabled'],
                     ],
                 ],
-                'showCheckbox' => true,
-                'selectedColumns' => [],
-                'showAddButton' => true,
-                'advanceFilters' => new \stdClass(),
-                'showExportButton' => false,
-                'exportColumns' => $table['fields'],
-                'externalFilters' => new \stdClass(),
-            ],
+                bulkActions: ['delete', 'enable', 'disable'],
+                showAddButton: true,
+            ),
         ]);
     }
 

@@ -7,19 +7,14 @@ export const useSharedApiClient = () => {
   }
 
   const getDatatableListingConfig = async (body: { holders: Array<ColumnListing> }) => {
-    // Mountain Core returns columnSearchable on each list/config. Skip legacy EQMS endpoint.
+    // EQMS: POST /api/datatableListingConfig — column dropdown holders.
     if (!body.holders?.length)
       return null
 
-    try {
-      const response = await post<ApiResponse<any>>('/datatableListingConfig', body)
+    const response = await post<ApiResponse<any>>('/datatableListingConfig', body)
 
-      if (response?.status)
-        return response.data
-    }
-    catch {
-      // Endpoint not present on Laravel Core — filters use list/config columnSearchable.
-    }
+    if (response?.status)
+      return response.data
 
     return null
   }

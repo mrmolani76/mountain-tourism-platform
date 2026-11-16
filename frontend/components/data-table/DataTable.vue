@@ -68,7 +68,9 @@ const savePreferenceLoadFlag = ref(false)
 const disabledExternalFilterModel = ref(false)
 const countries = ref(countryOptions)
 const columnSortable = ref({});
-const columnsToGetSearchable = ['users']
+// EQMS holders: column keys that need dropdown options from datatableListingConfig.
+// Prefer props.columnSearchable from list/config; only fetch when key is listed here.
+const columnsToGetSearchable = ['users', 'role', 'status', 'building_type', 'outlet_type', 'kind']
 const allHeaders = (props.headers.fields) ? props.headers.fields : []
 let filterToBeSavedParam: { [key: string]: any } = {}
 let timer: ReturnType<typeof setTimeout>;

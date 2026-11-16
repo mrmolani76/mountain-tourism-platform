@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Core\App\Http\Controllers\AuthController;
 use Modules\Core\App\Http\Controllers\BuildingController;
 use Modules\Core\App\Http\Controllers\CoreListingController;
+use Modules\Core\App\Http\Controllers\DatatableListingConfigController;
 use Modules\Core\App\Http\Controllers\MenuController;
 use Modules\Core\App\Http\Controllers\OutletAccessController;
 use Modules\Core\App\Http\Controllers\OutletController;
@@ -27,6 +28,9 @@ Route::middleware('staff.auth')->group(function () {
     // GET /api/core/menus
     Route::get('core/menus', [MenuController::class, 'index']);
     Route::get('core/menus/', [MenuController::class, 'index']);
+
+    // EQMS: POST /api/datatableListingConfig (DataTable column dropdown holders).
+    Route::post('datatableListingConfig', DatatableListingConfigController::class);
 
     // EQMS DataTable listing (before {id} routes).
     Route::get('buildings/list/config', [CoreListingController::class, 'listingConfig'])
