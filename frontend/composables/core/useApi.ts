@@ -11,8 +11,12 @@ import { IS_SAAS_ADMIN_HOST, resolveApiOrigin } from '@/utils/tenantHost'
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-/** Fail fast when Laravel is down / proxy cannot connect. */
-const REQUEST_TIMEOUT_MS = 8_000
+/**
+ * Request timeout. Must exceed the slowest realistic backend path: local dev
+ * (`artisan serve`) answers in 3-9s and login can spike past 8s under load,
+ * which aborted the login POST and left the user stuck on /login.
+ */
+const REQUEST_TIMEOUT_MS = 30_000
 
 /** After CSRF fails, skip re-trying for this window (ms). */
 const CSRF_FAIL_COOLDOWN_MS = 5_000
