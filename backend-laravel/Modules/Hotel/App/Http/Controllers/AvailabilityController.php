@@ -13,6 +13,7 @@ use Modules\Hotel\App\Models\HutDormitory;
 use Modules\Hotel\App\Models\RoomType;
 use Modules\Hotel\App\Services\AvailabilityService;
 use Modules\Hotel\App\Services\PricingService;
+use Modules\Core\App\Services\ListingConfigService;
 use Modules\Hotel\App\Support\HotelAuthz;
 
 class AvailabilityController extends Controller
@@ -44,7 +45,7 @@ class AvailabilityController extends Controller
             'includeAllFilter' => false,
         ];
 
-        $roomsHeaders = [
+        $roomsTable = [
             'fields' => [
                 $roomField('Room', 'room_number'),
                 $roomField('Name', 'name'),
@@ -53,39 +54,24 @@ class AvailabilityController extends Controller
                 array_merge($roomField('Availability', 'availability'), ['search_field' => 'Dropdown']),
             ],
             'default_sort' => ['key' => 'room_number', 'order' => 'asc'],
+            'default_order' => ['field' => 'room_number', 'dir' => 'asc'],
         ];
 
-        $bedsHeaders = [
+        $bedsTable = [
             'fields' => [
                 $roomField('Dormitory', 'dormitory'),
                 $roomField('Bed', 'bed_number'),
                 array_merge($roomField('Availability', 'availability'), ['search_field' => 'Dropdown']),
             ],
             'default_sort' => ['key' => 'bed_number', 'order' => 'asc'],
-        ];
-
-        $emptyExtras = [
-            'bulkActions' => [],
-            'columnSearchable' => [],
-            'showCheckbox' => false,
-            'selectedColumns' => [],
-            'showAddButton' => false,
-            'advanceFilters' => new \stdClass(),
-            'showExportButton' => false,
-            'externalFilters' => new \stdClass(),
+            'default_order' => ['field' => 'bed_number', 'dir' => 'asc'],
         ];
 
         return response()->json([
             'status' => true,
             'data' => [
-                'rooms' => array_merge($emptyExtras, [
-                    'headers' => $roomsHeaders,
-                    'exportColumns' => $roomsHeaders['fields'],
-                ]),
-                'beds' => array_merge($emptyExtras, [
-                    'headers' => $bedsHeaders,
-                    'exportColumns' => $bedsHeaders['fields'],
-                ]),
+                'rooms' => ListingConfigService::build($roomsTable, showAddButton: false),
+                'beds' => ListingConfigService::build($bedsTable, showAddButton: false),
             ],
         ]);
     }

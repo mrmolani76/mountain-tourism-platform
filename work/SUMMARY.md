@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** EQMS Core listing pattern (**100**) done. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** All-module EQMS listing audit (**101**) + Hotel aligned. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
@@ -14,6 +14,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **101** — All-modules EQMS listing audit + Hotel align (high, 2026-11-16).
 - **100** — Align Core listings to EQMS list/config pattern (high, 2026-11-16).
 - **99** — Complete Core Staff (CRUD, reset, outlet access + listing fix) (high, 2026-11-16).
 - **98** — Core menu UI+backend parity + fullstack rule (high, 2026-11-16).
@@ -104,6 +105,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-16 — `work/changes/2026-11-16--101-all-modules-eqms-listing-audit.md` — item 101: all-module audit + Hotel EQMS align
 - 2026-11-16 — `work/changes/2026-11-16--100-eqms-core-listing-pattern.md` — item 100: EQMS listing pattern
 - 2026-11-16 — `work/changes/2026-11-16--99-core-staff-complete.md` — item 99: Staff complete + listing config fix
 - 2026-11-16 — `work/changes/2026-11-16--98-core-menu-fullstack-rule.md` — item 98: fullstack rule + Core menu parity

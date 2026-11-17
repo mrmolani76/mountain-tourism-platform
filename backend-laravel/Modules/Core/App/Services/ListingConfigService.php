@@ -50,18 +50,28 @@ class ListingConfigService
     }
 
     /**
-     * Load listing table config; prefer module file if app merge is incomplete.
+     * Load listing table config; prefer merged config, then module file fallback.
      *
+     * @param  string  $configKey  Laravel config root — `listing` (Core) or `hotel_listing` (Hotel)
      * @return array<string, mixed>|null
      */
-    public static function table(string $listingName): ?array
+    public static function table(string $listingName, string $configKey = 'listing'): ?array
     {
-        $cfg = config('listing.'.$listingName);
+        $cfg = config($configKey.'.'.$listingName);
         if (is_array($cfg) && ! empty($cfg['fields'])) {
-            return $cfg;
+            return self::normalizeTable($cfg);
         }
 
-        $modulePath = base_path('Modules/Core/config/listing.php');
+        // Legacy nested shape: fields under headers (pre-EQMS-align).
+        if (is_array($cfg) && isset($cfg['headers']['fields'])) {
+            return self::normalizeTable($cfg);
+        }
+
+        $modulePath = match ($configKey) {
+            'hotel_listing' => base_path('Modules/Hotel/config/listing.php'),
+            default => base_path('Modules/Core/config/listing.php'),
+        };
+
         if (! is_file($modulePath)) {
             return null;
         }
@@ -69,7 +79,50 @@ class ListingConfigService
         /** @var array<string, mixed> $module */
         $module = require $modulePath;
         $fallback = $module[$listingName] ?? null;
+        if (! is_array($fallback)) {
+            return null;
+        }
 
-        return is_array($fallback) && ! empty($fallback['fields']) ? $fallback : null;
+        return self::normalizeTable($fallback);
+    }
+
+    /**
+     * Flatten nested headers → EQMS flat fields + default_sort/default_order.
+     *
+     * @param  array<string, mixed>  $cfg
+     * @return array<string, mixed>|null
+     */
+    private static function normalizeTable(array $cfg): ?array
+    {
+        if (isset($cfg['headers']['fields']) && ! isset($cfg['fields'])) {
+            $headers = $cfg['headers'];
+            $cfg['fields'] = $headers['fields'];
+            if (isset($headers['default_sort'])) {
+                $cfg['default_sort'] = $headers['default_sort'];
+            }
+            unset($cfg['headers']);
+        }
+
+        if (empty($cfg['fields']) || ! is_array($cfg['fields'])) {
+            return null;
+        }
+
+        if (! isset($cfg['default_sort']) && isset($cfg['default_order'])) {
+            $cfg['default_sort'] = [
+                'key' => (string) ($cfg['default_order']['field'] ?? 'id'),
+                'order' => strtolower((string) ($cfg['default_order']['dir'] ?? 'asc')) === 'desc'
+                    ? 'desc'
+                    : 'asc',
+            ];
+        }
+
+        if (! isset($cfg['default_order']) && isset($cfg['default_sort'])) {
+            $cfg['default_order'] = [
+                'field' => (string) ($cfg['default_sort']['key'] ?? 'id'),
+                'dir' => (string) ($cfg['default_sort']['order'] ?? 'asc'),
+            ];
+        }
+
+        return $cfg;
     }
 }

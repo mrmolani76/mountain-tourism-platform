@@ -7,6 +7,15 @@ use App\Support\Http\Envelope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\App\Services\ListingConfigService;
+use Modules\Hotel\App\Models\BoardPlan;
+use Modules\Hotel\App\Models\HutBed;
+use Modules\Hotel\App\Models\HutDormitory;
+use Modules\Hotel\App\Models\Reservation;
+use Modules\Hotel\App\Models\Room;
+use Modules\Hotel\App\Models\RoomSeasonPrice;
+use Modules\Hotel\App\Models\RoomType;
+use Modules\Hotel\App\Models\Stay;
 use Modules\Hotel\App\Support\HotelAuthz;
 
 /**
@@ -14,9 +23,74 @@ use Modules\Hotel\App\Support\HotelAuthz;
  *
  *   GET  /api/hotel/{resource}/list/config
  *   POST /api/hotel/{resource}/list
+ *
+ * Columns: Modules/Hotel/config/listing.php (flat fields).
+ * Model meta: RESOURCES below.
  */
 class HotelListingController extends Controller
 {
+    /**
+     * @var array<string, array{model: class-string<\Illuminate\Database\Eloquent\Model>, table: string, view_path: string, link_key: string, search_columns: list<string>}>
+     */
+    private const RESOURCES = [
+        'room-types' => [
+            'model' => RoomType::class,
+            'table' => 'hotel_room_type',
+            'view_path' => '/hotel/room-types',
+            'link_key' => 'name',
+            'search_columns' => ['name'],
+        ],
+        'rooms' => [
+            'model' => Room::class,
+            'table' => 'hotel_room',
+            'view_path' => '/hotel/rooms',
+            'link_key' => 'room_number',
+            'search_columns' => ['room_number', 'name'],
+        ],
+        'hut-dormitories' => [
+            'model' => HutDormitory::class,
+            'table' => 'hotel_hut_dormitory',
+            'view_path' => '/hotel/hut-dormitories',
+            'link_key' => 'name',
+            'search_columns' => ['name'],
+        ],
+        'hut-beds' => [
+            'model' => HutBed::class,
+            'table' => 'hotel_hut_bed',
+            'view_path' => '/hotel/hut-beds',
+            'link_key' => 'bed_number',
+            'search_columns' => ['bed_number'],
+        ],
+        'season-prices' => [
+            'model' => RoomSeasonPrice::class,
+            'table' => 'hotel_room_season_price',
+            'view_path' => '/hotel/season-prices',
+            'link_key' => 'id',
+            'search_columns' => [],
+        ],
+        'board-plans' => [
+            'model' => BoardPlan::class,
+            'table' => 'hotel_board_plan',
+            'view_path' => '/hotel/board-plans',
+            'link_key' => 'name',
+            'search_columns' => ['name', 'code'],
+        ],
+        'reservations' => [
+            'model' => Reservation::class,
+            'table' => 'hotel_reservation',
+            'view_path' => '/hotel/reservations',
+            'link_key' => 'reference',
+            'search_columns' => ['reference', 'guest_name'],
+        ],
+        'stays' => [
+            'model' => Stay::class,
+            'table' => 'hotel_stay',
+            'view_path' => '/hotel/stays',
+            'link_key' => 'id',
+            'search_columns' => [],
+        ],
+    ];
+
     public function listingConfig(Request $request): JsonResponse
     {
         $resource = $this->resolveResource($request);
@@ -25,25 +99,23 @@ class HotelListingController extends Controller
             return $denied;
         }
 
-        $cfg = $this->resourceConfig($resource);
-        if ($cfg === null) {
+        if (! isset(self::RESOURCES[$resource])) {
+            return Envelope::errorJson('not_found', 'Unknown listing resource.', [], 404);
+        }
+
+        $table = ListingConfigService::table($resource, 'hotel_listing');
+        if ($table === null) {
             return Envelope::errorJson('not_found', 'Unknown listing resource.', [], 404);
         }
 
         return response()->json([
             'status' => true,
-            'data' => [
-                'headers' => $cfg['headers'],
-                'bulkActions' => [],
-                'columnSearchable' => $this->columnSearchable($resource),
-                'showCheckbox' => false,
-                'selectedColumns' => [],
-                'showAddButton' => ! in_array($resource, ['reservations', 'stays'], true),
-                'advanceFilters' => new \stdClass(),
-                'showExportButton' => false,
-                'exportColumns' => $cfg['headers']['fields'],
-                'externalFilters' => new \stdClass(),
-            ],
+            'data' => ListingConfigService::build(
+                $table,
+                $this->columnSearchable($resource),
+                bulkActions: [],
+                showAddButton: ! in_array($resource, ['reservations', 'stays'], true),
+            ),
         ]);
     }
 
@@ -55,17 +127,18 @@ class HotelListingController extends Controller
             return $denied;
         }
 
-        $cfg = $this->resourceConfig($resource);
-        if ($cfg === null) {
+        $meta = self::RESOURCES[$resource] ?? null;
+        $table = ListingConfigService::table($resource, 'hotel_listing');
+        if ($meta === null || $table === null) {
             return Envelope::errorJson('not_found', 'Unknown listing resource.', [], 404);
         }
 
         /** @var class-string<\Illuminate\Database\Eloquent\Model> $modelClass */
-        $modelClass = $cfg['model'];
+        $modelClass = $meta['model'];
         $q = $modelClass::on(config('tenancy.connection_name'));
 
-        $this->applySearch($q, $request, $cfg);
-        $this->applySort($q, $request, $cfg);
+        $this->applySearch($q, $request, $meta);
+        $this->applySort($q, $request, $table, $meta['table']);
 
         $page = max(1, (int) $request->input('page', 1));
         $size = (int) $request->input('itemsPerPage', $request->input('page_size', 10));
@@ -82,7 +155,7 @@ class HotelListingController extends Controller
         $total = (clone $q)->count();
         $items = (clone $q)->skip(($page - 1) * $size)->take($size)->get();
 
-        $rows = $items->map(fn ($model) => $this->listRow($model, $cfg))->values()->all();
+        $rows = $items->map(fn ($model) => $this->listRow($model, $table, $meta))->values()->all();
 
         return response()->json([
             'status' => true,
@@ -98,7 +171,6 @@ class HotelListingController extends Controller
             return $fromDefaults;
         }
 
-        // Fallback: parse hotel/{resource}/list from path.
         $path = trim($request->path(), '/');
         if (preg_match('#hotel/([^/]+)/list#', $path, $matches) === 1) {
             return $matches[1];
@@ -109,18 +181,7 @@ class HotelListingController extends Controller
 
     private function denyFor(string $resource): ?JsonResponse
     {
-        // Listings are read surfaces (Front Desk + Owner), same as resource index.
         return HotelAuthz::denyUnlessFrontDesk();
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function resourceConfig(string $resource): ?array
-    {
-        $all = config('hotel_listing', []);
-
-        return is_array($all[$resource] ?? null) ? $all[$resource] : null;
     }
 
     /**
@@ -163,23 +224,23 @@ class HotelListingController extends Controller
 
     /**
      * @param  Builder<\Illuminate\Database\Eloquent\Model>  $q
-     * @param  array<string, mixed>  $cfg
+     * @param  array{table: string, search_columns: list<string>}  $meta
      */
-    private function applySearch(Builder $q, Request $request, array $cfg): void
+    private function applySearch(Builder $q, Request $request, array $meta): void
     {
         $columnSearch = $request->input('columnSearch', []);
         if (! is_array($columnSearch)) {
             return;
         }
 
-        foreach ($cfg['search_columns'] ?? [] as $col) {
+        foreach ($meta['search_columns'] as $col) {
             if (! empty($columnSearch[$col])) {
-                $q->where($col, 'ilike', '%'.$columnSearch[$col].'%');
+                $q->where($col, 'like', '%'.$columnSearch[$col].'%');
             }
         }
 
         if (array_key_exists('status', $columnSearch) && $columnSearch['status'] !== '' && $columnSearch['status'] !== null) {
-            if (in_array(($cfg['table'] ?? ''), [
+            if (in_array($meta['table'], [
                 'hotel_room_type', 'hotel_room', 'hotel_hut_dormitory', 'hotel_hut_bed', 'hotel_board_plan',
             ], true)) {
                 $q->where('is_active', (bool) (int) $columnSearch['status']);
@@ -198,13 +259,13 @@ class HotelListingController extends Controller
 
     /**
      * @param  Builder<\Illuminate\Database\Eloquent\Model>  $q
-     * @param  array<string, mixed>  $cfg
+     * @param  array<string, mixed>  $table
      */
-    private function applySort(Builder $q, Request $request, array $cfg): void
+    private function applySort(Builder $q, Request $request, array $table, string $tableName): void
     {
         $sortBy = $request->input('sortBy');
-        $key = $cfg['headers']['default_sort']['key'] ?? 'id';
-        $order = $cfg['headers']['default_sort']['order'] ?? 'asc';
+        $key = $table['default_sort']['key'] ?? 'id';
+        $order = $table['default_sort']['order'] ?? 'asc';
 
         if (is_array($sortBy)) {
             if (isset($sortBy['key'])) {
@@ -216,13 +277,11 @@ class HotelListingController extends Controller
             }
         }
 
-        if ($key === 'status' && isset($cfg['table']) && str_contains((string) $cfg['table'], 'hotel_')) {
-            $key = in_array($cfg['table'], [
-                'hotel_reservation', 'hotel_stay',
-            ], true) ? 'status' : 'is_active';
+        if ($key === 'status') {
+            $key = in_array($tableName, ['hotel_reservation', 'hotel_stay'], true) ? 'status' : 'is_active';
         }
 
-        $allowed = collect($cfg['headers']['fields'] ?? [])->pluck('key')->all();
+        $allowed = collect($table['fields'] ?? [])->pluck('key')->all();
         if (! in_array($key, $allowed, true) && $key !== 'is_active') {
             $key = 'id';
         }
@@ -232,14 +291,15 @@ class HotelListingController extends Controller
     }
 
     /**
-     * @param  array<string, mixed>  $cfg
+     * @param  array<string, mixed>  $table
+     * @param  array{view_path: string, link_key: string}  $meta
      * @return array<string, mixed>
      */
-    private function listRow(object $model, array $cfg): array
+    private function listRow(object $model, array $table, array $meta): array
     {
         $id = (int) $model->getKey();
-        $viewPath = rtrim((string) ($cfg['view_path'] ?? ''), '/');
-        $linkKey = (string) ($cfg['link_key'] ?? 'name');
+        $viewPath = rtrim($meta['view_path'], '/');
+        $linkKey = $meta['link_key'];
         $api = method_exists($model, 'toApiArray') ? $model->toApiArray() : $model->toArray();
 
         $row = [
@@ -253,7 +313,7 @@ class HotelListingController extends Controller
             ],
         ];
 
-        foreach ($cfg['headers']['fields'] as $field) {
+        foreach ($table['fields'] as $field) {
             $key = $field['key'];
             if ($key === 'actions') {
                 continue;

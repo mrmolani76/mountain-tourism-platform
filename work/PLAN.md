@@ -27,6 +27,7 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 101 | All-modules EQMS listing audit + Hotel align | high | B-hotel | backend | M | 2026-11-16 |
 | 100 | Align Core listings to EQMS list/config pattern | high | A-core | backend | M | 2026-11-16 |
 | 99 | Complete Core Staff (list CRUD reset outlet access + listing fix) | high | A-core | backend | M | 2026-11-16 |
 | 98 | Core menu UI+backend parity + allow fullstack delivery | high | A-core | backend | M | 2026-11-16 |
