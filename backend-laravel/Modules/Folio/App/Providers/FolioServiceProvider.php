@@ -23,5 +23,10 @@ class FolioServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+
+        $this->mergeConfigFrom(
+            base_path('Modules/Folio/config/listing.php'),
+            'folio_listing'
+        );
     }
 }

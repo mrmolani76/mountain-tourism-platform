@@ -2,9 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Folio\App\Http\Controllers\FolioController;
+use Modules\Folio\App\Http\Controllers\FolioListingController;
 
 // Guest folio money endpoints (Module C).
 Route::middleware('staff.auth')->group(function () {
+    // EQMS DataTable listing (before {folio} routes).
+    Route::get('folios/list/config', [FolioListingController::class, 'listingConfig']);
+    Route::post('folios/list', [FolioListingController::class, 'list']);
+
     Route::get('folios', [FolioController::class, 'index']);
     Route::get('folios/charge-to-room', [FolioController::class, 'searchChargeToRoom']);
     Route::post('folios/charge-to-room', [FolioController::class, 'storeChargeToRoom']);
