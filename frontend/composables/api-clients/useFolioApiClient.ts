@@ -34,8 +34,15 @@ export type ChargeToRoomMatch = {
 export const useFolioApiClient = () => {
   const { get, post } = useApiClient()
 
+  /** Legacy simple list (kept for charge-to-room helpers). Prefer listConfig + listRows. */
   const list = (params: Record<string, unknown> = {}) =>
     get<{ results: FolioRow[] }>('folios', params)
+
+  const listConfig = () =>
+    get<ApiResponse<DataTableConfig>>('folios/list/config')
+
+  const listRows = (body: Record<string, unknown> = {}) =>
+    post<DataTableResult<any>>('folios/list', body)
 
   const show = (id: number) =>
     get<FolioDetail>(`folios/${id}`)
@@ -80,6 +87,8 @@ export const useFolioApiClient = () => {
 
   return {
     list,
+    listConfig,
+    listRows,
     show,
     invoice,
     searchChargeToRoom,

@@ -23,7 +23,7 @@ Walk through the running local application in a browser, following the checklist
 
 - The repository tracks browser E2E automation separately in `work/todo/76-browser-e2e-testing.md`.
 - No current manual browser walkthrough or per-module result log is tracked.
-- At checklist creation, work item 102 was in progress and covered the Staff listing header defect. It was later returned to todo to allow item 103 to start.
+- At checklist creation, work item 104 was in progress and covered the Staff listing header defect. It was later returned to todo to allow item 103 to start.
 
 ## Expected / After
 
@@ -39,7 +39,7 @@ The project needs a repeatable, visible browser check of the core staff workflow
 
 - [ ] Preflight: confirm SPA loads and the API health endpoint responds.
 - [ ] Authentication: verify valid login, invalid login feedback, logout, and role-aware access.
-- [ ] Core: check Staff listing headers/filters, Buildings, Outlets, Seasons, and tenant settings. Staff listing check follows completion of item 102.
+- [ ] Core: check Staff listing headers/filters, Buildings, Outlets, Seasons, and tenant settings. Staff listing check follows completion of item 104.
 - [ ] Hotel: check availability, reservations, stays, check-in, and check-out.
 - [ ] Folio: check charge, payment, void reason, and zero-balance checkout. Never edit or delete Charge or Payment records.
 - [ ] POS: check catalog, order creation, settlement, and room charge where available.
@@ -70,6 +70,9 @@ The project needs a repeatable, visible browser check of the core staff workflow
 - **Preflight**: BLOCKED. Browser connections were refused at `http://lab.local.mtmtp.local:3000/`, `http://localhost:3000/`, and `http://127.0.0.1:8010/api/health/`.
 - **Action**: Stopped after the failed prerequisite. No Docker or other infrastructure was started.
 - **Next step**: Resume after the existing local app stack is available or the user explicitly authorizes starting it.
+- **Retry after user started Docker**: BLOCKED. `http://lab.local.mtmtp.local:3000/` and `http://localhost:3000/` returned `ERR_FAILED`; `http://127.0.0.1:8010/api/health/` and `http://127.0.0.1:8000/api/health/` refused connections.
+- **Action**: Did not run Docker commands. Returned the item to todo because the SPA and API are not reachable from the browser.
+- **Next step**: User to confirm the SPA and API are reachable; then resume the checklist.
 
 ---
 
@@ -77,8 +80,8 @@ The project needs a repeatable, visible browser check of the core staff workflow
 
 ### 2026-11-26
 - **Returned by**: Copilot
-- **Reason**: Browser preflight endpoints refused connections; this item disallows starting or resetting infrastructure without authorization.
-- **Next step**: Wait for the user to confirm the local app stack is ready, then resume item 103.
+- **Reason**: Browser preflight still fails after user started Docker; SPA loads return `ERR_FAILED` and API endpoints refuse connections.
+- **Next step**: Wait for user to confirm working SPA and API URLs, then resume item 103.
 
 ---
 

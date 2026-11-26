@@ -1,6 +1,6 @@
 ---
 title: Fix missing header row in Core Staff listing
-id: 102
+id: 104
 priority: medium
 status: todo
 milestone: none

@@ -53,6 +53,6 @@ All staff listing users. No data loss, no money or tenant isolation impact.
 
 ## 11. Related
 
-- Work item: 102 (to be created)
+- Work item: 104
 - Change report: pending
 - Other bugs: BUG-API-001 (listing config shadow)

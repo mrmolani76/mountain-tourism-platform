@@ -2,13 +2,13 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Browser acceptance checklist (**103**) is blocked until the local app stack is available. Staff listing header fix (**102**) is queued afterward. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Browser acceptance checklist (**103**) is blocked because SPA/API endpoints are unreachable, even after user started Docker. Folio EQMS DataTable (**102**) is complete. Staff listing header fix (**104**) is queued afterward. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
 ### Todo
-- **103** — Manual browser acceptance checks, one module at a time (high). Returned after preflight connections were refused; user will start the local stack and confirm when ready.
-- **102** — Fix missing header row in Core Staff listing (medium, BUG-APP-007). Returned to todo until browser checklist 103 is complete.
+- **103** — Manual browser acceptance checks, one module at a time (high). Retry blocked: SPA URLs return `ERR_FAILED`; API ports refuse connections. Resume when user confirms reachable URLs.
+- **104** — Fix missing header row in Core Staff listing (medium, BUG-APP-007). Returned to todo until browser checklist 103 is complete.
 - **90** — Local MySQL switch for browser testing (high). Returned 2026-11-14; finish on another machine (EQMS hosts, DB-per-tenant).
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
@@ -16,6 +16,7 @@ Refresh on every work / bug / change status update.
 - (none)
 
 ### Completed
+- **102** — Folio EQMS list/config + DataTable (Module C) (high, 2026-11-23).
 - **101** — All-modules EQMS listing audit + Hotel align (high, 2026-11-16).
 - **100** — Align Core listings to EQMS list/config pattern (high, 2026-11-16).
 - **99** — Complete Core Staff (CRUD, reset, outlet access + listing fix) (high, 2026-11-16).
@@ -108,8 +109,10 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
-- 2026-11-26 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103: queued manual browser checklist; picked up after user authorized pausing item 102.
+- 2026-11-26 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103: ordered browser checklist; preflight blocked, returned to todo.
 - 2026-11-23 — `work/changes/2026-11-23--mtmtp-dev-stack-restart.md` — runtime: restarted stopped mtmtp Docker stack; correct client URL `lab.local.mtmtp.local:3000`
+- 2026-11-23 — `work/changes/2026-11-23--102-folio-eqms-listing-datatable.md` — item 102: Folio EQMS DataTable + module audit
+- 2026-11-26 — `work/changes/2026-11-26--resolve-folio-staff-work-id-conflict.md` — preserved completed Folio item 102 and renumbered the Staff listing task to 104.
 - 2026-11-16 — `work/changes/2026-11-16--101-all-modules-eqms-listing-audit.md` — item 101: all-module audit + Hotel EQMS align
 - 2026-11-16 — `work/changes/2026-11-16--100-eqms-core-listing-pattern.md` — item 100: EQMS listing pattern
 - 2026-11-16 — `work/changes/2026-11-16--99-core-staff-complete.md` — item 99: Staff complete + listing config fix

@@ -4,7 +4,7 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **103** Manual browser acceptance checks are blocked: local SPA/API endpoints refused connections. User will start the local stack and confirm when ready. No WIP item active; item 102 is queued afterward.
+- **103** Manual browser acceptance checks are blocked; after user started Docker, SPA URLs returned `ERR_FAILED` and API ports refused connections. No WIP active. Item 104 waits afterward.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
 - **WIP = 1**; none active. Do not start infrastructure without user approval. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
@@ -12,7 +12,7 @@
 
 ## Next suggested pickups (kanban order)
 1. **103** Resume browser checks after the user confirms the local app stack is ready.
-2. **102** Resume Staff listing header fix after browser checks.
+2. **104** Resume Staff listing header fix after browser checks.
 3. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
 4. **90** Local MySQL (if browser test on that machine)
 5. **72** verify on setup machine when user allows
