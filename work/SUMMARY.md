@@ -2,11 +2,13 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** All-module EQMS listing audit (**101**) + Hotel aligned. Pending setup: Local MySQL (**90**). Leftovers: Hotel **72** verify, lobby TV polish, handover. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Browser acceptance checklist (**103**) is blocked until the local app stack is available. Staff listing header fix (**102**) is queued afterward. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
 
 ## 1. Work
 
 ### Todo
+- **103** — Manual browser acceptance checks, one module at a time (high). Returned after preflight connections were refused; user will start the local stack and confirm when ready.
+- **102** — Fix missing header row in Core Staff listing (medium, BUG-APP-007). Returned to todo until browser checklist 103 is complete.
 - **90** — Local MySQL switch for browser testing (high). Returned 2026-11-14; finish on another machine (EQMS hosts, DB-per-tenant).
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
@@ -85,6 +87,7 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
+- **BUG-APP-007** — Staff listing table renders without column header row (medium, 2026-11-23)
 - **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
@@ -105,6 +108,8 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-26 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103: queued manual browser checklist; picked up after user authorized pausing item 102.
+- 2026-11-23 — `work/changes/2026-11-23--mtmtp-dev-stack-restart.md` — runtime: restarted stopped mtmtp Docker stack; correct client URL `lab.local.mtmtp.local:3000`
 - 2026-11-16 — `work/changes/2026-11-16--101-all-modules-eqms-listing-audit.md` — item 101: all-module audit + Hotel EQMS align
 - 2026-11-16 — `work/changes/2026-11-16--100-eqms-core-listing-pattern.md` — item 100: EQMS listing pattern
 - 2026-11-16 — `work/changes/2026-11-16--99-core-staff-complete.md` — item 99: Staff complete + listing config fix

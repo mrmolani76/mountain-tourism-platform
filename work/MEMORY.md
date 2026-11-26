@@ -4,15 +4,18 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
+- **103** Manual browser acceptance checks are blocked: local SPA/API endpoints refused connections. User will start the local stack and confirm when ready. No WIP item active; item 102 is queued afterward.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP empty** after **93**. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
+- **WIP = 1**; none active. Do not start infrastructure without user approval. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
-2. **90** Local MySQL (if browser test on that machine)
-3. **72** verify on setup machine when user allows
+1. **103** Resume browser checks after the user confirms the local app stack is ready.
+2. **102** Resume Staff listing header fix after browser checks.
+3. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
+4. **90** Local MySQL (if browser test on that machine)
+5. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 

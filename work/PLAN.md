@@ -15,6 +15,8 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 103 | Manual browser acceptance checks, one module at a time | high | A-core | tests | L |
+| 102 | Fix missing header row in Core Staff listing | medium | A-core | frontend | S |
 | 90 | Local MySQL switch for browser testing | high | infra | devops | S |
 | 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
 
