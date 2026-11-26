@@ -1,7 +1,7 @@
 ---
 id: BUG-APP-007
 title: Staff listing table renders rows without column header row
-status: BUG_CREATED
+status: CLOSED
 type: APP
 severity: medium
 created: 2026-11-23
@@ -37,7 +37,7 @@ No header row. Screenshot shows: Columns filter (`4 Columns selected`), Reset Fi
 
 ## 7. Root Cause
 
-Under investigation. Code inspection of the shared listing component and the Staff list config is in progress.
+`ListingConfigService` converted Nexro's `default_order` into an object-shaped `default_sort` in the API response. Vuetify `VDataTableServer` expects its `sortBy` model as an array, so it raised `find is not a function` while rendering header cells.
 
 ## 8. Workaround
 
@@ -45,14 +45,20 @@ None known.
 
 ## 9. Suggested Fix
 
-Pending code inspection. Likely in the shared DataTable component header render path or the Staff list config, not in the API.
+Keep the Staff listing in Nexro's flat `fields` + `default_order` format and do not send object-shaped `default_sort` to the DataTable. Implemented in change report `work/changes/2026-11-26--104-staff-listing-header.md`.
 
-## 10. Impact
+## 10. Verification
+
+- 2026-11-26: Browser confirmed Staff table shows Email, Role, Status, and Actions headers with 8 staff rows.
+- 2026-11-26: Browser confirmed Core Buildings, Outlets, and Seasons tables render their headers.
+- No record-changing actions were performed.
+
+## 11. Impact
 
 All staff listing users. No data loss, no money or tenant isolation impact.
 
-## 11. Related
+## 12. Related
 
-- Work item: 104
-- Change report: pending
+- Work item: 104 (completed)
+- Change report: `work/changes/2026-11-26--104-staff-listing-header.md`
 - Other bugs: BUG-API-001 (listing config shadow)

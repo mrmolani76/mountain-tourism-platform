@@ -4,7 +4,6 @@
 
 | ID | Title | Severity | Status | Created |
 |----|-------|----------|--------|---------|
-| BUG-APP-007 | Staff listing table renders without column header row | medium | BUG_CREATED | 2026-11-23 |
 | BUG-APP-006 | Dev hard refresh drops :3000 (Apache :80 / login 502) | high | BUG_CREATED | 2026-11-06 |
 
 ## Verified
@@ -24,4 +23,4 @@
 
 | ID | Title | Severity | Status | Closed |
 |----|-------|----------|--------|--------|
-| | | | | |
+| BUG-APP-007 | Staff listing table renders without column header row | medium | CLOSED | 2026-11-26 |

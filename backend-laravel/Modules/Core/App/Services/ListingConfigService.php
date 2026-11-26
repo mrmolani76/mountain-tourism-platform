@@ -25,15 +25,8 @@ class ListingConfigService
     ): array {
         $fields = $tableColumns['fields'] ?? [];
 
-        // SPA DataTable expects headers.default_sort; EQMS also has default_order.
-        if (! isset($tableColumns['default_sort']) && isset($tableColumns['default_order'])) {
-            $tableColumns['default_sort'] = [
-                'key' => (string) ($tableColumns['default_order']['field'] ?? 'id'),
-                'order' => strtolower((string) ($tableColumns['default_order']['dir'] ?? 'asc')) === 'desc'
-                    ? 'desc'
-                    : 'asc',
-            ];
-        }
+        // Nexro DataTable sorts from server defaults; VDataTableServer expects sortBy as an array.
+        unset($tableColumns['default_sort']);
 
         return [
             'headers' => $tableColumns,
@@ -87,7 +80,7 @@ class ListingConfigService
     }
 
     /**
-     * Flatten nested headers → EQMS flat fields + default_sort/default_order.
+     * Flatten nested headers while preserving configured sort metadata.
      *
      * @param  array<string, mixed>  $cfg
      * @return array<string, mixed>|null
@@ -105,15 +98,6 @@ class ListingConfigService
 
         if (empty($cfg['fields']) || ! is_array($cfg['fields'])) {
             return null;
-        }
-
-        if (! isset($cfg['default_sort']) && isset($cfg['default_order'])) {
-            $cfg['default_sort'] = [
-                'key' => (string) ($cfg['default_order']['field'] ?? 'id'),
-                'order' => strtolower((string) ($cfg['default_order']['dir'] ?? 'asc')) === 'desc'
-                    ? 'desc'
-                    : 'asc',
-            ];
         }
 
         if (! isset($cfg['default_order']) && isset($cfg['default_sort'])) {

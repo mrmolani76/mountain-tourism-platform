@@ -2,7 +2,7 @@
 title: Manual browser acceptance checks, one module at a time
 id: 103
 priority: high
-status: todo
+status: inprogress
 milestone: 5
 module: A-core
 area: tests
@@ -29,7 +29,7 @@ Walk through the running local application in a browser, following the checklist
 
 - A manual browser walkthrough is recorded step by step against a disposable local tenant.
 - Any confirmed defect has a bug report before a fix is started.
-- Tests use the existing local app setup. Do not install packages or start/reset infrastructure as part of this item.
+- Use the existing local app setup. Do not reset tenant data or install packages as part of this item.
 
 ## Why
 
@@ -72,7 +72,12 @@ The project needs a repeatable, visible browser check of the core staff workflow
 - **Next step**: Resume after the existing local app stack is available or the user explicitly authorizes starting it.
 - **Retry after user started Docker**: BLOCKED. `http://lab.local.mtmtp.local:3000/` and `http://localhost:3000/` returned `ERR_FAILED`; `http://127.0.0.1:8010/api/health/` and `http://127.0.0.1:8000/api/health/` refused connections.
 - **Action**: Did not run Docker commands. Returned the item to todo because the SPA and API are not reachable from the browser.
-- **Next step**: User to confirm the SPA and API are reachable; then resume the checklist.
+- **Startup after explicit user authorization**: Started existing Postgres container; launched Laravel with `php artisan serve` directly (did not run the compose `--reset` provisioning command); attached its container to the Compose network with alias `laravel`; started SPA.
+- **Preflight retry**: PASS. `http://127.0.0.1:8010/api/health/` returned HTTP 200 with database `ok`; `http://lab.local.mtmtp.local:3000/login` returned HTTP 200 and rendered the Mountain Tourism login page; proxied `http://lab.local.mtmtp.local:3000/api/health/` returned HTTP 200.
+- **Next step**: Continue one-by-one browser workflow after the Staff listing header fix.
+
+- **Menu route check**: Started after item 104. The sidebar exposed 55 unique routes. The first navigation pass captured page titles/headings on 37 routes; 18 did not expose an `h1`/`h2` within the wait window, so they remain to be checked by page content. No browser page errors were captured during that pass.
+- **Read-only confirmation**: `/rental` overview rendered its title and links for the desk and catalog pages. `/buildings` rendered its title and configured table headers after waiting for async loading. Continue checking all menu routes without submitting forms or changing records.
 
 ---
 
@@ -80,8 +85,8 @@ The project needs a repeatable, visible browser check of the core staff workflow
 
 ### 2026-11-26
 - **Returned by**: Copilot
-- **Reason**: Browser preflight still fails after user started Docker; SPA loads return `ERR_FAILED` and API endpoints refuse connections.
-- **Next step**: Wait for user to confirm working SPA and API URLs, then resume item 103.
+- **Reason**: User asked to resolve the Staff listing header defect before continuing broader acceptance checks.
+- **Next step**: Resume item 103 after item 104 is completed.
 
 ---
 

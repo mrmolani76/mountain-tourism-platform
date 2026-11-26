@@ -4,22 +4,23 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **103** Manual browser acceptance checks are blocked; after user started Docker, SPA URLs returned `ERR_FAILED` and API ports refused connections. No WIP active. Item 104 waits afterward.
+- **103** Read-only browser checks for all menu routes. Local DB/API/SPA are running; do not submit forms or change records during route checks.
+- **104** Staff listing header bug is fixed and browser-verified using Nexro's `fields` + `default_order` listing pattern.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP = 1**; none active. Do not start infrastructure without user approval. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
+- **WIP = 1**; item 103 active. Docker startup authorized for this task only; preserve tenant data. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. **103** Resume browser checks after the user confirms the local app stack is ready.
-2. **104** Resume Staff listing header fix after browser checks.
-3. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
-4. **90** Local MySQL (if browser test on that machine)
-5. **72** verify on setup machine when user allows
+1. Continue **103** menu route checks and then its ordered module acceptance walkthrough.
+2. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
+3. **90** Local MySQL (if browser test on that machine)
+4. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **104** — Fix Staff listing header row with Nexro `default_order` configuration (medium, 2026-11-26)
 - **93** — Nexro-style mtmp.local guide + hosts:sync (high, 2026-11-14)
 - **92** — EQMS/Nexro tenancy routes + middleware (high, 2026-11-14)
 - **84** — POS frontend Module D (high, 2026-11-14)

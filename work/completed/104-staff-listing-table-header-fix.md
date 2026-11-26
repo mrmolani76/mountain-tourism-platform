@@ -2,7 +2,7 @@
 title: Fix missing header row in Core Staff listing
 id: 104
 priority: medium
-status: todo
+status: completed
 milestone: none
 module: A-core
 area: frontend
@@ -32,18 +32,20 @@ Header row with labels (Email, Role, Status, Actions) renders above the first da
 Confirmed UI bug reported by user on 2026-11-23. Listing is unusable without column labels.
 
 ## Acceptance Criteria (complete only when all ticked)
-- [ ] Header row renders on Staff listing
-- [ ] No regression in other EQMS-style listings
-- [ ] Change report written
-- [ ] PLAN.md + SUMMARY.md updated
+- [x] Header row renders on Staff listing
+- [x] No regression in Core Buildings, Outlets, and Seasons listings
+- [x] Change report written
+- [x] PLAN.md + SUMMARY.md updated
 
-## Files Likely Affected
+## Files Affected
 
-- Shared listing/DataTable component and/or Staff list config (exact paths to confirm).
+- `backend-laravel/Modules/Core/config/listing.php`
+- `backend-laravel/Modules/Core/App/Services/ListingConfigService.php`
+- `frontend/types/data-table-config.ts`
 
 ## Notes / Follow-ups
 
-- No API/money/tenant changes expected. UI only.
+- The API keeps Nexro's `default_order` format. It no longer serializes an object as Vuetify's `sortBy` model.
 
 ---
 
@@ -56,12 +58,12 @@ Confirmed UI bug reported by user on 2026-11-23. Listing is unusable without col
 
 ---
 
-## Completion Log (when work is complete)
+## Completion Log
 
-- **Completed by**: <Agent / Name>
-- **Date**: YYYY-MM-DD
-- **What was done**: short summary
-- **Files changed**: ...
-- **Verification**: tests/commands run + result (or N/A + why)
-- **Change report**: `work/changes/YYYY-MM-DD--NN-<desc>.md`
-- **PLAN / SUMMARY**: updated yes/no
+- **Completed by**: Copilot
+- **Date**: 2026-11-26
+- **What was done**: Aligned Staff list config with Nexro `fields` + `default_order`; stopped returning object-shaped `default_sort` to Vuetify.
+- **Files changed**: Core listing config, `ListingConfigService`, DataTable config type, bug/work tracking docs.
+- **Verification**: Browser check confirmed Staff headers Email, Role, Status, Actions with 8 rows. Buildings, Outlets, and Seasons also rendered their configured header rows.
+- **Change report**: `work/changes/2026-11-26--104-staff-listing-header.md`
+- **PLAN / SUMMARY**: updated yes

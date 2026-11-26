@@ -12,7 +12,11 @@ export interface DataTableConfig {
 
 export interface DataTableHeaderConfig {
   fields: Array<DataTableFieldConfig>
-  default_sort: SortConfig
+  default_order?: {
+    field: string
+    dir: 'asc' | 'desc'
+  }
+  default_sort?: Array<SortConfig>
 }
 
 export interface DataTableFieldConfig {

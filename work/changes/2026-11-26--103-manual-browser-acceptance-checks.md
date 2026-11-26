@@ -16,11 +16,11 @@ Created a queued, ordered manual browser acceptance checklist for checking the p
 
 ## 3. After
 
-- Added work item 103 in `work/todo/` with ordered checks from app preflight through reports.
-- Added item 103 to the Todo table in `work/PLAN.md` and the Todo section in `work/SUMMARY.md`.
-- After user authorized pausing item 104, moved item 104 back to `todo/` and attempted to pick up item 103.
-- Initial browser preflight was blocked because the documented local SPA and API endpoints refused connections. User later confirmed Docker was started, so item 103 was picked up again. The retry still failed: SPA URLs returned `ERR_FAILED`, and API health URLs refused connections.
-- Updated `work/MEMORY.md`, PLAN, and SUMMARY to show no active WIP and the blocked next step.
+- Added work item 103 with ordered checks from app preflight through reports; it is now active in `work/inprogress/`.
+- Initial browser preflight was blocked because the documented local SPA and API endpoints refused connections. User later confirmed Docker was started, but inspection found all three containers stopped. User then authorized the agent to start the stack; the existing Postgres container was started and Laravel/SPA were launched without the compose startup reset command.
+- Preflight now passes: API health responds with database `ok`, login renders, and proxied health responds.
+- Browser menu review found 55 unique routes. The first pass captured titles/headings on 37, and 18 exceeded the heading wait. Follow-up confirmed `/rental` navigation links and `/buildings` table headers after waiting for async loading. The full route review remains in progress.
+- Item 104 was completed and moved to `work/completed/`; item 103 remains the only WIP.
 
 ## 4. Reason
 
@@ -35,7 +35,7 @@ The user requested a Nexro-style todo list and browser-based checks performed on
 
 ## 6. Verification / Status
 
-- [x] Item 103 was retried after user confirmed Docker was started, then returned to `todo/` after the browser preflight failed again; item 104 remains in `todo/`.
+- [x] Item 103 is in `inprogress/`; item 104 is in `completed/`.
 - [ ] `bash scripts/check-work-kanban.sh` could not run successfully. Bash rejected the script's `set -o pipefail` line (`pipefail\r`).
-- [ ] Browser preflight blocked: SPA `http://lab.local.mtmtp.local:3000/` and `http://localhost:3000/` returned `ERR_FAILED`; API `http://127.0.0.1:8010/api/health/` and `http://127.0.0.1:8000/api/health/` refused connections. No Docker commands were run.
+- [x] Before startup: `docker compose ps -a` showed `mtmtp_db`, `mtmtp_spa`, and `mtmtp_laravel` all exited. Laravel's compose command includes local tenant `--reset`; it was not run during startup.
 - [ ] No application tests, builds, linters, installs, or infrastructure commands run for this documentation change.
