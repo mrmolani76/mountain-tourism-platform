@@ -3,6 +3,10 @@ import vuetify from 'vite-plugin-vuetify'
 import svgLoader from 'vite-svg-loader'
 import i18nConfig from './i18n.config'
 
+// Laravel TCP origin for the dev proxy. Host header is preserved so tenancy
+// still resolves the tenant from the browser host.
+const backendUrl = (process.env.BACKEND_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '')
+
 export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
@@ -29,13 +33,17 @@ export default defineNuxtConfig({
     // still sees browser Host (demo.mtmp.local) and resolves the tenant.
     // Pointing target at *.mtmp.local / *.localhost causes API timeouts when
     // that hostname does not resolve on the machine.
+    //
+    // Nitro devProxy REPLACES the matched prefix with `target`, so the prefix
+    // must be repeated in the target (otherwise /api/health arrives as
+    // /health at Laravel and 404s).
     devProxy: {
       '/api': {
-        target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
+        target: `${backendUrl}/api`,
         changeOrigin: false,
       },
       '/sanctum': {
-        target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
+        target: `${backendUrl}/sanctum`,
         changeOrigin: false,
       },
     },
@@ -149,6 +157,9 @@ export default defineNuxtConfig({
       host: '0.0.0.0',
       port: 3000,
       strictPort: true,
+      // Vite blocks unknown Host headers by default (403). Local tenant hosts
+      // such as lab.local.mtmtp.local:3000 must be allowed in dev.
+      allowedHosts: ['.mtmtp.local', '.localhost', 'localhost', '127.0.0.1'],
       hmr: {
         // Preserve :3000 in the browser when the page Host is lab.localhost
         clientPort: 3000,
@@ -156,7 +167,7 @@ export default defineNuxtConfig({
       proxy: {
         '/api': {
           // TCP target for artisan serve. Keep browser Host for tenant resolve.
-          target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
+          target: backendUrl,
           changeOrigin: false,
           secure: false,
           // Dead Laravel used to hang the browser for minutes; fail in ~8s.
@@ -164,7 +175,7 @@ export default defineNuxtConfig({
           proxyTimeout: 8_000,
         },
         '/sanctum': {
-          target: process.env.BACKEND_URL || 'http://127.0.0.1:8000',
+          target: backendUrl,
           changeOrigin: false,
           secure: false,
           timeout: 8_000,
