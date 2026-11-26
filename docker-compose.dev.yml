@@ -57,6 +57,11 @@ services:
     volumes:
       - ./backend-laravel:/app
       - ./backend-laravel/.env.docker:/app/.env
+      # Windows bind mount makes PHP read thousands of vendor files over the
+      # slow 9p/virtiofs bridge (~40s per artisan boot -> SPA API timeouts).
+      # Keep vendor on the container's native FS (same pattern as nexro).
+      # Startup `composer install` keeps the volume in sync with composer.lock.
+      - mtmtp_vendor:/app/vendor
     networks:
       - mtmtp_net
     command: >
@@ -91,3 +96,4 @@ networks:
 
 volumes:
   mtmtp_pgdata:
+  mtmtp_vendor:
