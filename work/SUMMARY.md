@@ -2,11 +2,24 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Scope audit (**105**) is complete. Manual browser acceptance (**103**) remains paused. New pending folio reason-code fix (**106**) is tracked from the audit.
+**Focus:** MVP scope audit (**105**) is complete. Remaining audit gaps are split into TODO items **107-119**. Item **114** now includes the Nexro-style SaaS admin flow and project-specific onboarding upgrades. Browser acceptance (**103**) and folio void fix (**106**) remain pending.
 
 ## 1. Work
 
 ### Todo
+- **107** — Confirm MVP contract decisions (high). Get agreement on tenancy, map, and weather-provider discrepancies.
+- **108** — Protect folio ledger integrity and outlet attribution (high). Require outlet linkage and prevent cascade deletion of money history; depends on 106.
+- **109** — Schedule tenant-local nightly and weather jobs (high). Use tenant timezone for nightly posting, hourly forecasts, and reporting dates.
+- **110** — Add minimum age to bookable services (medium). Persist and validate participant age against each service.
+- **111** — Connect reservation departures to transport drop-offs (high). Complete departure details and linked drop-off planning.
+- **112** — Implement approved OSM maps for locations and routes (high). Wait for provider decision in 107 before replacing map workflows.
+- **113** — Build public weather lobby screen with lift status (high). Show lift closures within one minute alongside warnings and avalanche level.
+- **114** — Build Nexro-style SaaS super-admin UI and tenant onboarding (high). Add central dashboard, tenant CRUD/lifecycle, readiness steps, and lifecycle history without non-MVP billing features.
+- **115** — Add automated acceptance tests for Modules D through I (high). Cover module acceptance and cross-module folio/report outcomes.
+- **116** — Document API with OpenAPI and align current project docs (high). Reconcile Laravel/Nuxt docs and resolve stale/missing handover references.
+- **117** — Implement tenant-aware VPS deploy backup and rollback (high). Deliver tenant-aware deployment, seven-day backups, tested restore, and five-release rollback.
+- **118** — Build complete MVP demo tenant seed (medium). Seed linked data across Modules A-H idempotently.
+- **119** — Complete MVP handover checklist and walkthrough (medium). Finalize evidence and record the client walkthrough after acceptance.
 - **106** — Fix generic folio void reason default (high). `BUG-MONEY-001`: ordinary voids may be labeled as weather when `reason_code` is omitted.
 - **103** — Manual browser acceptance checks, one module at a time (high). Preflight passes; menu route and module checks remain.
 - **90** — Local MySQL switch for browser testing (high). Returned 2026-11-14; finish on another machine (EQMS hosts, DB-per-tenant).
@@ -111,6 +124,8 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-26 — `work/changes/2026-11-26--114-nexro-saas-admin-ui-todo.md` — refined item 114 against Nexro's SaaS admin pattern, added MVP onboarding/readiness upgrades, and returned it to Todo.
+- 2026-11-26 — `work/changes/2026-11-26--mvp-remaining-work-todos.md` — added TODO items 107-119 from the MVP scope audit.
 - 2026-11-26 — `work/changes/2026-11-26--105-mvp-scope-project-audit.md` — item 105: full MVP scope audit; report at `docs/MVP_SCOPE_AUDIT.md`; BUG-MONEY-001 tracked as item 106.
 - 2026-11-26 — `work/changes/2026-11-26--104-staff-listing-header.md` — item 104: Nexro-style `default_order`; fix Vuetify headers.
 - 2026-11-26 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103: preflight passes; read-only route review in progress.

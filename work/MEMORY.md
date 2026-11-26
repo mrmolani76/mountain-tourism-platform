@@ -4,6 +4,7 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
+- No active work item. **114** has been returned to Todo with Nexro-style SaaS admin screens and Mountain Tourism onboarding/readiness upgrades defined; no product code was changed.
 - **105** Full MVP PDF versus project audit completed at `docs/MVP_SCOPE_AUDIT.md`. Treat PDF as contract and mark unverified work honestly.
 - **106** Pending fix for BUG-MONEY-001: generic folio voids can default to reason code `weather`.
 - **103** Manual browser acceptance is paused in `work/todo/`; route checks can resume after the audit. No forms or records were changed.
@@ -15,9 +16,10 @@
 
 ## Next suggested pickups (kanban order)
 1. **106** Fix BUG-MONEY-001 before further folio acceptance work.
-2. Resume **103** menu route checks and ordered module acceptance.
-3. **90** Local MySQL (if browser test on that machine)
-4. **72** verify on setup machine when user allows
+2. **114** Build the central SaaS super-admin UI and tenant onboarding flow.
+3. Resume **103** menu route checks and ordered module acceptance.
+4. **90** Local MySQL (if browser test on that machine)
+5. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
