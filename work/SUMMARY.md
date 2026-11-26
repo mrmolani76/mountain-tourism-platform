@@ -2,18 +2,21 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Run read-only browser checks for all menu routes (**103**). Staff listing header fix (**104**) is complete and verified. PDF: `document/Mountain_MVP_Scope_v1.pdf`.
+**Focus:** Scope audit (**105**) is complete. Manual browser acceptance (**103**) remains paused. New pending folio reason-code fix (**106**) is tracked from the audit.
 
 ## 1. Work
 
 ### Todo
+- **106** — Fix generic folio void reason default (high). `BUG-MONEY-001`: ordinary voids may be labeled as weather when `reason_code` is omitted.
+- **103** — Manual browser acceptance checks, one module at a time (high). Preflight passes; menu route and module checks remain.
 - **90** — Local MySQL switch for browser testing (high). Returned 2026-11-14; finish on another machine (EQMS hosts, DB-per-tenant).
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
-- **103** — Manual browser acceptance checks, one module at a time (high). Preflight passes; route-level menu checks underway, no data-changing actions.
+- (none)
 
 ### Completed
+- **105** — Audit MVP scope against the complete project (high, 2026-11-26). Full Modules A-I scope and relationship audit; report at `docs/MVP_SCOPE_AUDIT.md`.
 - **104** — Fix missing header row in Core Staff listing (medium, 2026-11-26). Nexro `default_order` config; Vuetify headers render correctly.
 - **102** — Folio EQMS list/config + DataTable (Module C) (high, 2026-11-23).
 - **101** — All-modules EQMS listing audit + Hotel align (high, 2026-11-16).
@@ -87,6 +90,7 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
+- **BUG-MONEY-001** — Generic folio void defaults to weather reason (medium, 2026-11-26). Fix item 106 pending.
 - **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
@@ -107,6 +111,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-26 — `work/changes/2026-11-26--105-mvp-scope-project-audit.md` — item 105: full MVP scope audit; report at `docs/MVP_SCOPE_AUDIT.md`; BUG-MONEY-001 tracked as item 106.
 - 2026-11-26 — `work/changes/2026-11-26--104-staff-listing-header.md` — item 104: Nexro-style `default_order`; fix Vuetify headers.
 - 2026-11-26 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103: preflight passes; read-only route review in progress.
 - 2026-11-23 — `work/changes/2026-11-23--mtmtp-dev-stack-restart.md` — runtime: restarted stopped mtmtp Docker stack; correct client URL `lab.local.mtmtp.local:3000`

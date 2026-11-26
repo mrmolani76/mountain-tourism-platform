@@ -2,7 +2,7 @@
 title: Manual browser acceptance checks, one module at a time
 id: 103
 priority: high
-status: inprogress
+status: todo
 milestone: 5
 module: A-core
 area: tests
@@ -78,10 +78,16 @@ The project needs a repeatable, visible browser check of the core staff workflow
 
 - **Menu route check**: Started after item 104. The sidebar exposed 55 unique routes. The first navigation pass captured page titles/headings on 37 routes; 18 did not expose an `h1`/`h2` within the wait window, so they remain to be checked by page content. No browser page errors were captured during that pass.
 - **Read-only confirmation**: `/rental` overview rendered its title and links for the desk and catalog pages. `/buildings` rendered its title and configured table headers after waiting for async loading. Continue checking all menu routes without submitting forms or changing records.
+- **Hotel route pass**: `/hotel`, `/hotel/room-types`, `/hotel/rooms`, `/hotel/hut-dormitories`, `/hotel/hut-beds`, `/hotel/season-prices`, `/hotel/board-plans`, `/hotel/reservations`, `/hotel/stays`, and `/hotel/availability` returned HTTP 200 and rendered their expected page headings. No forms were submitted.
 
 ---
 
 ## Return to Pending Log (when work stops midway)
+
+### 2026-11-26
+- **Returned by**: Copilot
+- **Reason**: User reprioritized work to a full MVP PDF versus project implementation audit; WIP limit is one.
+- **Next step**: Resume the remaining menu and module acceptance checks after the project audit.
 
 ### 2026-11-26
 - **Returned by**: Copilot

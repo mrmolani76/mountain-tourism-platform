@@ -4,22 +4,25 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **103** Read-only browser checks for all menu routes. Local DB/API/SPA are running; do not submit forms or change records during route checks.
+- **105** Full MVP PDF versus project audit completed at `docs/MVP_SCOPE_AUDIT.md`. Treat PDF as contract and mark unverified work honestly.
+- **106** Pending fix for BUG-MONEY-001: generic folio voids can default to reason code `weather`.
+- **103** Manual browser acceptance is paused in `work/todo/`; route checks can resume after the audit. No forms or records were changed.
 - **104** Staff listing header bug is fixed and browser-verified using Nexro's `fields` + `default_order` listing pattern.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP = 1**; item 103 active. Docker startup authorized for this task only; preserve tenant data. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
+- **WIP limit = 1**; no item is currently active. Docker startup authorized for the previous browser task only; preserve tenant data. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. Continue **103** menu route checks and then its ordered module acceptance walkthrough.
-2. Human: copy `.env.example` mtmp values + `sudo bash scripts/mtmp-hosts-sync.sh` when ready
+1. **106** Fix BUG-MONEY-001 before further folio acceptance work.
+2. Resume **103** menu route checks and ordered module acceptance.
 3. **90** Local MySQL (if browser test on that machine)
 4. **72** verify on setup machine when user allows
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **105** — Full MVP scope audit, module and relationship mapping (high, 2026-11-26)
 - **104** — Fix Staff listing header row with Nexro `default_order` configuration (medium, 2026-11-26)
 - **93** — Nexro-style mtmp.local guide + hosts:sync (high, 2026-11-14)
 - **92** — EQMS/Nexro tenancy routes + middleware (high, 2026-11-14)

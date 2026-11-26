@@ -8,6 +8,7 @@ PDF remains the legal contract. If docs and PDF disagree, **PDF wins** until hum
 | [TECHNICAL_RULES.md](TECHNICAL_RULES.md) | Non-negotiable tech rules (§7) |
 | [GLOSSARY.md](GLOSSARY.md) | Domain vocabulary |
 | [MODULES.md](MODULES.md) | Modules A–I index + done-when |
+| [MVP_SCOPE_AUDIT.md](MVP_SCOPE_AUDIT.md) | Evidence-based scope-to-project audit and remaining work |
 | [modules/](modules/) | Per-module deep files (link to phase embeds) |
 | [../work/phases/](../work/phases/) | Phase plans with **complete** module descriptions |
 | [MILESTONES.md](MILESTONES.md) | Payment milestones 1–5 |

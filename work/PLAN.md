@@ -15,6 +15,8 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 106 | Fix generic folio void reason default | high | C-folio | backend | S |
+| 103 | Manual browser acceptance checks, one module at a time | high | A-core | tests | L |
 | 90 | Local MySQL switch for browser testing | high | infra | devops | S |
 | 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
 
@@ -22,12 +24,12 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 103 | Manual browser acceptance checks, one module at a time | high | A-core | tests | L |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 105 | Audit MVP scope against the complete project | high | docs | docs | L | 2026-11-26 |
 | 104 | Fix missing header row in Core Staff listing | medium | A-core | backend/frontend | S | 2026-11-26 |
 | 102 | Folio EQMS list/config + DataTable (Module C) | high | C-folio | backend | M | 2026-11-23 |
 | 101 | All-modules EQMS listing audit + Hotel align | high | B-hotel | backend | M | 2026-11-16 |
