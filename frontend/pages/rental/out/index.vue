@@ -3,35 +3,54 @@ definePageMeta({ navActiveLink: 'rental' })
 useHead({ title: 'Currently out' })
 
 const client = useRentalApiClient()
+const outletClient = usePosApiClient()
 const loading = ref(false)
 const saving = ref(false)
 const overdueOnly = ref(false)
 const rows = ref<Array<Record<string, any>>>([])
+const outlets = ref<Array<Record<string, any>>>([])
 const returnOpen = ref(false)
 const returningId = ref<number | null>(null)
 const returnForm = ref({
   condition_on_return: 'ok',
   damage_fee: 0,
+  outlet_id: null as number | null,
 })
+const rentalOutlets = computed(() => outlets.value.filter(outlet =>
+  outlet.is_active !== false && outlet.outlet_type === 'rental',
+))
+const outletOptions = computed(() => rentalOutlets.value.map(outlet => ({
+  title: outlet.name,
+  value: Number(outlet.id),
+})))
 
 async function load() {
   loading.value = true
-  const res = await client.currentlyOut({ overdue: overdueOnly.value ? '1' : '0' })
+  const [res, outletRows] = await Promise.all([
+    client.currentlyOut({ overdue: overdueOnly.value ? '1' : '0' }),
+    outletClient.listOutlets(),
+  ])
   rows.value = res?.results ?? []
+  outlets.value = outletRows
   loading.value = false
 }
 
-function startReturn(rentalItemId: number) {
+function startReturn(rentalItemId: number, outletId: number | null) {
   returningId.value = rentalItemId
-  returnForm.value = { condition_on_return: 'ok', damage_fee: 0 }
+  returnForm.value = {
+    condition_on_return: 'ok',
+    damage_fee: 0,
+    outlet_id: outletId ?? (rentalOutlets.value.length === 1 ? Number(rentalOutlets.value[0].id) : null),
+  }
   returnOpen.value = true
 }
 
 async function submitReturn() {
-  if (!returningId.value)
+  if (!returningId.value || !returnForm.value.outlet_id)
     return
   saving.value = true
   await client.returnItem(returningId.value, {
+    outlet_id: Number(returnForm.value.outlet_id),
     condition_on_return: returnForm.value.condition_on_return,
     damage_fee_cents: majorToCents(returnForm.value.damage_fee),
   })
@@ -105,7 +124,7 @@ onMounted(load)
               </VChip>
             </td>
             <td class="text-end">
-              <VBtn size="small" color="primary" variant="tonal" @click="startReturn(row.rental_item_id)">
+              <VBtn size="small" color="primary" variant="tonal" @click="startReturn(row.rental_item_id, row.outlet_id ?? null)">
                 Return
               </VBtn>
             </td>
@@ -134,6 +153,13 @@ onMounted(load)
             item-value="value"
             label="Condition on return"
           />
+          <AppSelect
+            v-model="returnForm.outlet_id"
+            :items="outletOptions"
+            item-title="title"
+            item-value="value"
+            label="Rental outlet"
+          />
           <AppTextField
             v-model.number="returnForm.damage_fee"
             type="number"
@@ -147,7 +173,7 @@ onMounted(load)
           <VBtn variant="text" @click="returnOpen = false">
             Cancel
           </VBtn>
-          <VBtn color="primary" :loading="saving" @click="submitReturn">
+          <VBtn color="primary" :loading="saving" :disabled="!returnForm.outlet_id" @click="submitReturn">
             Confirm return
           </VBtn>
         </VCardActions>

@@ -5,30 +5,42 @@ definePageMeta({ navActiveLink: 'transport' })
 useHead({ title: 'Lift passes' })
 
 const client = useTransportApiClient()
+const outletClient = usePosApiClient()
 const loading = ref(false)
 const saving = ref(false)
 const products = ref<Array<Record<string, any>>>([])
 const lifts = ref<Lift[]>([])
+const outlets = ref<Array<Record<string, any>>>([])
 const productOpen = ref(false)
 const sellOpen = ref(false)
 const productForm = ref({ product_id: null as number | null, lift_id: null as number | null, valid_days: 1, is_active: true })
 const sellForm = ref({
   lift_pass_product_id: null as number | null,
+  outlet_id: null as number | null,
   guest_name: '',
   stay_id: null as number | null,
   valid_from: new Date().toISOString().slice(0, 10),
   pay_now: false,
   payment_method: 'cash' as 'cash' | 'card',
 })
+const activeOutlets = computed(() => outlets.value.filter(outlet => outlet.is_active !== false))
+const outletOptions = computed(() => activeOutlets.value.map(outlet => ({
+  title: `${outlet.name} · ${outlet.outlet_type}`,
+  value: Number(outlet.id),
+})))
 
 async function load() {
   loading.value = true
-  const [p, l] = await Promise.all([
+  const [p, l, outletRows] = await Promise.all([
     client.listLiftPassProducts(),
     client.listLifts(),
+    outletClient.listOutlets(),
   ])
   products.value = p?.results ?? []
   lifts.value = l?.results ?? []
+  outlets.value = outletRows
+  if (activeOutlets.value.length === 1)
+    sellForm.value.outlet_id = Number(activeOutlets.value[0].id)
   loading.value = false
 }
 
@@ -48,11 +60,12 @@ async function saveProduct() {
 }
 
 async function sell() {
-  if (!sellForm.value.lift_pass_product_id || !sellForm.value.guest_name)
+  if (!sellForm.value.lift_pass_product_id || !sellForm.value.outlet_id || !sellForm.value.guest_name)
     return
   saving.value = true
   const issued = await client.sellLiftPass({
     lift_pass_product_id: sellForm.value.lift_pass_product_id,
+    outlet_id: Number(sellForm.value.outlet_id),
     guest_name: sellForm.value.guest_name,
     stay_id: sellForm.value.stay_id || undefined,
     valid_from: sellForm.value.valid_from,
@@ -138,6 +151,17 @@ onMounted(load)
             item-value="value"
             label="Pass product"
           />
+          <AppSelect
+            v-model="sellForm.outlet_id"
+            :items="outletOptions"
+            item-title="title"
+            item-value="value"
+            label="Outlet"
+            :disabled="!activeOutlets.length"
+          />
+          <VAlert v-if="!activeOutlets.length" type="warning" variant="tonal" density="compact">
+            No active outlet is available for this account.
+          </VAlert>
           <AppTextField v-model="sellForm.guest_name" label="Guest name" />
           <AppTextField v-model.number="sellForm.stay_id" type="number" label="Stay ID (room charge)" />
           <AppTextField v-model="sellForm.valid_from" type="date" label="Valid from" />
@@ -157,7 +181,7 @@ onMounted(load)
           <VBtn
             color="primary"
             :loading="saving"
-            :disabled="!sellForm.lift_pass_product_id || !sellForm.guest_name"
+            :disabled="!sellForm.lift_pass_product_id || !sellForm.outlet_id || !sellForm.guest_name"
             @click="sell"
           >
             Sell

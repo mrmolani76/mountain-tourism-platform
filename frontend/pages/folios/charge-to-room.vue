@@ -5,8 +5,10 @@ definePageMeta({ navActiveLink: 'folios' })
 useHead({ title: 'Charge to room' })
 
 const client = useFolioApiClient()
+const outletClient = usePosApiClient()
 const searching = ref(false)
 const posting = ref(false)
+const outlets = ref<Array<Record<string, any>>>([])
 const roomNumber = ref('')
 const guest = ref('')
 const matches = ref<ChargeToRoomMatch[]>([])
@@ -16,7 +18,20 @@ const form = ref({
   description: '',
   amount: 0,
   tax: 0,
+  outlet_id: null as number | null,
 })
+
+const activeOutlets = computed(() => outlets.value.filter(outlet => outlet.is_active !== false))
+const outletOptions = computed(() => activeOutlets.value.map(outlet => ({
+  title: `${outlet.name} · ${outlet.outlet_type}`,
+  value: Number(outlet.id),
+})))
+
+async function loadOutlets() {
+  outlets.value = await outletClient.listOutlets()
+  if (activeOutlets.value.length === 1)
+    form.value.outlet_id = Number(activeOutlets.value[0].id)
+}
 
 async function search() {
   searching.value = true
@@ -41,6 +56,7 @@ async function postCharge() {
     description: form.value.description,
     amount_cents: majorToCents(form.value.amount),
     tax_cents: majorToCents(form.value.tax),
+    outlet_id: Number(form.value.outlet_id),
     source_type: 'other',
   })
   posting.value = false
@@ -52,10 +68,12 @@ async function postCharge() {
     'OK',
   )
 
-  form.value = { description: '', amount: 0, tax: 0 }
+  form.value = { description: '', amount: 0, tax: 0, outlet_id: form.value.outlet_id }
   if (match?.folio_id)
     await navigateTo(`/folios/view/${match.folio_id}`)
 }
+
+onMounted(loadOutlets)
 </script>
 
 <template>
@@ -87,6 +105,9 @@ async function postCharge() {
             Find stay
           </VCardTitle>
           <VCardText class="d-flex flex-column gap-3">
+            <VAlert v-if="!activeOutlets.length" type="warning" variant="tonal" density="compact">
+              No active outlet is available for this account.
+            </VAlert>
             <AppTextField
               v-model="roomNumber"
               label="Room number"
@@ -182,13 +203,21 @@ async function postCharge() {
               label="Tax (EUR)"
               :disabled="!selectedStayId"
             />
+            <AppSelect
+              v-model="form.outlet_id"
+              :items="outletOptions"
+              item-title="title"
+              item-value="value"
+              label="Outlet"
+              :disabled="!selectedStayId || !activeOutlets.length"
+            />
           </VCardText>
           <VCardActions>
             <VSpacer />
             <VBtn
               color="primary"
               :loading="posting"
-              :disabled="!selectedStayId || !form.description || !(form.amount > 0)"
+              :disabled="!selectedStayId || !form.outlet_id || !form.description || !(form.amount > 0)"
               @click="postCharge"
             >
               Post to folio

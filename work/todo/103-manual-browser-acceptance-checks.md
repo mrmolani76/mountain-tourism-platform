@@ -21,7 +21,7 @@ Walk through the running local application in a browser, following the checklist
 
 ## Current / Before
 
-- The repository tracks browser E2E automation separately in `work/todo/76-browser-e2e-testing.md`.
+- The repository tracks browser E2E automation separately in `work/todo/121-browser-e2e-testing.md`.
 - No current manual browser walkthrough or per-module result log is tracked.
 - At checklist creation, work item 104 was in progress and covered the Staff listing header defect. It was later returned to todo to allow item 103 to start.
 

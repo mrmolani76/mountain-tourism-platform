@@ -22,6 +22,7 @@ export type RentalRow = {
   id: number
   reference: string
   customer_type: string
+  outlet_id: number | null
   stay_id: number | null
   folio_id: number | null
   guest_name: string
@@ -70,6 +71,7 @@ export const useRentalApiClient = () => {
     get<{ rental: RentalRow; items: Array<Record<string, any>> }>(`rental/rentals/${id}`)
 
   const returnItem = (rentalItemId: number, body: {
+    outlet_id: number
     returned_at?: string
     condition_on_return?: string
     damage_fee_cents?: number

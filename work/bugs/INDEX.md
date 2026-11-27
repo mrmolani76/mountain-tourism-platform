@@ -4,13 +4,14 @@
 
 | ID | Title | Severity | Status | Created |
 |----|-------|----------|--------|---------|
-| BUG-MONEY-001 | Generic folio void defaults to weather reason | medium | BUG_CREATED | 2026-11-26 |
 | BUG-APP-006 | Dev hard refresh drops :3000 (Apache :80 / login 502) | high | BUG_CREATED | 2026-11-06 |
 
 ## Verified
 
 | ID | Title | Severity | Status | Verified |
 |----|-------|----------|--------|----------|
+| BUG-API-002 | Tenant validation calls an unsupported connection method | high | VERIFIED | 2026-11-27 |
+| BUG-ENV-002 | Todo notifier fails with Windows CRLF checkout | medium | VERIFIED | 2026-11-27 |
 | BUG-API-001 | Core listing config shadowed — Unknown listing resource 404 | high | VERIFIED | 2026-11-16 |
 | BUG-APP-005 | Domain ViewSets use empty authentication_classes (auth bypass risk) | high | VERIFIED | 2026-11-03 |
 | BUG-APP-004 | Staff login bad credentials → 403 instead of 401 | low | VERIFIED | 2026-11-03 |
@@ -24,4 +25,5 @@
 
 | ID | Title | Severity | Status | Closed |
 |----|-------|----------|--------|--------|
+| BUG-MONEY-001 | Generic folio void defaults to weather reason | medium | CLOSED | 2026-11-27 |
 | BUG-APP-007 | Staff listing table renders without column header row | medium | CLOSED | 2026-11-26 |

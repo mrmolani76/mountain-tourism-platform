@@ -4,26 +4,27 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- No active work item. **114** has been returned to Todo with Nexro-style SaaS admin screens and Mountain Tourism onboarding/readiness upgrades defined; no product code was changed.
 - **105** Full MVP PDF versus project audit completed at `docs/MVP_SCOPE_AUDIT.md`. Treat PDF as contract and mark unverified work honestly.
-- **106** Pending fix for BUG-MONEY-001: generic folio voids can default to reason code `weather`.
 - **103** Manual browser acceptance is paused in `work/todo/`; route checks can resume after the audit. No forms or records were changed.
 - **104** Staff listing header bug is fixed and browser-verified using Nexro's `fields` + `default_order` listing pattern.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP limit = 1**; no item is currently active. Docker startup authorized for the previous browser task only; preserve tenant data. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
+- **WIP limit = 1**. Item **122** SMTP notifier setup is complete. Docker startup authorized for the previous browser task only; preserve tenant data. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
-1. **106** Fix BUG-MONEY-001 before further folio acceptance work.
-2. **114** Build the central SaaS super-admin UI and tenant onboarding flow.
-3. Resume **103** menu route checks and ordered module acceptance.
-4. **90** Local MySQL (if browser test on that machine)
-5. **72** verify on setup machine when user allows
+1. **109** Schedule tenant-local nightly and weather jobs.
+2. **110** Add minimum age to bookable services.
+3. **111** Connect reservation departures to transport drop-offs.
 
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **108** — Protected Folio ledger and Outlet attribution; HTTP charge-to-room and weather-cancellation flows verified (high, 2026-11-27)
+- **120** — Replaced unsupported tenant validation builder calls and verified active-tenant HTTP flows (high, 2026-11-27)
+- **122** — Configured Gmail SMTP notifier, fixed Windows LF handling, and verified delivery (medium, 2026-11-27)
+- **107** — Contract choices recorded: DB-per-tenant retained, OSM maps, MET Norway only; formal PDF tenancy amendment still required (high, 2026-11-27)
+- **106** — Generic folio voids default to `other`; explicit weather remains. Focused JUnit report clean; full Hotel file has unrelated BUG-API-002 validation failures (high, 2026-11-27)
 - **105** — Full MVP scope audit, module and relationship mapping (high, 2026-11-26)
 - **104** — Fix Staff listing header row with Nexro `default_order` configuration (medium, 2026-11-26)
 - **93** — Nexro-style mtmp.local guide + hosts:sync (high, 2026-11-14)

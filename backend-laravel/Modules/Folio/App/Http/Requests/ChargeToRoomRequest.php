@@ -15,7 +15,7 @@ class ChargeToRoomRequest extends FolioRequest
             'amount_cents' => ['required', 'integer', 'min:1'],
             'tax_cents' => ['sometimes', 'integer', 'min:0'],
             'posted_on' => ['sometimes', 'date'],
-            'outlet_id' => ['nullable', 'integer', $this->tenantExists('core_outlet')],
+            'outlet_id' => ['required', 'integer', 'min:1'],
             'source_type' => ['sometimes', 'string', Rule::in(Charge::SOURCES)],
             'source_id' => ['nullable', 'string', 'max:64'],
         ];

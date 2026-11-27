@@ -11,6 +11,7 @@ class RentOutRequest extends RentalRequest
     {
         return [
             'customer_type' => ['required', 'string', Rule::in([Rental::CUSTOMER_ROOM, Rental::CUSTOMER_WALK_IN])],
+            'outlet_id' => ['required', 'integer', 'min:1'],
             'stay_id' => ['required_if:customer_type,room', 'nullable', 'integer', $this->tenantExists('hotel_stay')],
             'guest_name' => ['required', 'string', 'max:160'],
             'equipment_item_ids' => ['required', 'array', 'min:1'],

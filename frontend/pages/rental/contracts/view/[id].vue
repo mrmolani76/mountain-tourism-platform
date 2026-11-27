@@ -8,33 +8,52 @@ const rentalId = computed(() => Number(route.params.id))
 useHead({ title: computed(() => `Rental ${rentalId.value}`) })
 
 const client = useRentalApiClient()
+const outletClient = usePosApiClient()
 const loading = ref(true)
 const saving = ref(false)
 const rental = ref<RentalRow | null>(null)
 const items = ref<Array<Record<string, any>>>([])
+const outlets = ref<Array<Record<string, any>>>([])
 const returnOpen = ref(false)
 const returningId = ref<number | null>(null)
-const returnForm = ref({ condition_on_return: 'ok', damage_fee: 0 })
+const returnForm = ref({ condition_on_return: 'ok', damage_fee: 0, outlet_id: null as number | null })
+const rentalOutlets = computed(() => outlets.value.filter(outlet =>
+  outlet.is_active !== false && outlet.outlet_type === 'rental',
+))
+const outletOptions = computed(() => rentalOutlets.value.map(outlet => ({
+  title: outlet.name,
+  value: Number(outlet.id),
+})))
 
 async function load() {
   loading.value = true
-  const detail = await client.showRental(rentalId.value)
+  const [detail, outletRows] = await Promise.all([
+    client.showRental(rentalId.value),
+    outletClient.listOutlets(),
+  ])
   rental.value = detail.rental
   items.value = detail.items ?? []
+  outlets.value = outletRows
   loading.value = false
 }
 
 function startReturn(id: number) {
   returningId.value = id
-  returnForm.value = { condition_on_return: 'ok', damage_fee: 0 }
+  returnForm.value = {
+    condition_on_return: 'ok',
+    damage_fee: 0,
+    outlet_id: rental.value?.outlet_id
+      ?? (rentalOutlets.value.length === 1 ? Number(rentalOutlets.value[0].id) : null),
+  }
   returnOpen.value = true
 }
 
 async function submitReturn() {
-  if (!returningId.value)
+  if (!returningId.value || !returnForm.value.outlet_id)
     return
   saving.value = true
   await client.returnItem(returningId.value, {
+    outlet_id: Number(returnForm.value.outlet_id),
     condition_on_return: returnForm.value.condition_on_return,
     damage_fee_cents: majorToCents(returnForm.value.damage_fee),
   })
@@ -170,6 +189,14 @@ onMounted(load)
             item-value="value"
             label="Condition"
           />
+          <AppSelect
+            v-model="returnForm.outlet_id"
+            :items="outletOptions"
+            item-title="title"
+            item-value="value"
+            label="Rental outlet"
+            :disabled="Boolean(rental?.outlet_id)"
+          />
           <AppTextField v-model.number="returnForm.damage_fee" type="number" step="0.01" min="0" label="Damage fee (EUR)" />
         </VCardText>
         <VCardActions>
@@ -177,7 +204,7 @@ onMounted(load)
           <VBtn variant="text" @click="returnOpen = false">
             Cancel
           </VBtn>
-          <VBtn color="primary" :loading="saving" @click="submitReturn">
+          <VBtn color="primary" :loading="saving" :disabled="!returnForm.outlet_id" @click="submitReturn">
             Confirm
           </VBtn>
         </VCardActions>

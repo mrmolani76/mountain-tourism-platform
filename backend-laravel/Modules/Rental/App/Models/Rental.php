@@ -24,12 +24,13 @@ class Rental extends BaseModel
     protected $table = 'rental_rental';
 
     protected $fillable = [
-        'reference', 'customer_type', 'stay_id', 'folio_id', 'guest_name',
+        'reference', 'customer_type', 'outlet_id', 'stay_id', 'folio_id', 'guest_name',
         'rented_by', 'rented_at', 'due_on', 'status', 'deposit_cents',
         'charge_id', 'notes',
     ];
 
     protected $casts = [
+        'outlet_id' => 'integer',
         'stay_id' => 'integer',
         'folio_id' => 'integer',
         'rented_by' => 'integer',
@@ -57,6 +58,9 @@ class Rental extends BaseModel
             'id' => (int) $this->getKey(),
             'reference' => $this->getAttribute('reference'),
             'customer_type' => $this->getAttribute('customer_type'),
+            'outlet_id' => $this->getAttribute('outlet_id') === null
+                ? null
+                : (int) $this->getAttribute('outlet_id'),
             'stay_id' => $this->getAttribute('stay_id') === null
                 ? null
                 : (int) $this->getAttribute('stay_id'),

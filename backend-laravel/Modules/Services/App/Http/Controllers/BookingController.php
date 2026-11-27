@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\App\Support\StaffAuthz;
 use Modules\Services\App\Http\Requests\StoreBookingRequest;
 use Modules\Services\App\Models\Booking;
 use Modules\Services\App\Models\BookingParticipant;
+use Modules\Services\App\Models\ServiceDefinition;
+use Modules\Services\App\Models\Slot;
 use Modules\Services\App\Services\BookingService;
 use Modules\Services\App\Support\ServicesAuthz;
 
@@ -40,7 +43,19 @@ class BookingController extends Controller
             return $denied;
         }
 
-        $booking = $this->bookings->book($request->validated());
+        $data = $request->validated();
+        $slot = Slot::on(config('tenancy.connection_name'))->find((int) $data['slot_id']);
+        $service = $slot === null
+            ? null
+            : ServiceDefinition::on(config('tenancy.connection_name'))
+                ->find((int) $slot->getAttribute('service_id'));
+        $outletId = $service?->getAttribute('outlet_id');
+
+        if ($outletId !== null && ($denied = StaffAuthz::denyUnlessOutletAccess((int) $outletId))) {
+            return $denied;
+        }
+
+        $booking = $this->bookings->book($data);
         $payload = $booking->toApiArray();
         $payload['participants'] = BookingParticipant::on(config('tenancy.connection_name'))
             ->where('booking_id', $booking->getKey())

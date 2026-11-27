@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\App\Support\StaffAuthz;
 use Modules\Folio\App\Http\Requests\ChargeToRoomRequest;
 use Modules\Folio\App\Http\Requests\StoreChargeRequest;
 use Modules\Folio\App\Http\Requests\StorePaymentRequest;
@@ -137,6 +138,10 @@ class FolioController extends Controller
         }
 
         $data = $request->validated();
+        if ($denied = StaffAuthz::denyUnlessOutletAccess((int) $data['outlet_id'])) {
+            return $denied;
+        }
+
         $stayId = (int) $data['stay_id'];
         unset($data['stay_id']);
 
@@ -156,7 +161,12 @@ class FolioController extends Controller
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
 
-        $charge = $this->folios->postCharge($model, $request->validated());
+        $data = $request->validated();
+        if ($denied = StaffAuthz::denyUnlessOutletAccess((int) $data['outlet_id'])) {
+            return $denied;
+        }
+
+        $charge = $this->folios->postCharge($model, $data);
 
         return response()->json($charge->toApiArray(), 201);
     }

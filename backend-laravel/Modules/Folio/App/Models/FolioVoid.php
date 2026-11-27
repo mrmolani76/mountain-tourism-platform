@@ -8,6 +8,8 @@ use Modules\Folio\App\Support\FolioDate;
 /** Audit row for a voided charge or payment: reason + actor + timestamp. */
 class FolioVoid extends BaseModel
 {
+    public const REASON_OTHER = 'other';
+
     public const REASON_WEATHER = 'weather';
 
     public const UPDATED_AT = null;

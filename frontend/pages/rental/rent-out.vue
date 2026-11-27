@@ -5,11 +5,21 @@ definePageMeta({ navActiveLink: 'rental' })
 useHead({ title: 'Rent out' })
 
 const client = useRentalApiClient()
+const outletClient = usePosApiClient()
 const loading = ref(false)
 const saving = ref(false)
 const available = ref<EquipmentItem[]>([])
+const outlets = ref<Array<Record<string, any>>>([])
 const selected = ref<number[]>([])
+const rentalOutlets = computed(() => outlets.value.filter(outlet =>
+  outlet.is_active !== false && outlet.outlet_type === 'rental',
+))
+const outletOptions = computed(() => rentalOutlets.value.map(outlet => ({
+  title: outlet.name,
+  value: Number(outlet.id),
+})))
 const form = ref({
+  outlet_id: null as number | null,
   customer_type: 'walk_in' as 'walk_in' | 'room',
   guest_name: '',
   stay_id: null as number | null,
@@ -22,20 +32,27 @@ const form = ref({
 
 async function load() {
   loading.value = true
-  const res = await client.listItems({ available_only: true })
+  const [res, outletRows] = await Promise.all([
+    client.listItems({ available_only: true }),
+    outletClient.listOutlets(),
+  ])
+  outlets.value = outletRows
+  if (rentalOutlets.value.length === 1)
+    form.value.outlet_id = Number(rentalOutlets.value[0].id)
   // Prefer active ok items; API may ignore available_only — filter client-side
   available.value = (res?.results ?? []).filter(i => i.is_active && i.condition === 'ok')
   loading.value = false
 }
 
 async function submit() {
-  if (!selected.value.length || !form.value.guest_name.trim())
+  if (!selected.value.length || !form.value.outlet_id || !form.value.guest_name.trim())
     return
   if (form.value.customer_type === 'room' && !form.value.stay_id)
     return
 
   saving.value = true
   const rental = await client.rentOut({
+    outlet_id: Number(form.value.outlet_id),
     customer_type: form.value.customer_type,
     guest_name: form.value.guest_name.trim(),
     stay_id: form.value.customer_type === 'room' ? form.value.stay_id : undefined,
@@ -75,6 +92,17 @@ onMounted(load)
             Guest
           </VCardTitle>
           <VCardText class="d-flex flex-column gap-3">
+            <VAlert v-if="!rentalOutlets.length" type="warning" variant="tonal" density="compact">
+              Create an active rental outlet before renting equipment.
+            </VAlert>
+            <AppSelect
+              v-model="form.outlet_id"
+              :items="outletOptions"
+              item-title="title"
+              item-value="value"
+              label="Rental outlet"
+              :disabled="!rentalOutlets.length"
+            />
             <AppSelect
               v-model="form.customer_type"
               :items="[
@@ -113,7 +141,7 @@ onMounted(load)
             <VBtn
               color="primary"
               :loading="saving"
-              :disabled="!selected.length || !form.guest_name.trim() || (form.customer_type === 'room' && !form.stay_id)"
+              :disabled="!selected.length || !form.outlet_id || !form.guest_name.trim() || (form.customer_type === 'room' && !form.stay_id)"
               @click="submit"
             >
               Confirm rent out

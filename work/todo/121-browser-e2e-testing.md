@@ -1,6 +1,6 @@
 ---
 title: Browser / E2E testing for frontend (Nuxt + Vuetify)
-id: 76
+id: 121
 priority: high
 status: todo
 milestone: 2
@@ -30,7 +30,7 @@ Add Playwright E2E test suite for `frontend/` (Nuxt 4 + Vuetify 3, SSR off, :300
 - `frontend/tests/e2e/` with Playwright config + spec files for auth, dashboard, hotel availability, checkout gate.
 - `playwright.config.ts` with baseURL `http://localhost:3000`, Chrome/webkit/firefox projects.
 - Test credentials sourced from env (never hardcoded real passwords).
-- `work/changes/2026-11-13--76-browser-e2e-testing.md` written.
+- `work/changes/YYYY-MM-DD--121-browser-e2e-testing.md` written.
 - PLAN.md + SUMMARY.md updated.
 
 ## Why
@@ -53,7 +53,7 @@ Browser testing is the next gate after backend Laravel work (items 69–75). Cri
 
 - `frontend/tests/e2e/**`
 - `frontend/package.json` (devDependency note only — do not install)
-- `work/todo/76-browser-e2e-testing.md`
+- `work/todo/121-browser-e2e-testing.md`
 - `work/PLAN.md`, `work/SUMMARY.md`
 
 ## Notes / Follow-ups

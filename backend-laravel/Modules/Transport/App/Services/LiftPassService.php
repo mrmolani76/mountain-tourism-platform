@@ -5,12 +5,14 @@ namespace Modules\Transport\App\Services;
 use App\Support\Http\Envelope;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\App\Models\Outlet;
 use Modules\Folio\App\Models\Charge;
 use Modules\Folio\App\Models\Folio;
 use Modules\Folio\App\Models\Payment;
 use Modules\Folio\App\Services\FolioService;
 use Modules\Hotel\App\Models\Stay;
 use Modules\Pos\App\Models\Product;
+use Modules\Pos\App\Models\OutletProduct;
 use Modules\Transport\App\Models\IssuedLiftPass;
 use Modules\Transport\App\Models\LiftPassProduct;
 
@@ -37,11 +39,34 @@ class LiftPassService
             Envelope::abort('product_unavailable', 'Linked POS product is unavailable.', [], 422);
         }
 
+        $outletId = filter_var(
+            $data['outlet_id'] ?? null,
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]]
+        );
+        $outlet = $outletId === false
+            ? null
+            : Outlet::on(config('tenancy.connection_name'))
+                ->where('is_active', true)
+                ->find($outletId);
+        if ($outlet === null || ! OutletProduct::on(config('tenancy.connection_name'))
+            ->where('outlet_id', $outletId)
+            ->where('product_id', $posProduct->getKey())
+            ->where('is_available', true)
+            ->exists()) {
+            Envelope::abort(
+                'product_unavailable_at_outlet',
+                'The selected active outlet does not offer this lift pass product.',
+                [],
+                422
+            );
+        }
+
         $validFrom = CarbonImmutable::parse((string) ($data['valid_from'] ?? CarbonImmutable::now()->toDateString()));
         $days = max(1, (int) $product->getAttribute('valid_days'));
         $validTo = $validFrom->addDays($days - 1);
 
-        return DB::connection(config('tenancy.connection_name'))->transaction(function () use ($data, $product, $posProduct, $validFrom, $validTo) {
+        return DB::connection(config('tenancy.connection_name'))->transaction(function () use ($data, $product, $posProduct, $validFrom, $validTo, $outletId) {
             $folio = $this->resolveFolio($data);
             $amount = (int) $posProduct->getAttribute('price_cents');
             $taxBp = (int) $posProduct->getAttribute('tax_rate_bp');
@@ -58,6 +83,7 @@ class LiftPassService
 
             if ($folio !== null && $amount > 0) {
                 $charge = $this->folios->postCharge($folio, [
+                    'outlet_id' => $outletId,
                     'description' => 'Lift pass: '.$posProduct->getAttribute('name'),
                     'amount_cents' => $amount,
                     'tax_cents' => $tax,

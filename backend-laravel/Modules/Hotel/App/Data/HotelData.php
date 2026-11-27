@@ -19,7 +19,7 @@ abstract class HotelData extends Data
 
     protected static function tenantExists(string $table, string $column = 'id'): Exists
     {
-        return Rule::exists($table, $column)->connection(self::tenantConnection());
+        return Rule::exists(self::tenantConnection().'.'.$table, $column);
     }
 
     /**

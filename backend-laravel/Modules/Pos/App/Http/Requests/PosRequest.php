@@ -22,6 +22,6 @@ abstract class PosRequest extends FormRequest
 
     protected function tenantExists(string $table, string $column = 'id'): \Illuminate\Validation\Rules\Exists
     {
-        return Rule::exists($table, $column)->connection($this->tenantConnection());
+        return Rule::exists($this->tenantConnection().'.'.$table, $column);
     }
 }

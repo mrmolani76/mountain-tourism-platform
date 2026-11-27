@@ -58,7 +58,7 @@ export const useFolioApiClient = () => {
     description: string
     amount_cents: number
     tax_cents?: number
-    outlet_id?: number | null
+    outlet_id: number
     source_type?: string
     source_id?: string
   }) => post<Record<string, any>>('folios/charge-to-room', body)
@@ -67,7 +67,7 @@ export const useFolioApiClient = () => {
     description: string
     amount_cents: number
     tax_cents?: number
-    outlet_id?: number | null
+    outlet_id: number
     source_type?: string
     source_id?: string
   }) => post<Record<string, any>>(`folios/${folioId}/charges`, body)

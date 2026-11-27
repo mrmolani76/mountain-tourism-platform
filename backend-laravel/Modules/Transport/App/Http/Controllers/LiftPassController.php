@@ -4,6 +4,7 @@ namespace Modules\Transport\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Modules\Core\App\Support\StaffAuthz;
 use Modules\Transport\App\Http\Requests\SellLiftPassRequest;
 use Modules\Transport\App\Http\Requests\StoreLiftPassProductRequest;
 use Modules\Transport\App\Models\LiftPassProduct;
@@ -48,7 +49,12 @@ class LiftPassController extends Controller
             return $denied;
         }
 
-        $pass = $this->passes->sell($request->validated());
+        $data = $request->validated();
+        if ($denied = StaffAuthz::denyUnlessOutletAccess((int) $data['outlet_id'])) {
+            return $denied;
+        }
+
+        $pass = $this->passes->sell($data);
 
         return response()->json($pass->toApiArray(), 201);
     }

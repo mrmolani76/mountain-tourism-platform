@@ -20,9 +20,8 @@ class StoreRoomSeasonPriceData extends HotelData
                 'required',
                 'integer',
                 self::tenantExists('core_season'),
-                Rule::unique('hotel_room_season_price', 'season_id')
-                    ->where(fn ($q) => $q->where('room_type_id', (int) request()->input('room_type_id')))
-                    ->connection(self::tenantConnection()),
+                Rule::unique(self::tenantConnection().'.hotel_room_season_price', 'season_id')
+                    ->where(fn ($q) => $q->where('room_type_id', (int) request()->input('room_type_id'))),
             ],
             'amount_cents' => ['required', 'integer', 'min:0'],
         ];

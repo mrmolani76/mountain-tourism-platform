@@ -15,8 +15,6 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 107 | Confirm unresolved MVP contract decisions | high | docs | docs | S |
-| 108 | Protect folio ledger integrity and outlet attribution | high | C-folio | backend | L |
 | 109 | Schedule tenant-local nightly and weather jobs | high | H-weather | backend | L |
 | 110 | Add minimum age to bookable services | medium | F-services | backend | M |
 | 111 | Connect reservation departures to transport drop-offs | high | G-transport | backend | M |
@@ -28,7 +26,7 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 | 117 | Implement tenant-aware VPS deploy backup and rollback | high | infra | devops | L |
 | 118 | Build complete MVP demo tenant seed | medium | A-core | backend | L |
 | 119 | Complete MVP handover checklist and walkthrough | medium | docs | docs | M |
-| 106 | Fix generic folio void reason default | high | C-folio | backend | S |
+| 121 | Browser / E2E testing for frontend (Nuxt + Vuetify) | high | A-core | frontend | L |
 | 103 | Manual browser acceptance checks, one module at a time | high | A-core | tests | L |
 | 90 | Local MySQL switch for browser testing | high | infra | devops | S |
 | 72 | Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract | high | B-hotel | backend | L |
@@ -42,6 +40,11 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 108 | Protect folio ledger integrity and outlet attribution | high | C-folio | backend | L | 2026-11-27 |
+| 120 | Fix tenant-scoped validation rule builders | high | A-core | backend | L | 2026-11-27 |
+| 122 | Configure Gmail SMTP todo notifications | medium | infra | devops | S | 2026-11-27 |
+| 107 | Confirm unresolved MVP contract decisions | high | docs | docs | S | 2026-11-27 |
+| 106 | Fix generic folio void reason default | high | C-folio | backend | S | 2026-11-27 |
 | 105 | Audit MVP scope against the complete project | high | docs | docs | L | 2026-11-26 |
 | 104 | Fix missing header row in Core Staff listing | medium | A-core | backend/frontend | S | 2026-11-26 |
 | 102 | Folio EQMS list/config + DataTable (Module C) | high | C-folio | backend | M | 2026-11-23 |

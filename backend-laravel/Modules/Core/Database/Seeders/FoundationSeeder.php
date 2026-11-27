@@ -28,6 +28,9 @@ class FoundationSeeder extends Seeder
             ['Reception', 'reception'],
             ['Restaurant', 'restaurant'],
         ],
+        'Chalets' => [
+            ['Reception', 'reception'],
+        ],
         'Mid Station' => [
             ['Snack Bar', 'restaurant'],
         ],

@@ -1,7 +1,7 @@
 ---
 id: BUG-MONEY-001
 title: Generic folio void defaults to weather reason
-status: BUG_CREATED
+status: CLOSED
 type: MONEY
 severity: medium
 created: 2026-11-26
@@ -13,7 +13,7 @@ created: 2026-11-26
 If a folio void request omits `reason_code`, the service records `weather` even for a normal staff void. This can misclassify voids in audit and weather-cancellation reports.
 
 ## 2. Environment
-Code-path finding from the 2026-11-26 MVP scope audit. No runtime reproduction or test was run.
+Verified in the local Laravel test environment using PHP 8.4.28 and SQLite.
 
 ## 3. Steps to Reproduce
 1. Submit a valid folio void request with `charge_id` or `payment_id` and a `reason`, but omit `reason_code`.
@@ -28,6 +28,8 @@ The API should require an explicit reason code or use a non-weather default for 
 ## 6. Evidence
 - [VoidRequest.php](../../backend-laravel/Modules/Folio/App/Http/Requests/VoidRequest.php)
 - [FolioService.php](../../backend-laravel/Modules/Folio/App/Services/FolioService.php)
+- Focused JUnit report: 2 tests, 8 assertions, 0 failures/errors. Coverage verifies the default `other` reason and explicit `weather`.
+- Running the full `HotelModuleTest` file also confirms a separate validation error (`Exists::connection()`), tracked as BUG-API-002.
 
 ## 7. Root Cause
 The API boundary allows `reason_code` to be absent, and the service fallback is the weather-specific reason.
@@ -45,3 +47,7 @@ Folio void audit classification and weather-cancellation reporting for void requ
 - Work item: 106
 - Change report: `work/changes/2026-11-26--105-mvp-scope-project-audit.md`
 - Other bugs: none
+
+## 12. Current Work
+- **2026-11-27**: Service fallback changed to `other`; regression assertions cover omitted `reason_code` and explicit `weather`.
+- **Status**: CLOSED after focused verification. The PHP test invocation returned exit code 1 despite the clean focused JUnit report; the broader Hotel test file has 8 failures from BUG-API-002, tracked separately.

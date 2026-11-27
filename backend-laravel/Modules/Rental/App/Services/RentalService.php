@@ -9,6 +9,7 @@ use Modules\Folio\App\Models\Charge;
 use Modules\Folio\App\Models\Folio;
 use Modules\Folio\App\Models\Payment;
 use Modules\Folio\App\Services\FolioService;
+use Modules\Core\App\Models\Outlet;
 use Modules\Hotel\App\Models\Stay;
 use Modules\Rental\App\Models\EquipmentItem;
 use Modules\Rental\App\Models\Rental;
@@ -38,8 +39,9 @@ class RentalService
 
         $days = max(1, (int) ($data['days'] ?? 1));
         $dueOn = $data['due_on'] ?? CarbonImmutable::now()->addDays($days)->toDateString();
+        $outletId = $this->assertRentalOutlet((int) $data['outlet_id']);
 
-        return DB::connection(config('tenancy.connection_name'))->transaction(function () use ($data, $itemIds, $days, $dueOn) {
+        return DB::connection(config('tenancy.connection_name'))->transaction(function () use ($data, $itemIds, $days, $dueOn, $outletId) {
             foreach ($itemIds as $itemId) {
                 $this->assertItemAvailable($itemId);
             }
@@ -50,6 +52,7 @@ class RentalService
             $rental = Rental::on(config('tenancy.connection_name'))->create([
                 'reference' => $reference,
                 'customer_type' => $data['customer_type'],
+                'outlet_id' => $outletId,
                 'stay_id' => $data['stay_id'] ?? null,
                 'folio_id' => $folio->getKey(),
                 'guest_name' => $data['guest_name'],
@@ -85,6 +88,7 @@ class RentalService
 
             $chargeTotal = $rentalTotal + (int) $rental->getAttribute('deposit_cents');
             $charge = $this->folios->postCharge($folio, [
+                'outlet_id' => $outletId,
                 'description' => 'Equipment rental '.$rental->getAttribute('reference'),
                 'amount_cents' => $chargeTotal,
                 'tax_cents' => 0,
@@ -126,6 +130,12 @@ class RentalService
             Envelope::abort('rental_closed', 'Rental is not open.', [], 422);
         }
 
+        $outletId = $this->assertRentalOutlet((int) $data['outlet_id']);
+        $storedOutletId = $rental->getAttribute('outlet_id');
+        if ($storedOutletId !== null && (int) $storedOutletId !== $outletId) {
+            Envelope::abort('rental_outlet_mismatch', 'Return outlet must match the rental outlet.', [], 422);
+        }
+
         $returnedAt = CarbonImmutable::parse($data['returned_at'] ?? now());
         $dueOn = CarbonImmutable::parse($rental->getAttribute('due_on'))->startOfDay();
         $returnDay = $returnedAt->startOfDay();
@@ -139,8 +149,11 @@ class RentalService
         $condition = $data['condition_on_return'] ?? EquipmentItem::CONDITION_OK;
 
         return DB::connection(config('tenancy.connection_name'))->transaction(function () use (
-            $line, $rental, $returnedAt, $lateDays, $lateFee, $damageFee, $condition
+            $line, $rental, $returnedAt, $lateDays, $lateFee, $damageFee, $condition, $outletId
         ) {
+            $rental->setAttribute('outlet_id', $outletId);
+            $rental->save();
+
             $line->setAttribute('returned_at', $returnedAt);
             $line->setAttribute('condition_on_return', $condition);
             $line->setAttribute('late_days', $lateDays);
@@ -169,6 +182,7 @@ class RentalService
             if ($folio !== null && $folio->isOpen()) {
                 if ($lateFee > 0) {
                     $this->folios->postCharge($folio, [
+                        'outlet_id' => $outletId,
                         'description' => 'Late rental fee '.$rental->getAttribute('reference'),
                         'amount_cents' => $lateFee,
                         'tax_cents' => 0,
@@ -179,6 +193,7 @@ class RentalService
                 }
                 if ($damageFee > 0) {
                     $this->folios->postCharge($folio, [
+                        'outlet_id' => $outletId,
                         'description' => 'Damage fee '.$rental->getAttribute('reference'),
                         'amount_cents' => $damageFee,
                         'tax_cents' => 0,
@@ -223,6 +238,7 @@ class RentalService
                 'rental_rental.guest_name',
                 'rental_rental.due_on',
                 'rental_rental.status as rental_status',
+                'rental_rental.outlet_id',
                 'rental_equipment_item.item_code',
             ])
             ->orderBy('rental_rental.due_on');
@@ -236,6 +252,7 @@ class RentalService
                 'rental_item_id' => (int) $row->id,
                 'rental_id' => (int) $row->rental_id,
                 'reference' => $row->reference,
+                'outlet_id' => $row->outlet_id === null ? null : (int) $row->outlet_id,
                 'guest_name' => $row->guest_name,
                 'item_code' => $row->item_code,
                 'equipment_item_id' => (int) $row->equipment_item_id,
@@ -307,5 +324,19 @@ class RentalService
         }
 
         return null;
+    }
+
+    private function assertRentalOutlet(int $outletId): int
+    {
+        $outlet = Outlet::on(config('tenancy.connection_name'))
+            ->where('outlet_type', 'rental')
+            ->where('is_active', true)
+            ->find($outletId);
+
+        if ($outlet === null) {
+            Envelope::abort('rental_outlet_invalid', 'Select an active rental outlet.', [], 422);
+        }
+
+        return (int) $outlet->getKey();
     }
 }

@@ -8,7 +8,9 @@ const folioId = computed(() => Number(route.params.id))
 useHead({ title: computed(() => `Folio ${folioId.value}`) })
 
 const client = useFolioApiClient()
+const outletClient = usePosApiClient()
 const loading = ref(true)
+const outlets = ref<Array<Record<string, any>>>([])
 const detail = ref<FolioDetail | null>(null)
 const invoice = ref<Record<string, any> | null>(null)
 const showInvoice = ref(false)
@@ -20,15 +22,24 @@ const voidTarget = ref<{ kind: 'charge' | 'payment'; id: number } | null>(null)
 const saving = ref(false)
 
 const payForm = ref({ method: 'cash' as 'cash' | 'card', amount: 0, reference: '' })
-const chargeForm = ref({ description: '', amount: 0, tax: 0 })
+const chargeForm = ref({ description: '', amount: 0, tax: 0, outlet_id: null as number | null })
 const voidReason = ref('')
 
 const isOpen = computed(() => detail.value?.folio.status === 'open')
+const activeOutlets = computed(() => outlets.value.filter(outlet => outlet.is_active !== false))
+const outletOptions = computed(() => activeOutlets.value.map(outlet => ({
+  title: `${outlet.name} · ${outlet.outlet_type}`,
+  value: Number(outlet.id),
+})))
 
 async function load() {
   loading.value = true
   detail.value = await client.show(folioId.value)
   loading.value = false
+}
+
+async function loadOutlets() {
+  outlets.value = await outletClient.listOutlets()
 }
 
 async function loadInvoice() {
@@ -43,7 +54,12 @@ function openPay() {
 }
 
 function openCharge() {
-  chargeForm.value = { description: '', amount: 0, tax: 0 }
+  chargeForm.value = {
+    description: '',
+    amount: 0,
+    tax: 0,
+    outlet_id: activeOutlets.value.length === 1 ? Number(activeOutlets.value[0].id) : null,
+  }
   chargeOpen.value = true
 }
 
@@ -72,6 +88,7 @@ async function submitCharge() {
     description: chargeForm.value.description,
     amount_cents: majorToCents(chargeForm.value.amount),
     tax_cents: majorToCents(chargeForm.value.tax),
+    outlet_id: Number(chargeForm.value.outlet_id),
     source_type: 'other',
   })
   chargeOpen.value = false
@@ -102,7 +119,10 @@ function printInvoice() {
   window.print()
 }
 
-onMounted(load)
+onMounted(() => {
+  load()
+  loadOutlets()
+})
 </script>
 
 <template>
@@ -430,6 +450,17 @@ onMounted(load)
       <VCard>
         <VCardTitle>Add charge</VCardTitle>
         <VCardText class="d-flex flex-column gap-3">
+          <VAlert v-if="!activeOutlets.length" type="warning" variant="tonal" density="compact">
+            No active outlet is available for this account.
+          </VAlert>
+          <AppSelect
+            v-model="chargeForm.outlet_id"
+            :items="outletOptions"
+            item-title="title"
+            item-value="value"
+            label="Outlet"
+            :disabled="!activeOutlets.length"
+          />
           <AppTextField
             v-model="chargeForm.description"
             label="Description"
@@ -460,7 +491,7 @@ onMounted(load)
           <VBtn
             color="primary"
             :loading="saving"
-            :disabled="!chargeForm.description || !(chargeForm.amount > 0)"
+            :disabled="!chargeForm.outlet_id || !chargeForm.description || !(chargeForm.amount > 0)"
             @click="submitCharge"
           >
             Post charge

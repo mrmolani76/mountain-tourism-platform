@@ -25,10 +25,9 @@ class UpdateRoomSeasonPriceData extends HotelData
                 'sometimes',
                 'integer',
                 self::tenantExists('core_season'),
-                Rule::unique('hotel_room_season_price', 'season_id')
+                Rule::unique(self::tenantConnection().'.hotel_room_season_price', 'season_id')
                     ->where(fn ($q) => $q->where('room_type_id', $roomTypeId))
-                    ->ignore($id)
-                    ->connection(self::tenantConnection()),
+                    ->ignore($id),
             ],
             'amount_cents' => ['sometimes', 'integer', 'min:0'],
         ];

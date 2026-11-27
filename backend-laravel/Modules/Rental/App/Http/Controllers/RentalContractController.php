@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Core\App\Support\StaffAuthz;
 use Modules\Rental\App\Http\Requests\RentOutRequest;
 use Modules\Rental\App\Http\Requests\ReturnItemRequest;
 use Modules\Rental\App\Models\Rental;
@@ -41,7 +42,12 @@ class RentalContractController extends Controller
             return $denied;
         }
 
-        $rental = $this->rentals->rentOut($request->validated());
+        $data = $request->validated();
+        if ($denied = StaffAuthz::denyUnlessOutletAccess((int) $data['outlet_id'])) {
+            return $denied;
+        }
+
+        $rental = $this->rentals->rentOut($data);
         $payload = $rental->toApiArray();
         $payload['items'] = RentalItem::on(config('tenancy.connection_name'))
             ->where('rental_id', $rental->getKey())
@@ -84,7 +90,12 @@ class RentalContractController extends Controller
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
 
-        $returned = $this->rentals->returnItem($line, $request->validated());
+        $data = $request->validated();
+        if ($denied = StaffAuthz::denyUnlessOutletAccess((int) $data['outlet_id'])) {
+            return $denied;
+        }
+
+        $returned = $this->rentals->returnItem($line, $data);
 
         return response()->json($returned->toApiArray(), 200);
     }

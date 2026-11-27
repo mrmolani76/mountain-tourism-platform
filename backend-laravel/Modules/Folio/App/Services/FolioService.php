@@ -5,6 +5,7 @@ namespace Modules\Folio\App\Services;
 use App\Support\Http\Envelope;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\App\Models\AuditEvent;
+use Modules\Core\App\Models\Outlet;
 use Modules\Core\App\Support\CoreAudit;
 use Modules\Folio\App\Models\Charge;
 use Modules\Folio\App\Models\Folio;
@@ -34,10 +35,28 @@ class FolioService
     {
         $this->assertOpen($folio);
         $this->assertPositive((int) ($data['amount_cents'] ?? 0));
+        $outletId = filter_var(
+            $data['outlet_id'] ?? null,
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]]
+        );
+
+        if ($outletId === false
+            || ! Outlet::on(config('tenancy.connection_name'))
+                ->where('is_active', true)
+                ->whereKey($outletId)
+                ->exists()) {
+            Envelope::abort(
+                'outlet_required',
+                'A valid active tenant outlet is required to post a charge.',
+                [],
+                422
+            );
+        }
 
         $charge = Charge::on(config('tenancy.connection_name'))->create([
             'folio_id' => $folio->getKey(),
-            'outlet_id' => $data['outlet_id'] ?? null,
+            'outlet_id' => $outletId,
             'posted_on' => $data['posted_on'] ?? now()->toDateString(),
             'description' => $data['description'],
             'amount_cents' => (int) $data['amount_cents'],
@@ -133,7 +152,7 @@ class FolioService
                 'charge_id' => $chargeId,
                 'payment_id' => $paymentId,
                 'reason' => $data['reason'],
-                'reason_code' => $data['reason_code'] ?? FolioVoid::REASON_WEATHER,
+                'reason_code' => $data['reason_code'] ?? FolioVoid::REASON_OTHER,
                 'voided_by' => $this->actorId(),
             ]);
 

@@ -10,6 +10,7 @@ class ReturnItemRequest extends RentalRequest
     public function rules(): array
     {
         return [
+            'outlet_id' => ['required', 'integer', 'min:1'],
             'returned_at' => ['sometimes', 'date'],
             'condition_on_return' => ['sometimes', 'string', Rule::in(EquipmentItem::CONDITIONS)],
             'damage_fee_cents' => ['sometimes', 'integer', 'min:0'],
