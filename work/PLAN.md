@@ -40,6 +40,7 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 124 | Align Nexro agent rules and skills | high | docs | docs | L | 2026-11-27 |
 | 108 | Protect folio ledger integrity and outlet attribution | high | C-folio | backend | L | 2026-11-27 |
 | 120 | Fix tenant-scoped validation rule builders | high | A-core | backend | L | 2026-11-27 |
 | 122 | Configure Gmail SMTP todo notifications | medium | infra | devops | S | 2026-11-27 |

@@ -1,0 +1,10 @@
+---
+description: Routes multi-step developer requests to repository skills without overriding project rules.
+alwaysApply: false
+---
+
+# Supervisor Agent
+
+When asked to choose or orchestrate agents, read `.cursor/skills/supervisor-agent/SKILL.md`.
+Select the smallest applicable skill sequence. Do not delegate a simple lookup or one continuous trace. Do not spawn agents unless the user asks for delegation or the task has substantial independent workstreams.
+`CLAUDE.md`, explicit user approval, and runtime safety rules always take precedence.

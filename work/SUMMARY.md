@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **108** is complete: Folio ledger attribution/protection and HTTP charge-to-room/weather-cancellation checks are done. Two back-to-back reservation assertions still return 409 under the SQLite test harness. Browser UI acceptance remains tracked in TODOs 103 and 121. Item 107 recorded DB-per-tenant, OSM, and MET Norway only; a formal PDF tenancy amendment remains required.
+**Focus:** Item **124** completed. Nexro-inspired agent workflows are adapted and mirrored across Cursor, Claude, and OpenCode. Item **103** remains next in Todo.
 
 ## 1. Work
 
@@ -26,6 +26,7 @@ Refresh on every work / bug / change status update.
 ### In Progress
 
 ### Completed
+- **124** — Align Nexro agent rules and skills (high, 2026-11-27). Adapted Nexro workflows and synchronized 23 skills across Cursor, Claude, and OpenCode.
 - **108** — Protect folio ledger integrity and outlet attribution (high, 2026-11-27). Active Outlet checks, nightly mappings, retry handling, restrictive ledger FKs, and focused HTTP charge-to-room/weather-cancellation tests are complete.
 - **120** — Fix tenant-scoped validation rule builders (high, 2026-11-27). Replaced unsupported connection methods; active-tenant scope, unique-price validation, weather cancellation, and charge-to-room flows passed focused HTTP tests.
 - **122** — Configure Gmail SMTP todo notifications (medium, 2026-11-27). SMTP auth and delivery verified; Windows LF handling fixed.
@@ -131,6 +132,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-27 — `work/changes/2026-11-27--124-nexro-agent-rules-and-skills.md` — adapted Nexro workflows to the Mountain Tourism stack and synchronized 23 skills across Cursor, Claude, and OpenCode.
 - 2026-11-27 — `work/changes/2026-11-27--108-folio-ledger-integrity-progress.md` — completed item 108: require valid outlet attribution, protect ledger history, map nightly charges, and verify HTTP Folio/weather flows.
 - 2026-11-27 — `work/changes/2026-11-27--120-tenant-validation-rules.md` — replaced unsupported tenant-scoped validation builder calls and verified active-tenant HTTP flows.
 - 2026-11-27 — `work/changes/2026-11-27--122-gmail-smtp-notifications.md` — configured local Gmail SMTP, verified authentication and delivery, fixed the notifier's Windows CRLF checkout, and completed tracking.

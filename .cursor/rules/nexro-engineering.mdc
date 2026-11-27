@@ -50,3 +50,23 @@ alwaysApply: true
 - Run relevant tests and report actual results when verification is allowed.
 - Document changed files, security findings, and remaining risks.
 - Never claim success without verification.
+
+### 9. CI Failure Handling
+
+- Triage a failed CI run before editing application code or tests.
+- Never bypass required checks, suppress failures, or weaken tests to get a green result.
+
+### 10. Migration Safety
+
+- Treat shipped migrations as immutable; create a new migration for schema changes.
+- Do not run migrations unless the user explicitly authorizes them.
+
+### 11. Browser E2E Safety
+
+- Run browser E2E only in an authorized test environment with existing credentials.
+- Do not install test tooling or start services unless explicitly authorized.
+
+### 12. Git Approval
+
+- Do not automatically commit, push, create PRs, or merge.
+- Get explicit user approval for each GitHub write action.

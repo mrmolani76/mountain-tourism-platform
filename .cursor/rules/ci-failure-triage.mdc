@@ -1,0 +1,17 @@
+---
+description: Triage failed GitHub Actions before editing code or tests.
+alwaysApply: false
+---
+
+# CI Failure Triage
+
+When GitHub Actions is red:
+
+1. Inspect the failed run, job, step, and first relevant error using `gh`.
+2. Classify as infrastructure/environment, existing known failure, application regression, or test/setup defect.
+3. Reproduce only when the user has authorized running tests.
+4. Do not weaken tests, suppress failures, edit baselines to hide defects, or bypass required CI.
+5. Confirmed application bugs require `bug-tracker` before a fix.
+6. Follow the repository's `coding-agent`, `testing-agent`, and explicit git-approval rules.
+
+Read `.cursor/skills/ci-failure-triage/SKILL.md`.

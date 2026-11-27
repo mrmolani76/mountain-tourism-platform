@@ -252,6 +252,20 @@ Skills live in `.cursor/skills/` and are mirrored to `.opencode/skills/` and `.c
 | `bug-tracker` | Confirmed bugs → `work/bugs/` |
 | `triage-before-fix` | Red/flaky tests |
 | `verify-before-done` | Before claiming done |
+| `ci-failure-triage` | Failed GitHub Actions runs, classify before changes |
+| `ci-failure-report` | Requested report-only CI investigation |
+| `browser-e2e` | Requested Nuxt/Laravel browser acceptance work |
+| `dev-test-fix-loop` | Explicitly requested full development and verification lifecycle |
+| `bug-fix-workflow` | Explicitly requested bug lifecycle, no auto-ship |
+| `github-pr-workflow` | Explicit issue/branch/PR requests, approval-gated |
+| `supervisor-agent` | Skill routing when orchestration is requested |
+| `infer-conventions` | Requested evidence-based convention documentation |
+| `testing-best-practices` | Test design/review, follow installed tooling |
+| `tailwindcss-development` | Tailwind work in `frontend/`, follow installed version |
+| `auth-development` | Sanctum authentication, roles, and outlet access |
+| `task-interruption-safety` | Preserve state when pausing/resuming work |
+
+These workflows adapt the compatible Nexro patterns to this platform. Do not copy Nexro-specific production infrastructure, private machine details, credentials, or auto-commit/auto-push exceptions. `CLAUDE.md` and the explicit approval rules remain authoritative.
 
 ---
 

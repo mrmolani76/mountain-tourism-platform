@@ -35,6 +35,18 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 | `bug-tracker` | confirmed bug |
 | `triage-before-fix` | red / flaky tests |
 | `verify-before-done` | before "done" / "finished" |
+| `ci-failure-triage` | failed GitHub Actions runs |
+| `ci-failure-report` | requested report-only CI investigation |
+| `browser-e2e` | requested browser acceptance / Playwright work |
+| `dev-test-fix-loop` | explicitly requested full implementation-test-fix cycle |
+| `bug-fix-workflow` | explicitly requested bug lifecycle |
+| `github-pr-workflow` | explicitly requested GitHub issue / branch / PR work |
+| `supervisor-agent` | requested skill routing / workflow orchestration |
+| `infer-conventions` | requested convention audit / documentation |
+| `testing-best-practices` | designing or reviewing tests |
+| `tailwindcss-development` | Tailwind styling in `frontend/` |
+| `auth-development` | Laravel Sanctum auth / role / outlet access |
+| `task-interruption-safety` | pausing or resuming long-running work |
 
 ## Quick Start for Agents
 1. Read `CLAUDE.md`
@@ -46,6 +58,8 @@ Configured under `.cursor/skills/` (mirrors: `.opencode/skills/`, `.claude/skill
 7. WIP limit = 1. Validate: `bash scripts/check-work-kanban.sh`
 8. Before saying done: `verify-before-done` + Completion Log + change report + MD → `completed`
 9. Commit/push only after explicit user approval ("Commit aur push karun?")
+
+Nexro-inspired rules and skills are adapted for this repository. `CLAUDE.md` wins over any skill or client-specific mirror. Never import another project's production machine details, secrets, or workflows that override this repository's approval gates.
 
 ## Key Project Facts
 - **Product**: Mountain tourism complex SaaS (MVP scope PDF in `document/`)

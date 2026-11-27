@@ -1,0 +1,12 @@
+---
+description: Shipped migrations are immutable; schema changes require a new migration.
+globs: backend-laravel/**/migrations/**/*.php
+alwaysApply: false
+---
+
+# Immutable Migrations
+
+- Never edit a migration that may have shipped or run on any database.
+- Make schema changes in a new migration following the module's existing layout.
+- Do not run migrations unless the user explicitly authorizes them.
+- Follow `CLAUDE.md` Rule 8 and `.cursor/skills/laravel-best-practices/rules/migrations.md`.

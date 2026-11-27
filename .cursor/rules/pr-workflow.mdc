@@ -1,0 +1,13 @@
+---
+description: Guardrails for GitHub issues, branches, commits, pushes, and pull requests.
+alwaysApply: false
+---
+
+# GitHub PR Workflow
+
+Activate `.cursor/skills/github-pr-workflow/SKILL.md` when the user explicitly requests branch, issue, or PR work.
+
+- Never commit, push, or create a PR without explicit approval in the current exchange.
+- Never force-push or merge.
+- Do not create fake issues or branches just to satisfy a workflow.
+- Keep project work-tracker requirements and the user's requested branch strategy.

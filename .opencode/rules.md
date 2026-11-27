@@ -27,6 +27,10 @@ Tenant, Building, Outlet, Season, Stay, Board plan, Folio, Charge, Payment, Serv
 6. Watch N+1 / expensive queries
 7. Follow repo conventions; do not weaken tests to pass CI
 8. Never claim done without verification
+9. Triage CI failures before code/test changes; never bypass required checks
+10. Use immutable migrations: add a new migration for a schema change
+11. Run browser E2E only in an authorized test environment with existing credentials
+12. No auto-commit, auto-push, PR creation, or merge; get the user's explicit approval
 
 ---
 
@@ -47,6 +51,20 @@ Skills: `.opencode/skills/<name>/SKILL.md`. Cursor mirrors: `.cursor/skills/`. C
 | `bug-tracker` | Confirmed bugs |
 | `triage-before-fix` | Red/flaky tests |
 | `verify-before-done` | Before claiming done |
+| `ci-failure-triage` | Failed GitHub Actions runs, classify before edits |
+| `ci-failure-report` | Requested CI report-only investigation |
+| `browser-e2e` | Requested browser acceptance testing |
+| `dev-test-fix-loop` | Explicit full development/test/fix lifecycle |
+| `bug-fix-workflow` | Explicit bug lifecycle, no auto-ship |
+| `github-pr-workflow` | Explicit GitHub issue/branch/PR requests |
+| `supervisor-agent` | Requested skill routing/orchestration |
+| `infer-conventions` | Requested convention audit |
+| `testing-best-practices` | Test design and review |
+| `tailwindcss-development` | Tailwind UI work, follow installed version |
+| `auth-development` | Laravel Sanctum auth and authorization |
+| `task-interruption-safety` | Preserve state when pausing/resuming work |
+
+Cursor-specific rule files live in `.cursor/rules/`; all clients follow root `CLAUDE.md` on conflicts. Skills added from Nexro are adapted to the local Laravel + Nuxt stack; no Nexro credentials, private production details, or automatic Git/deployment permissions are imported.
 
 ## Response style
 Chat = Hinglish. Repo files = English. Short, tables/bullets, no em-dash.

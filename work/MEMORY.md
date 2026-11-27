@@ -9,7 +9,7 @@
 - **104** Staff listing header bug is fixed and browser-verified using Nexro's `fields` + `default_order` listing pattern.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP limit = 1**. Item **122** SMTP notifier setup is complete. Docker startup authorized for the previous browser task only; preserve tenant data. Next setup when asked: apply hosts (`sudo … hosts:sync`) / MySQL **90**.
+- **WIP limit = 1**. Item **124** is complete; item **103** remains next in Todo. Preserve tenant data and require explicit authorization before any further migration or reset. Item **90** MySQL switch remains pending.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
@@ -20,6 +20,7 @@
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **124** — Adapted and synchronized Nexro-inspired rules and 12 new skills across Cursor, Claude, and OpenCode (high, 2026-11-27)
 - **108** — Protected Folio ledger and Outlet attribution; HTTP charge-to-room and weather-cancellation flows verified (high, 2026-11-27)
 - **120** — Replaced unsupported tenant validation builder calls and verified active-tenant HTTP flows (high, 2026-11-27)
 - **122** — Configured Gmail SMTP notifier, fixed Windows LF handling, and verified delivery (medium, 2026-11-27)

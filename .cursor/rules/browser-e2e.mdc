@@ -1,0 +1,15 @@
+---
+description: Browser E2E practices for the Nuxt/Vuetify staff SPA and Laravel API.
+globs: frontend/**/*
+alwaysApply: false
+---
+
+# Browser E2E
+
+For browser E2E implementation or execution requests:
+
+1. Read `.cursor/skills/browser-e2e/SKILL.md`.
+2. Use existing browser tooling and test layout; do not install a framework or start services unless explicitly authorized.
+3. Use stable accessible selectors, isolated data, and existing test credentials. Never commit credentials.
+4. On failures, activate `triage-before-fix`; confirmed application defects go through `bug-tracker`.
+5. Respect `testing-agent` limits on test execution and the kanban, change-report, and git-approval rules.
