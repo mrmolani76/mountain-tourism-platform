@@ -20,7 +20,8 @@ class AuthApiTest extends TenancyTestCase
         $response->assertOk()
             ->assertJsonPath('email', 'owner@lab.test')
             ->assertJsonPath('role_code', 'owner')
-            ->assertJsonPath('tenant_slug', 'lab');
+            ->assertJsonPath('tenant_slug', 'lab')
+            ->assertJsonPath('uuid', $this->owner->uuid);
     }
 
     public function test_login_wrong_password(): void
@@ -61,7 +62,52 @@ class AuthApiTest extends TenancyTestCase
 
         $response->assertOk()
             ->assertJsonPath('email', 'owner@lab.test')
-            ->assertJsonPath('role_code', 'owner');
+            ->assertJsonPath('role_code', 'owner')
+            ->assertJsonPath('uuid', $this->owner->uuid);
+    }
+
+    public function test_staff_lookup_endpoints_resolve_persisted_uuid(): void
+    {
+        $uuid = (string) $this->frontDesk->uuid;
+
+        $this->actingAsStaff($this->owner)
+            ->getJson('/api/user/show?uuid='.$uuid)
+            ->assertOk()
+            ->assertJsonPath('data.uuid', $uuid)
+            ->assertJsonPath('data.id', $this->frontDesk->getKey());
+
+        $this->actingAsStaff($this->owner)
+            ->getJson('/api/user/fetch?uuid='.$uuid)
+            ->assertOk()
+            ->assertJsonPath('data.user.uuid', $uuid);
+    }
+
+    public function test_staff_resource_routes_resolve_uuid(): void
+    {
+        $uuid = (string) $this->frontDesk->uuid;
+
+        $this->actingAsStaff($this->owner)
+            ->getJson('/api/staff/'.$uuid)
+            ->assertOk()
+            ->assertJsonPath('uuid', $uuid);
+
+        $this->actingAsStaff($this->owner)
+            ->patchJson('/api/staff/'.$uuid, ['email' => $this->frontDesk->email])
+            ->assertOk()
+            ->assertJsonPath('uuid', $uuid);
+    }
+
+    public function test_staff_listing_uses_uuid_for_view_links(): void
+    {
+        $uuid = (string) $this->frontDesk->uuid;
+
+        $response = $this->actingAsStaff($this->owner)
+            ->postJson('/api/users/list', [])
+            ->assertOk();
+
+        $row = collect($response->json('data'))->firstWhere('uuid', $uuid);
+        $this->assertNotNull($row);
+        $this->assertSame('/users/view/'.$uuid, $row['email']['url']);
     }
 
     public function test_me_without_auth_denied(): void

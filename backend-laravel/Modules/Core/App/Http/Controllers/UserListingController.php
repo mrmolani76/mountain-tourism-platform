@@ -25,7 +25,7 @@ use Modules\Core\App\Support\StaffAuthz;
  *   GET  /api/users/list/config
  *   POST /api/users/list
  *   POST /api/users/create
- *   GET  /api/user/fetch?id=
+ *   GET  /api/user/fetch?uuid=
  *   POST /api/user/update
  *   POST /api/users/destroy
  *   POST /api/users/usersActivate
@@ -151,7 +151,7 @@ class UserListingController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Staff created.',
-            'uuid' => (string) $s->getKey(),
+            'uuid' => (string) $s->getAttribute('uuid'),
             'data' => $this->detail($s),
         ], 201);
     }
@@ -162,8 +162,8 @@ class UserListingController extends Controller
             return $d;
         }
 
-        $id = (int) $request->query('id', $request->query('uuid', 0));
-        $s = Staff::on(config('tenancy.connection_name'))->find($id);
+        $identifier = (string) $request->query('uuid', $request->query('id', ''));
+        $s = $this->findStaff($identifier);
         if ($s === null) {
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
@@ -182,8 +182,8 @@ class UserListingController extends Controller
             return $d;
         }
 
-        $id = (int) $request->query('uuid', $request->query('id', 0));
-        $s = Staff::on(config('tenancy.connection_name'))->find($id);
+        $identifier = (string) $request->query('uuid', $request->query('id', ''));
+        $s = $this->findStaff($identifier);
         if ($s === null) {
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
@@ -200,8 +200,8 @@ class UserListingController extends Controller
             return $d;
         }
 
-        $id = (int) ($request->input('uuid') ?? $request->input('id') ?? 0);
-        $s = Staff::on(config('tenancy.connection_name'))->find($id);
+        $identifier = (string) ($request->input('uuid') ?? $request->input('id') ?? '');
+        $s = $this->findStaff($identifier);
         if ($s === null) {
             return Envelope::errorJson('not_found', 'Not found.', [], 404);
         }
@@ -236,7 +236,7 @@ class UserListingController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Staff updated.',
-            'uuid' => (string) $s->getKey(),
+            'uuid' => (string) $s->getAttribute('uuid'),
             'data' => $this->detail($s->fresh()),
         ]);
     }
@@ -311,7 +311,30 @@ class UserListingController extends Controller
             $raw = [$raw];
         }
 
-        return array_values(array_filter(array_map('intval', $raw)));
+        $identifiers = array_values(array_filter(
+            array_map(static fn ($value) => trim((string) $value), $raw),
+            static fn (string $value) => $value !== '',
+        ));
+        if ($identifiers === []) {
+            return [];
+        }
+
+        $uuids = array_values(array_filter($identifiers, static fn (string $value) => ! ctype_digit($value)));
+        $ids = array_values(array_filter($identifiers, static fn (string $value) => ctype_digit($value)));
+
+        return Staff::on(config('tenancy.connection_name'))
+            ->where(function ($query) use ($uuids, $ids) {
+                if ($uuids !== []) {
+                    $query->whereIn('uuid', $uuids);
+                }
+                if ($ids !== []) {
+                    $method = $uuids === [] ? 'whereIn' : 'orWhereIn';
+                    $query->{$method}('id', array_map('intval', $ids));
+                }
+            })
+            ->pluck('id')
+            ->map(static fn ($id) => (int) $id)
+            ->all();
     }
 
     /**
@@ -324,7 +347,7 @@ class UserListingController extends Controller
         $active = (bool) $s->is_active;
 
         return [
-            'uuid' => (string) $s->getKey(),
+            'uuid' => (string) $s->getAttribute('uuid'),
             'id' => (int) $s->getKey(),
             'actions' => [
                 'writePermission' => true,
@@ -336,7 +359,7 @@ class UserListingController extends Controller
             'email' => [
                 'label' => (string) $s->email,
                 'type' => 'link',
-                'url' => '/users/view/'.$s->getKey(),
+                'url' => '/users/view/'.$s->getAttribute('uuid'),
             ],
             'role' => [
                 'label' => $s->roleDisplay(),
@@ -392,7 +415,7 @@ class UserListingController extends Controller
 
         return [
             'id' => (int) $s->getKey(),
-            'uuid' => (string) $s->getKey(),
+            'uuid' => (string) $s->getAttribute('uuid'),
             'email' => $email,
             'fullName' => explode('@', $email)[0] ?? $email,
             'firstName' => explode('@', $email)[0] ?? '',
@@ -419,6 +442,23 @@ class UserListingController extends Controller
                 'type' => 'text',
             ],
         ];
+    }
+
+    private function findStaff(string $identifier): ?Staff
+    {
+        if ($identifier === '') {
+            return null;
+        }
+
+        $staff = Staff::on(config('tenancy.connection_name'))
+            ->where('uuid', $identifier)
+            ->first();
+
+        if ($staff === null && ctype_digit($identifier)) {
+            $staff = Staff::on(config('tenancy.connection_name'))->find((int) $identifier);
+        }
+
+        return $staff;
     }
 
     /**

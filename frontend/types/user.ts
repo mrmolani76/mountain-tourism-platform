@@ -73,6 +73,7 @@ export interface Role {
  */
 export interface StaffUser {
   id: number
+  uuid: string
   email: string
   role: string
   role_code: string

@@ -4,12 +4,15 @@
 
 | ID | Title | Severity | Status | Created |
 |----|-------|----------|--------|---------|
+| BUG-APP-010 | Outlets listing shows building ID instead of name | medium | RETESTING | 2026-11-27 |
 | BUG-APP-006 | Dev hard refresh drops :3000 (Apache :80 / login 502) | high | BUG_CREATED | 2026-11-06 |
 
 ## Verified
 
 | ID | Title | Severity | Status | Verified |
 |----|-------|----------|--------|----------|
+| BUG-APP-009 | Owner dashboard today report returns HTTP 500 | medium | VERIFIED | 2026-11-27 |
+| BUG-APP-008 | Staff detail URLs use numeric IDs instead of UUIDs | medium | VERIFIED | 2026-11-27 |
 | BUG-API-002 | Tenant validation calls an unsupported connection method | high | VERIFIED | 2026-11-27 |
 | BUG-ENV-002 | Todo notifier fails with Windows CRLF checkout | medium | VERIFIED | 2026-11-27 |
 | BUG-API-001 | Core listing config shadowed — Unknown listing resource 404 | high | VERIFIED | 2026-11-16 |
@@ -25,5 +28,6 @@
 
 | ID | Title | Severity | Status | Closed |
 |----|-------|----------|--------|--------|
+| BUG-ENV-003 | Nuxt Docker HMR does not reflect source edits | medium | CLOSED | 2026-11-27 |
 | BUG-MONEY-001 | Generic folio void defaults to weather reason | medium | CLOSED | 2026-11-27 |
 | BUG-APP-007 | Staff listing table renders without column header row | medium | CLOSED | 2026-11-26 |

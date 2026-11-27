@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **124** completed. Nexro-inspired agent workflows are adapted and mirrored across Cursor, Claude, and OpenCode. Item **103** remains next in Todo.
+**Focus:** Item **126** is in progress: show the related Building name in the Core Outlets listing instead of its numeric ID.
 
 ## 1. Work
 
@@ -19,14 +19,17 @@ Refresh on every work / bug / change status update.
 - **118** — Build complete MVP demo tenant seed (medium). Seed linked data across Modules A-H idempotently.
 - **119** — Complete MVP handover checklist and walkthrough (medium). Finalize evidence and record the client walkthrough after acceptance.
 - **121** — Browser / E2E testing for frontend (Nuxt + Vuetify) (high). Add Playwright coverage for auth, dashboard, availability, and checkout.
-- **103** — Manual browser acceptance checks, one module at a time (high). Preflight passes; menu route and module checks remain.
+- **103** — Manual browser acceptance checks, one module at a time (high). Returned to Todo while item 123 is prioritized. Local preflight and Staff UUID listing/detail/edit browser checks pass; remaining auth and module acceptance checks are pending.
 - **90** — Local MySQL switch for browser testing (high). Returned 2026-11-14; finish on another machine (EQMS hosts, DB-per-tenant).
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
+- **126** — Show Building names in Core Outlets listing (medium). Replace the numeric Building ID in the Outlet table with its related Building name.
 
 ### Completed
+- **125** — Run platform locally with Docker Compose (medium, 2026-11-27). Nuxt dev server runs without starting the migration/reset command; live HMR verified at `http://lab.local.mtmtp.local:3000/`.
 - **124** — Align Nexro agent rules and skills (high, 2026-11-27). Adapted Nexro workflows and synchronized 23 skills across Cursor, Claude, and OpenCode.
+- **123** — Fix owner dashboard today-summary API and UI (medium, 2026-11-27). Fixed the invalid Eloquent Builder call, added API regression coverage, and browser-verified the dashboard summary and empty-room state.
 - **108** — Protect folio ledger integrity and outlet attribution (high, 2026-11-27). Active Outlet checks, nightly mappings, retry handling, restrictive ledger FKs, and focused HTTP charge-to-room/weather-cancellation tests are complete.
 - **120** — Fix tenant-scoped validation rule builders (high, 2026-11-27). Replaced unsupported connection methods; active-tenant scope, unique-price validation, weather cancellation, and charge-to-room flows passed focused HTTP tests.
 - **122** — Configure Gmail SMTP todo notifications (medium, 2026-11-27). SMTP auth and delivery verified; Windows LF handling fixed.
@@ -106,9 +109,12 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
+- **BUG-APP-010** — Outlets listing shows building ID instead of name (medium, RETESTING, 2026-11-27)
 - **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
+- **BUG-APP-009** — Owner dashboard `/api/reports/today` returned HTTP 500 (medium, VERIFIED, 2026-11-27). Fixed the invalid Builder call; browser refresh loaded metrics without the error banner.
+- **BUG-APP-008** — Staff detail URLs use persisted UUIDs (medium, VERIFIED, 2026-11-27). Local migration and browser listing/detail/edit checks passed.
 - **BUG-API-002** — Tenant validation used unsupported `Exists::connection()` calls (high, VERIFIED, 2026-11-27). Fixed and verified in item 120.
 - **BUG-ENV-002** — Todo notification script failed with Windows CRLF checkout; LF policy added and SMTP delivery verified (medium, 2026-11-27).
 - **BUG-API-001** — Core listing config shadowed — Unknown listing resource 404 (high, 2026-11-16)
@@ -120,10 +126,16 @@ Refresh on every work / bug / change status update.
 - **BUG-ENV-001** — Tenant DB template clone missing OPTIONS key (high, 2026-11-02)
 
 ### Closed
+- **BUG-ENV-003** — Nuxt Docker HMR did not detect Windows bind-mounted edits (medium, CLOSED, 2026-11-27). Vite polling fixed it; live browser update verified under item 125.
 - **BUG-MONEY-001** — Generic folio void defaults to weather reason (medium, CLOSED, 2026-11-27). Fix item 106 verified.
 - **BUG-APP-007** — Staff listing table renders without column header row (medium, CLOSED, 2026-11-26).
 
 ## 3. Testing
+- 2026-11-27 — Item 126: eager-loaded the related Building for the Outlets list and serialized its name into the existing display cell. Regression test authored; execution could not start because `php` is not available on the Windows host. Browser verification is pending an authenticated tenant-host session.
+- 2026-11-27 — Item 125: Compose config validated; `mtmtp_spa_dev` is running and `http://lab.local.mtmtp.local:3000/` returns HTTP 200. Browser rendered the tenant-host login page and applied a source edit through HMR without a manual reload or navigation. No migrations, resets, or volume removals were run.
+- 2026-11-27 — Staff UUID routes: applied only the UUID migration to `lab_local`; 8 of 8 Staff rows have unique non-null UUIDs. Browser listing, detail, and edit routes passed. Regression tests were authored but not run under the code-only workflow.
+- 2026-11-27 — Item 103 local preflight: API and proxied health HTTP 200; SPA login rendered. At startup, central migrations 7 and `lab_local` tenant migrations 60 were already applied; later, only the Staff UUID migration was applied after approval.
+- 2026-11-27 — Owner dashboard: reproduced `/api/reports/today` HTTP 500 from `TenantSettings::on($conn)->query()`, fixed the invalid Builder call, and verified the browser dashboard loads metrics without the failure banner. No-room occupancy now shows `—` and “No rooms configured”. Regression test authored but not run.
 - 2026-11-27 — Item 120 focused API flow tests: 5 passed, 17 assertions. Full `HotelModuleTest.php`: 17 passed, 2 back-to-back reservation assertions returned 409 under SQLite; PHPUnit process exits 1.
 - 2026-11-27 — Item 108 focused JUnit report: 6 tests, 29 assertions, 0 failures/errors/skipped. The HTTP flow checks also passed in item 120's focused run. PHPUnit process still exits 1; project browser URL refused connection, so UI checks remain pending in TODOs 103/121.
 - 2026-11-27 — item 106 focused JUnit report: 2 tests, 8 assertions, no failures/errors; test invocation returned exit code 1. Full `HotelModuleTest`: 3 passed, 8 failed due to BUG-API-002 validation errors.
@@ -132,7 +144,13 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-27 — `work/changes/2026-11-27--126-outlet-building-name.md` — changed the Core Outlets listing response to show the related Building name without changing the DataTable component or CRUD IDs; verification remains pending.
+- 2026-11-27 — `work/changes/2026-11-27--125-docker-hmr.md` — added the Nuxt Docker development target, enabled bind-mount polling for HMR, and verified the requested tenant host without resetting data.
 - 2026-11-27 — `work/changes/2026-11-27--124-nexro-agent-rules-and-skills.md` — adapted Nexro workflows to the Mountain Tourism stack and synchronized 23 skills across Cursor, Claude, and OpenCode.
+- 2026-11-27 — `work/changes/2026-11-27--103-staff-uuid-routes.md` — aligned Staff URL identifiers with Nexro UUID pattern; local migration and browser route checks passed.
+- 2026-11-27 — `work/changes/2026-11-27--123-dashboard-summary-api-ui.md` — fixed the owner dashboard report API and made the no-room occupancy state explicit; browser-verified.
+- 2026-11-27 — `work/changes/2026-11-27--123-track-dashboard-today-report-500.md` — recorded BUG-APP-009 and moved item 123 into progress; no app fix attempted yet.
+- 2026-11-27 — `work/changes/2026-11-27--103-remove-staff-detail-back-button.md` — removed the redundant back-arrow button from the Staff detail header; edit action remains.
 - 2026-11-27 — `work/changes/2026-11-27--108-folio-ledger-integrity-progress.md` — completed item 108: require valid outlet attribution, protect ledger history, map nightly charges, and verify HTTP Folio/weather flows.
 - 2026-11-27 — `work/changes/2026-11-27--120-tenant-validation-rules.md` — replaced unsupported tenant-scoped validation builder calls and verified active-tenant HTTP flows.
 - 2026-11-27 — `work/changes/2026-11-27--122-gmail-smtp-notifications.md` — configured local Gmail SMTP, verified authentication and delivery, fixed the notifier's Windows CRLF checkout, and completed tracking.
@@ -145,7 +163,7 @@ Refresh on every work / bug / change status update.
 - 2026-11-26 — `work/changes/2026-11-26--mvp-remaining-work-todos.md` — added TODO items 107-119 from the MVP scope audit.
 - 2026-11-26 — `work/changes/2026-11-26--105-mvp-scope-project-audit.md` — item 105: full MVP scope audit; report at `docs/MVP_SCOPE_AUDIT.md`; BUG-MONEY-001 tracked as item 106.
 - 2026-11-26 — `work/changes/2026-11-26--104-staff-listing-header.md` — item 104: Nexro-style `default_order`; fix Vuetify headers.
-- 2026-11-26 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103: preflight passes; read-only route review in progress.
+- 2026-11-27 — `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md` — item 103 local stack started without migrations/reset; API and SPA preflight pass, remaining browser checks in progress.
 - 2026-11-23 — `work/changes/2026-11-23--mtmtp-dev-stack-restart.md` — runtime: restarted stopped mtmtp Docker stack; correct client URL `lab.local.mtmtp.local:3000`
 - 2026-11-23 — `work/changes/2026-11-23--102-folio-eqms-listing-datatable.md` — item 102: Folio EQMS DataTable + module audit
 - 2026-11-26 — `work/changes/2026-11-26--resolve-folio-staff-work-id-conflict.md` — preserved completed Folio item 102 and renumbered the Staff listing task to 104.

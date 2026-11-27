@@ -35,12 +35,15 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
+| 126 | Show Building names in Core Outlets listing | medium | A-core | backend | S |
 
 ## Completed
 
 | ID | Title | Priority | Module | Area | Effort | Completed |
 |----|-------|----------|--------|------|--------|-----------|
+| 125 | Run platform locally with Docker Compose | medium | infra | devops | M | 2026-11-27 |
 | 124 | Align Nexro agent rules and skills | high | docs | docs | L | 2026-11-27 |
+| 123 | Fix owner dashboard today-summary API and UI | medium | I-dashboard | backend/frontend | M | 2026-11-27 |
 | 108 | Protect folio ledger integrity and outlet attribution | high | C-folio | backend | L | 2026-11-27 |
 | 120 | Fix tenant-scoped validation rule builders | high | A-core | backend | L | 2026-11-27 |
 | 122 | Configure Gmail SMTP todo notifications | medium | infra | devops | S | 2026-11-27 |

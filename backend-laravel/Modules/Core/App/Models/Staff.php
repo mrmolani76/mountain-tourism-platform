@@ -3,6 +3,7 @@
 namespace Modules\Core\App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Support\Str;
 use Modules\Core\App\Enums\StaffRole;
 
 class Staff extends BaseModel
@@ -43,6 +44,7 @@ class Staff extends BaseModel
     protected static function booted(): void
     {
         static::creating(function (self $staff) {
+            $staff->setAttribute('uuid', $staff->getAttribute('uuid') ?: (string) Str::uuid());
             $staff->setAttribute('created_at', $staff->getAttribute('created_at') ?: now());
         });
     }

@@ -18,7 +18,7 @@ useHead({
 const { $toast } = useNuxtApp()
 const { getUserViewById, userPasswordReset, loading } = useUserApiClient()
 const route = useRoute()
-const uuid = ref(String(route.params.id))
+const uuid = ref(String(route.params.uuid))
 const user = ref<User | undefined>()
 const tabItems = ref([] as AppTab[])
 const resetOpen = ref(false)
@@ -74,8 +74,8 @@ const openReset = () => {
 }
 
 const submitReset = async () => {
-  const staffId = Number(user.value?.id || uuid.value)
-  if (!staffId || String(newPassword.value).length < 8) {
+  const internalStaffId = Number(user.value?.id)
+  if (!internalStaffId || String(newPassword.value).length < 8) {
     $toast.error('Password must be at least 8 characters.')
 
     return
@@ -84,7 +84,7 @@ const submitReset = async () => {
   resetSaving.value = true
   try {
     const response = await userPasswordReset({
-      staff_id: staffId,
+      staff_id: internalStaffId,
       new_password: newPassword.value,
     })
 
@@ -101,11 +101,11 @@ const submitReset = async () => {
 
 reloadData()
 
-watch(() => route.params.id, (id) => {
-  if (!id)
+watch(() => route.params.uuid, (routeUuid) => {
+  if (!routeUuid)
     return
 
-  uuid.value = String(id)
+  uuid.value = String(routeUuid)
   reloadData()
 })
 </script>
@@ -211,17 +211,6 @@ watch(() => route.params.id, (id) => {
                 </div>
               </template>
             </VTooltip>
-            <VBtn
-              size="38"
-              variant="tonal"
-              color="secondary"
-              @click="navigateTo('/users')"
-            >
-              <VIcon
-                icon="tabler-arrow-left"
-                size="22"
-              />
-            </VBtn>
           </div>
           <div class="tw-flex tw-justify-end tw-gap-1">
             <VTooltip :text="$t('lastLogin') || 'Last login'">

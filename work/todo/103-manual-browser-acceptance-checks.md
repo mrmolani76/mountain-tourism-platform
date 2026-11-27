@@ -8,9 +8,9 @@ module: A-core
 area: tests
 effort: L
 dependencies: none
-bug: none
+bug: BUG-APP-008
 created: 2026-11-26
-updated: 2026-11-26
+updated: 2026-11-27
 ---
 
 # Manual browser acceptance checks, one module at a time
@@ -37,9 +37,10 @@ The project needs a repeatable, visible browser check of the core staff workflow
 
 ## Acceptance Criteria (complete only when all ticked)
 
-- [ ] Preflight: confirm SPA loads and the API health endpoint responds.
+- [x] Preflight: confirm SPA loads and the API health endpoint responds.
 - [ ] Authentication: verify valid login, invalid login feedback, logout, and role-aware access.
 - [ ] Core: check Staff listing headers/filters, Buildings, Outlets, Seasons, and tenant settings. Staff listing check follows completion of item 104.
+- [ ] Confirm Staff detail/edit routes and API lookups use persisted UUIDs, not numeric IDs. See BUG-APP-008.
 - [ ] Hotel: check availability, reservations, stays, check-in, and check-out.
 - [ ] Folio: check charge, payment, void reason, and zero-balance checkout. Never edit or delete Charge or Payment records.
 - [ ] POS: check catalog, order creation, settlement, and room charge where available.
@@ -54,17 +55,32 @@ The project needs a repeatable, visible browser check of the core staff workflow
 
 ## Files Likely Affected
 
-- `work/todo/103-manual-browser-acceptance-checks.md`
+- `work/inprogress/103-manual-browser-acceptance-checks.md`
 - `work/changes/2026-11-26--103-manual-browser-acceptance-checks.md`
 - `work/bugs/` if browser checks confirm defects
 
 ## Notes / Follow-ups
 
 - Use only a disposable local test tenant and test account. Do not use production guest or payment data.
-- Do not add a browser-test dependency in this manual walkthrough. Playwright automation remains item 76.
+- Do not add a browser-test dependency in this manual walkthrough. Playwright automation remains item 121.
 - Stop on a failed prerequisite and record the blocker instead of masking it or changing data to force a pass.
 
 ## Browser Run Log
+
+### 2026-11-27
+- **Preflight**: PASS. Started `mtmtp_db`, `mtmtp_laravel_local`, and `mtmtp_spa` without migrations or tenant reset. API health, SPA login, and proxied API health returned HTTP 200; browser rendered the Mountain Tourism login page.
+- **Migration check**: Central DB has 7 applied migrations; `lab_local` tenant DB has 60 applied migrations (batch 8). These were already present; no migration command was executed.
+- **Startup note**: Compose's default Laravel command includes migrations and `tenants:provision-local --reset`, so it was overridden. `docker compose start spa` tried to start the old Laravel container and hit a port conflict; starting the existing SPA container directly succeeded.
+- **Next step**: Resume remaining authentication and module checks after dashboard bug item 123.
+- **UI request**: Removed the redundant back-arrow button from the Staff detail header at the user's request; retained the edit control.
+- **Change report**: `work/changes/2026-11-27--103-remove-staff-detail-back-button.md`.
+- **Staff UUID routes**: Updated SPA routes and API handling to use persisted UUIDs, matching Nexro. BUG-APP-008 is verified after the local tenant migration and browser checks.
+- **Change report**: `work/changes/2026-11-27--103-staff-uuid-routes.md`.
+- **Browser refresh after route update**: PASS. Nuxt HMR serves `http://localhost:3000/login`; after hydration the browser renders the login form. The anonymous session lookup returned HTTP 401 before successful test-account login. No application records were changed during browser checks.
+- **Staff UUID migration**: PASS. After user approval, ran only `2026_11_27_000003_add_uuid_to_core_staff.php` against `lab_local`; all 8 Staff rows have non-null, distinct UUIDs. No reset or other migration was run.
+- **Staff UUID browser flow**: PASS. Local test login succeeded; Staff listing linked to UUID URLs, and the UUID detail and edit routes loaded the selected Staff record. The edit form was not submitted.
+- **Owner dashboard today report**: FAIL. Dashboard showed the today-summary failure message, and Laravel request logs showed repeated HTTP 500 responses from `/api/reports/today`. Tracked as BUG-APP-009 and Todo item 123; no application code was changed.
+- **Work priority**: Returned this item to Todo so the dashboard failure can be investigated first under the WIP limit.
 
 ### 2026-11-26
 - **Preflight**: BLOCKED. Browser connections were refused at `http://lab.local.mtmtp.local:3000/`, `http://localhost:3000/`, and `http://127.0.0.1:8010/api/health/`.
@@ -83,6 +99,11 @@ The project needs a repeatable, visible browser check of the core staff workflow
 ---
 
 ## Return to Pending Log (when work stops midway)
+
+### 2026-11-27
+- **Returned by**: Copilot
+- **Reason**: User asked to prioritize fixing the owner dashboard today-report failure; WIP limit is one.
+- **Next step**: Resume the remaining auth and module browser checks after item 123.
 
 ### 2026-11-26
 - **Returned by**: Copilot

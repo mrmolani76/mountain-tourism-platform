@@ -111,6 +111,7 @@ class AuthController extends Controller
 
         return [
             'id' => $staff->getKey(),
+            'uuid' => (string) $staff->getAttribute('uuid'),
             'email' => $staff->getAttribute('email'),
             'role' => $staff->roleDisplay(),
             'role_code' => $staff->getAttribute('role'),

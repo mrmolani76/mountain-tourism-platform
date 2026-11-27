@@ -63,3 +63,25 @@ COPY --from=builder /app/.output /usr/share/nginx/html
 EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]
+
+###############################################################################
+# Development runtime — Nuxt dev server with hot reload
+###############################################################################
+
+FROM node:22-alpine AS development
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml .npmrc ./
+
+RUN pnpm install --ignore-scripts
+
+COPY . .
+
+RUN pnpm exec nuxt prepare && pnpm run build:icons
+
+EXPOSE 3000
+
+CMD ["pnpm", "exec", "nuxt", "dev", "--host", "0.0.0.0", "--port", "3000"]

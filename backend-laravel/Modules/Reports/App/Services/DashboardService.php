@@ -376,7 +376,7 @@ class DashboardService
             return 'EUR';
         }
 
-        $settings = TenantSettings::on($conn)->query()->first();
+        $settings = TenantSettings::on($conn)->first();
 
         return $settings?->getAttribute('currency') ?: 'EUR';
     }

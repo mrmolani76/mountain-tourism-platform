@@ -37,6 +37,7 @@ class TenantIsolationTest extends TenancyTestCase
 
         Schema::connection('tenant')->create('core_staff', function ($t) {
             $t->id();
+            $t->uuid('uuid')->unique();
             $t->string('email')->unique();
             $t->string('password');
             $t->string('role', 32);

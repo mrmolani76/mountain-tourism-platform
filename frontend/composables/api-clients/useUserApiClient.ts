@@ -47,10 +47,10 @@ export const useUserApiClient = () => {
     }
   }
 
-  const getUserById = async (id: string) => {
+  const getUserByUuid = async (uuid: string) => {
     loading.value = true
     try {
-      const response = await get<ApiResponse<{ user: User; permissions?: Permission }>>(`/user/fetch?id=${id}`)
+      const response = await get<ApiResponse<{ user: User; permissions?: Permission }>>(`/user/fetch?uuid=${encodeURIComponent(uuid)}`)
 
       if (response?.status)
         return response?.data
@@ -190,7 +190,7 @@ export const useUserApiClient = () => {
   const getUserViewById = async (uuid: string) => {
     loading.value = true
     try {
-      const response = await get<ApiResponse<User>>(`/user/show?uuid=${uuid}`)
+      const response = await get<ApiResponse<User>>(`/user/show?uuid=${encodeURIComponent(uuid)}`)
 
       if (response?.status)
         return response?.data
@@ -227,7 +227,7 @@ export const useUserApiClient = () => {
     sendResetPasswordMail: auth.sendResetPasswordMail,
     login: auth.login,
     logout: auth.logout,
-    getUserById,
+    getUserByUuid,
     getUserDetails: auth.getUserDetails,
     getMenuItems,
     createUser,

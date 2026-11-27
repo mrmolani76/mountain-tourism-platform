@@ -1,0 +1,46 @@
+###############################################################################
+# Nuxt development server with hot reload.
+#
+# Usage:
+#   docker compose -f docker-compose.spa-dev.yml up -d --build
+#   Open http://lab.local.mtmtp.local:3000/
+#
+# The Laravel API must already be running on the external `mtmtp_mtmtp_net`
+# network with the `laravel` alias. This avoids starting the base Compose
+# Laravel service, whose startup command runs migrations and tenant provisioning.
+###############################################################################
+
+name: mtmtp-spa-dev
+
+services:
+  spa-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: mtmtp_spa_dev
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: http://laravel:8000
+      NUXT_PUBLIC_API_BASE_URL: ""
+      NUXT_PUBLIC_ENABLE_REALTIME: "false"
+      NUXT_DOCKER_WATCH_POLLING: "true"
+      ENV: local
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./frontend:/app
+      - mtmtp_spa_dev_node_modules:/app/node_modules
+      - mtmtp_spa_dev_nuxt:/app/.nuxt
+    networks:
+      - mtmtp_net
+    command: ["pnpm", "exec", "nuxt", "dev", "--host", "0.0.0.0", "--port", "3000"]
+
+networks:
+  mtmtp_net:
+    external: true
+    name: mtmtp_mtmtp_net
+
+volumes:
+  mtmtp_spa_dev_node_modules:
+  mtmtp_spa_dev_nuxt:

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Core\App\Enums\StaffRole;
 use Modules\Core\App\Http\Requests\Concerns\FailsWithEnvelope;
+use Modules\Core\App\Models\Staff;
 
 class UpdateStaffRequest extends FormRequest
 {
@@ -19,17 +20,21 @@ class UpdateStaffRequest extends FormRequest
     public function rules(): array
     {
         $conn = config('tenancy.connection_name');
-        $staffId = (int) ($this->route('staff')
+        $identifier = (string) ($this->route('staff')
             ?? $this->input('uuid')
             ?? $this->input('id')
-            ?? 0);
+            ?? '');
+        $staff = Staff::on($conn)->where('uuid', $identifier)->first();
+        if ($staff === null && ctype_digit($identifier)) {
+            $staff = Staff::on($conn)->find((int) $identifier);
+        }
 
         return [
             'email' => [
                 'sometimes',
                 'email',
                 'max:255',
-                Rule::unique($conn.'.core_staff', 'email')->ignore($staffId),
+                Rule::unique($conn.'.core_staff', 'email')->ignore($staff?->getKey()),
             ],
             'password' => ['sometimes', 'nullable', 'string', 'min:8', 'max:128'],
             'role' => ['sometimes', 'string', 'in:' . implode(',', StaffRole::codes())],

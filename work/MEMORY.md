@@ -4,12 +4,14 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
+- **126** Show the related Building name in the Core Outlets listing instead of its numeric ID; BUG-APP-010.
 - **105** Full MVP PDF versus project audit completed at `docs/MVP_SCOPE_AUDIT.md`. Treat PDF as contract and mark unverified work honestly.
-- **103** Manual browser acceptance is paused in `work/todo/`; route checks can resume after the audit. No forms or records were changed.
+- **123** Dashboard `/api/reports/today` HTTP 500 fixed and browser-verified (BUG-APP-009). Regression test authored but not run under the code-only workflow.
+- **103** Manual browser acceptance is next in `work/todo/`; Staff UUID migration is applied to `lab_local`, and listing/detail/edit routes passed. Broader auth and module checks remain.
 - **104** Staff listing header bug is fixed and browser-verified using Nexro's `fields` + `default_order` listing pattern.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP limit = 1**. Item **124** is complete; item **103** remains next in Todo. Preserve tenant data and require explicit authorization before any further migration or reset. Item **90** MySQL switch remains pending.
+- **WIP limit = 1**. Item **126** is active; preserve tenant data and require explicit authorization before any migration or reset. Item **90** MySQL switch remains pending.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
@@ -20,7 +22,9 @@
 Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-notify.sh`; creds in gitignored `scripts/.notify.env`).
 
 ## Recently completed (this week)
+- **125** — Started the Nuxt development server in Docker, enabled bind-mount polling, and verified live HMR at `http://lab.local.mtmtp.local:3000/` without migrations, resets, or volume removal (medium, 2026-11-27)
 - **124** — Adapted and synchronized Nexro-inspired rules and 12 new skills across Cursor, Claude, and OpenCode (high, 2026-11-27)
+- **123** — Fixed dashboard today-report HTTP 500, added API regression coverage, clarified empty-room occupancy UI, and verified the dashboard in the browser (medium, 2026-11-27)
 - **108** — Protected Folio ledger and Outlet attribution; HTTP charge-to-room and weather-cancellation flows verified (high, 2026-11-27)
 - **120** — Replaced unsupported tenant validation builder calls and verified active-tenant HTTP flows (high, 2026-11-27)
 - **122** — Configured Gmail SMTP notifier, fixed Windows LF handling, and verified delivery (medium, 2026-11-27)

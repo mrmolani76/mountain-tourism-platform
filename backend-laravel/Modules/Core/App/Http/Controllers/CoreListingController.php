@@ -89,6 +89,9 @@ class CoreListingController extends Controller
         /** @var class-string<\Illuminate\Database\Eloquent\Model> $modelClass */
         $modelClass = $meta['model'];
         $q = $modelClass::on(config('tenancy.connection_name'));
+        if ($modelClass === Outlet::class) {
+            $q->with('building:id,name');
+        }
 
         $this->applySearch($q, $request, $meta['search_columns']);
         $this->applySort($q, $request, $table);
@@ -337,6 +340,15 @@ class CoreListingController extends Controller
                 $code = (string) ($api['outlet_type'] ?? '');
                 $label = Outlet::TYPES[$code] ?? ($code !== '' ? $code : '--');
                 $row[$key] = ['label' => $label, 'type' => 'text'];
+
+                continue;
+            }
+
+            if ($key === 'building_id' && $model instanceof Outlet) {
+                $row[$key] = [
+                    'label' => $model->building?->name ?? '--',
+                    'type' => 'text',
+                ];
 
                 continue;
             }

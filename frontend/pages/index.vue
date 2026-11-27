@@ -55,7 +55,7 @@ const occupancySummary = computed(() => {
   const rooms = rows.reduce((sum, row) => sum + (row.rooms_total || 0), 0)
   const occupied = rows.reduce((sum, row) => sum + (row.occupied || 0), 0)
 
-  return { rooms, occupied, pct: rooms > 0 ? Math.round((occupied / rooms) * 100) : 0 }
+  return { rooms, occupied, pct: rooms > 0 ? Math.round((occupied / rooms) * 100) : null }
 })
 
 const arrivals = computed(() => today.value?.arrivals_today?.results ?? [])
@@ -192,10 +192,14 @@ onMounted(loadToday)
         <div class="ops-pulse__item">
           <span class="ops-pulse__label">Occupancy</span>
           <strong class="ops-pulse__value">
-            {{ today ? `${occupancySummary.pct}%` : '—' }}
+            {{ today && occupancySummary.pct !== null ? `${occupancySummary.pct}%` : '—' }}
           </strong>
           <span class="ops-pulse__hint">
-            {{ occupancySummary.occupied }} / {{ occupancySummary.rooms || '—' }} rooms
+            {{ today
+              ? occupancySummary.rooms > 0
+                ? `${occupancySummary.occupied} / ${occupancySummary.rooms} rooms`
+                : 'No rooms configured'
+              : '—' }}
           </span>
         </div>
         <div class="ops-pulse__item">

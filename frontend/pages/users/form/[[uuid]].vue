@@ -9,7 +9,7 @@ import type { VForm } from 'vuetify/components/VForm'
 const nuxtApp: any = useNuxtApp()
 const { t } = useI18n()
 const route = useRoute()
-const { createUser, updateUser, getUserById, formInitaldata } = useUserApiClient()
+const { createUser, updateUser, getUserByUuid, formInitaldata } = useUserApiClient()
 
 definePageMeta({
   navActiveLink: 'users',
@@ -18,7 +18,7 @@ definePageMeta({
   form: true,
 })
 
-const uuid = route.params.id as string | undefined
+const uuid = route.params.uuid as string | undefined
 const isEdit = Boolean(uuid)
 
 useHead({
@@ -81,7 +81,6 @@ const saveUser = async () => {
 
   if (isEdit) {
     payload.uuid = uuid
-    payload.id = uuid
   }
 
   const response = isEdit
@@ -115,12 +114,12 @@ const saveUser = async () => {
     return
   }
 
-  const data = await getUserById(String(uuid))
+  const data = await getUserByUuid(String(uuid))
   const user = data?.user as any
 
   if (user) {
     userForm.value = {
-      uuid: String(user.uuid || user.id || uuid),
+      uuid: String(user.uuid || uuid),
       email: user.email || '',
       password: '',
       role: user.roleCode || user.role?.name || 'front_desk',

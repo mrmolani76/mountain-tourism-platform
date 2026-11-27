@@ -48,7 +48,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  // Bind all interfaces so *.mtmp.local:3000 / lab.localhost:3000 work.
+  // Bind all interfaces so tenant hosts such as lab.local.mtmtp.local:3000 work.
   // strictPort + HMR clientPort keep :3000 on hard refresh (Apache owns :80 here).
   devServer: {
     host: '0.0.0.0',
@@ -157,11 +157,15 @@ export default defineNuxtConfig({
       host: '0.0.0.0',
       port: 3000,
       strictPort: true,
+      watch: {
+        usePolling: process.env.NUXT_DOCKER_WATCH_POLLING === 'true',
+        interval: 1000,
+      },
       // Vite blocks unknown Host headers by default (403). Local tenant hosts
       // such as lab.local.mtmtp.local:3000 must be allowed in dev.
       allowedHosts: ['.mtmtp.local', '.localhost', 'localhost', '127.0.0.1'],
       hmr: {
-        // Preserve :3000 in the browser when the page Host is lab.localhost
+        // Preserve :3000 in the browser when the page Host is lab.local.mtmtp.local.
         clientPort: 3000,
       },
       proxy: {

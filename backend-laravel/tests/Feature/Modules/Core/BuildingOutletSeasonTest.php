@@ -63,6 +63,31 @@ class BuildingOutletSeasonTest extends TenancyTestCase
         $show->assertOk();
     }
 
+    public function test_outlet_listing_displays_building_name(): void
+    {
+        $building = Building::on('tenant')->create([
+            'name' => 'Main Hotel',
+            'building_type' => 'main_hotel',
+            'altitude_m' => 1200,
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $outlet = Outlet::on('tenant')->create([
+            'building_id' => $building->getKey(),
+            'name' => 'Rental Desk',
+            'outlet_type' => 'rental',
+            'is_active' => true,
+            'created_at' => now(),
+        ]);
+
+        $response = $this->actingAsStaff($this->owner)->postJson('/api/outlets/list', []);
+
+        $response->assertOk();
+        $row = collect($response->json('data'))->firstWhere('id', $outlet->getKey());
+        $this->assertSame('Main Hotel', data_get($row, 'building_id.label'));
+    }
+
     public function test_outlet_show_denied_without_access(): void
     {
         $building = Building::on('tenant')->create([

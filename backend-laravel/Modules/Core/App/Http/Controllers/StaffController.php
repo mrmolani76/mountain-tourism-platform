@@ -44,22 +44,24 @@ class StaffController extends Controller
         return response()->json($this->serialize($s), 201);
     }
 
-    public function show(int $staff): JsonResponse
+    public function show(string $staff): JsonResponse
     {
         if ($d = StaffAuthz::denyUnlessOwner()) {
             return $d;
         }
-        $s = Staff::on(config('tenancy.connection_name'))->findOrFail($staff);
+        $s = $this->findStaff($staff);
+        abort_if($s === null, 404);
 
         return response()->json($this->serialize($s));
     }
 
-    public function update(UpdateStaffRequest $request, int $staff): JsonResponse
+    public function update(UpdateStaffRequest $request, string $staff): JsonResponse
     {
         if ($d = StaffAuthz::denyUnlessOwner()) {
             return $d;
         }
-        $s = Staff::on(config('tenancy.connection_name'))->findOrFail($staff);
+        $s = $this->findStaff($staff);
+        abort_if($s === null, 404);
         $old = $this->serialize($s);
         $data = $request->validated();
         if (isset($data['password'])) {
@@ -77,12 +79,13 @@ class StaffController extends Controller
         return response()->json($this->serialize($s));
     }
 
-    public function destroy(int $staff): JsonResponse
+    public function destroy(string $staff): JsonResponse
     {
         if ($d = StaffAuthz::denyUnlessOwner()) {
             return $d;
         }
-        $s = Staff::on(config('tenancy.connection_name'))->findOrFail($staff);
+        $s = $this->findStaff($staff);
+        abort_if($s === null, 404);
         $old = $this->serialize($s);
         $id = (int) $s->getKey();
         $s->delete();
@@ -95,10 +98,24 @@ class StaffController extends Controller
     {
         return [
             'id' => $s->getKey(),
+            'uuid' => (string) $s->getAttribute('uuid'),
             'email' => $s->email,
             'role' => $s->role,
             'role_display' => $s->roleDisplay(),
             'is_active' => (bool) $s->is_active,
         ];
+    }
+
+    private function findStaff(string $identifier): ?Staff
+    {
+        $staff = Staff::on(config('tenancy.connection_name'))
+            ->where('uuid', $identifier)
+            ->first();
+
+        if ($staff === null && ctype_digit($identifier)) {
+            $staff = Staff::on(config('tenancy.connection_name'))->find((int) $identifier);
+        }
+
+        return $staff;
     }
 }

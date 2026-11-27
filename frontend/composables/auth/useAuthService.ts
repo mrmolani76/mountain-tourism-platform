@@ -36,7 +36,7 @@ export function mapStaffToUser(staff: StaffUser): User {
 
   return {
     id: staff.id,
-    uuid: String(staff.id),
+    uuid: staff.uuid,
     fullName: username,
     firstName: username,
     lastName: '',
