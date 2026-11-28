@@ -3,8 +3,8 @@ import { IS_SAAS_ADMIN_HOST, resolveApiOrigin } from '@/utils/tenantHost'
 /**
  * Shared HTTP client for the Mountain Nuxt SPA.
  *
- * - Sanctum CSRF: only before mutating methods when XSRF-TOKEN missing
- * - Short timeout so a dead Vite→Laravel proxy fails fast (not 30–120s hang)
+ * - Sanctum CSRF: bootstrap before mutations and recover once from HTTP 419
+ * - Bounded timeout that allows slow local Laravel startup and login requests
  * - CSRF failure cooldown avoids stacking timeouts on every parallel call
  * - baseURL: `{origin}/api` (no trailing slash on paths; Laravel Core routes)
  */
@@ -12,11 +12,10 @@ import { IS_SAAS_ADMIN_HOST, resolveApiOrigin } from '@/utils/tenantHost'
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
 /**
- * Request timeout. Must exceed the slowest realistic backend path: local dev
- * (`artisan serve`) answers in 3-9s and login can spike past 8s under load,
- * which aborted the login POST and left the user stuck on /login.
+ * Local Laravel requests can take over 30 seconds with the Windows bind mount.
+ * Keep the timeout bounded while allowing CSRF bootstrap and login to finish.
  */
-const REQUEST_TIMEOUT_MS = 30_000
+const REQUEST_TIMEOUT_MS = 60_000
 
 /** After CSRF fails, skip re-trying for this window (ms). */
 const CSRF_FAIL_COOLDOWN_MS = 5_000
@@ -31,6 +30,14 @@ function readCookie(name: string): string | null {
   const match = document.cookie.split('; ').find(row => row.startsWith(prefix))
 
   return match ? decodeURIComponent(match.slice(prefix.length)) : null
+}
+
+function clearXsrfCookie(): void {
+  if (typeof document === 'undefined')
+    return
+
+  document.cookie = 'XSRF-TOKEN=; Path=/; Max-Age=0; SameSite=Lax'
+  document.cookie = 'XSRF-TOKEN=; Path=/; Max-Age=0; SameSite=Lax; Secure'
 }
 
 function stripTrailingSlash(url: string): string {
@@ -49,18 +56,19 @@ function timeoutSignal(ms: number): AbortSignal | undefined {
 
 class MountainApi {
   private csrfTokenPromise: Promise<void> | null = null
+  private csrfRecoveryPromise: Promise<boolean> | null = null
   private csrfCooldownUntil = 0
 
   /**
    * Seed XSRF cookie. Safe GETs skip this (session cookie is enough to probe `/auth/me`).
    * Mutating calls still require it for Sanctum SPA.
    */
-  async ensureCsrfCookie(): Promise<void> {
+  async ensureCsrfCookie(): Promise<boolean> {
     if (readCookie('XSRF-TOKEN'))
-      return
+      return true
 
     if (Date.now() < this.csrfCooldownUntil)
-      return
+      return Boolean(readCookie('XSRF-TOKEN'))
 
     if (!this.csrfTokenPromise) {
       const origin = resolveApiOrigin()
@@ -74,6 +82,8 @@ class MountainApi {
         .then(() => {
           this.csrfTokenPromise = null
           this.csrfCooldownUntil = 0
+          if (!readCookie('XSRF-TOKEN'))
+            throw new Error('Laravel did not set the CSRF cookie.')
         })
         .catch((err: unknown) => {
           this.csrfTokenPromise = null
@@ -97,11 +107,40 @@ class MountainApi {
     }
 
     await this.csrfTokenPromise
+
+    return Boolean(readCookie('XSRF-TOKEN'))
   }
 
-  private async request<T>(method: HttpMethod, url: string, body?: unknown): Promise<T | null> {
-    if (UNSAFE_METHODS.has(method))
-      await this.ensureCsrfCookie()
+  private async recoverCsrfToken(): Promise<boolean> {
+    if (this.csrfRecoveryPromise)
+      return this.csrfRecoveryPromise
+
+    const recovery = this.refreshCsrfToken()
+    this.csrfRecoveryPromise = recovery
+
+    return recovery
+  }
+
+  private async refreshCsrfToken(): Promise<boolean> {
+    try {
+      clearXsrfCookie()
+      this.csrfCooldownUntil = 0
+      this.csrfTokenPromise = null
+      return await this.ensureCsrfCookie()
+    }
+    finally {
+      this.csrfRecoveryPromise = null
+    }
+  }
+
+  private async request<T>(
+    method: HttpMethod,
+    url: string,
+    body?: unknown,
+    csrfRetried = false,
+  ): Promise<T | null> {
+    if (UNSAFE_METHODS.has(method) && !(await this.ensureCsrfCookie()))
+      return null
 
     const origin = resolveApiOrigin()
     const path = stripTrailingSlash(url.replace(/^\//, ''))
@@ -132,6 +171,13 @@ class MountainApi {
         : result
     }
     catch (error: any) {
+      const status = error?.response?.status ?? error?.statusCode ?? error?.status
+      if (status === 419 && UNSAFE_METHODS.has(method) && !csrfRetried) {
+        const tokenRefreshed = await this.recoverCsrfToken()
+        if (tokenRefreshed)
+          return this.request<T>(method, url, body, true)
+      }
+
       await this.errorHandler(error)
 
       return null

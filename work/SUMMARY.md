@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **114** is active for Nexro-style SaaS onboarding, including per-tenant database provisioning and Owner credential email. Browser acceptance remains with the user.
+**Focus:** Item **114** is active for Nexro-style SaaS onboarding. SaaS admin login and local tenant database/Core/Owner provisioning are browser-verified; Owner email and tenant-domain login remain blocked by missing local mail transport and hostname resolution.
 
 ## 1. Work
 
@@ -109,13 +109,14 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
-- **BUG-TENANT-002** — SaaS onboarding does not provision tenant database or email Owner credentials (high, IN_PROGRESS, 2026-11-28)
+- **BUG-TENANT-002** — SaaS onboarding does not provision tenant database or email Owner credentials (high, RETESTING, 2026-11-28)
 - **BUG-AUTH-001** — Owner provisioning can overwrite an existing staff role (high, IN_PROGRESS, 2026-11-27)
 - **BUG-APP-011** — Static Core menu fallback omits Outlets (medium, BUG_CREATED, 2026-11-27)
 - **BUG-APP-010** — Outlets listing shows building ID instead of name (medium, RETESTING, 2026-11-27)
 - **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
+- **BUG-AUTH-002** — SaaS login exceeded the old 30-second request timeout and lacked stale-CSRF recovery; after the 60-second timeout and one-time 419 recovery, browser login redirects to `/saas` and confirms the platform admin (high, VERIFIED, 2026-11-28).
 - **BUG-DATA-001** — Added/backfilled required unique `saas_tenant.uuid` in central `mountain_tourism`; browser dashboard loads and shows correct counts (high, VERIFIED, 2026-11-28).
 - **BUG-ENV-004** — Nuxt dev server had a stale `[id]/edit.vue` route import; restarting `mtmtp_spa_dev` regenerated routes with `[uuid]/edit.vue`. Browser reaches the SaaS login for unauthenticated tenant-list access (medium, VERIFIED, 2026-11-28).
 - **BUG-APP-012** — SaaS login page now renders before checking the existing session; browser sees the sign-in form (high, VERIFIED, 2026-11-27).
@@ -137,6 +138,8 @@ Refresh on every work / bug / change status update.
 - **BUG-APP-007** — Staff listing table renders without column header row (medium, CLOSED, 2026-11-26).
 
 ## 3. Testing
+- 2026-11-28 — Item 114 / BUG-AUTH-002: observed CSRF bootstrap at ~39s and login at ~34s, exceeding the old 30s timeout. After the 60s timeout and one-time HTTP 419 recovery, browser login redirects to `/saas` and confirms the platform admin. Initial 20s HTTP probes timed out, but later longer browser waits completed tenant creation and readiness checks below.
+- 2026-11-28 — Item 114 / BUG-TENANT-002: created `copilot-qa-20261128-0655` through the SaaS UI. Tenant database, Core migrations, active Owner, and central `Complex created` activity report ready. Email status is `not_configured` (default `log` mailer); domain `copilot-qa-20261128-0655.mtmp.local` cannot resolve locally and the hosts-file write was denied. Owner domain login and email delivery are not verified; no existing tenant/database was touched.
 - 2026-11-28 — Item 114 `BUG-DATA-001`: forward migration applied only to local central `mountain_tourism`; `uuid` is non-null and unique, all 1/1 tenant rows are backfilled. Browser dashboard now renders 1 total, 1 active, 0 inactive without an error. No reset; automated tests not run.
 - 2026-11-28 — Item 114 browser UI check reproduced a Vite import error for removed `[id]/edit.vue`. Restarted `mtmtp_spa_dev`; the route module now imports `[uuid]/edit.vue`, SaaS login renders, and unauthenticated `/saas/tenants` redirects to login. Tenant list acceptance still needs a Super Admin session.
 - 2026-11-28 — Item 114: central schema and registered `lab_local` tenant database were reset and re-provisioned; central admin, tenant registry, tenant migrations, and Owner fixture presence verified. Browser and automated tests are deferred to the user. Added DB-backed central activity coverage for tenant creation and profile changes; tests are authored but not run.
@@ -154,6 +157,8 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-28 — `work/changes/2026-11-28--114-saas-login-csrf-recovery.md` — increased the request timeout and added Nexro-style XSRF refresh/one retry; browser SaaS login verified.
+- 2026-11-28 — `work/changes/2026-11-28--114-browser-tenant-onboarding.md` — browser-created a unique tenant; database, migrations, Owner, readiness, and lifecycle event verified. Tenant-domain login and credential email remain blocked by local host resolution and mail transport configuration.
 - 2026-11-28 — `work/changes/2026-11-28--114-auto-tenant-provisioning.md` — added per-tenant PostgreSQL provisioning/migrations, safe initial Owner setup, and credential-email delivery status. Existing databases are not reused or reset; browser acceptance remains pending.
 - 2026-11-28 — `work/changes/2026-11-28--114-fix-saas-tenant-uuid.md` — added and applied a forward-safe central UUID migration; verified constraints, backfill, and dashboard rendering.
 - 2026-11-28 — `work/changes/2026-11-28--114-central-saas-uuid-schema-mismatch.md` — traced the SaaS dashboard HTTP 500 to the missing `saas_tenant.uuid` column in the active central database; no migration/reset performed.

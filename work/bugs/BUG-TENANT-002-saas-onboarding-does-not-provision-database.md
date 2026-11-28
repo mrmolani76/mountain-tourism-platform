@@ -1,7 +1,7 @@
 ---
 id: BUG-TENANT-002
 title: SaaS onboarding does not provision tenant database or email Owner credentials
-status: IN_PROGRESS
+status: RETESTING
 type: TENANT
 severity: high
 created: 2026-11-28
@@ -10,7 +10,7 @@ created: 2026-11-28
 # BUG-TENANT-002: SaaS onboarding does not provision tenant database or email Owner credentials
 
 ## 1. Summary
-Creating a complex from the SaaS UI writes its central registry and domain but does not create and migrate its dedicated tenant database or email the initial Owner credentials.
+The prior SaaS onboarding flow only wrote central registry/domain records. Automatic tenant database provisioning and Owner creation now pass a local browser retest; email delivery and tenant-host login remain unverified due local configuration.
 
 ## 2. Environment
 Local development, Mountain Tourism Laravel + Nuxt SaaS onboarding.
@@ -24,21 +24,23 @@ Local development, Mountain Tourism Laravel + Nuxt SaaS onboarding.
 The onboarding flow creates a new, isolated tenant database, runs configured tenant migrations, creates an Owner with a forced first-login password change, and emails the temporary credentials when a mail transport is configured.
 
 ## 5. Actual
-The central tenant/domain rows are created, but the service does not create the physical database or run tenant migrations. Owner creation can be skipped when its schema is unavailable. The UI states that the temporary password is not emailed.
+The SaaS UI created a unique tenant with its database reachable, Core migrations ready, and an active Owner. The detail page reports onboarding `Ready` and records `Complex created`. The email delivery status is `not_configured` because the active mail default is `log`. The tenant hostname does not resolve in this Windows environment, so Owner login through that host could not be completed.
 
 ## 6. Evidence
-- `TenantService::register()` records the tenant with `db_name = <slug>_local` but does not provision a database.
-- The SaaS activity event for the reported creation records `owner_created=false` and `temporary_password_generated=false`.
-- The local Laravel mail default is `log`, with no SMTP username or password configured. A log mailer must not receive temporary credentials because that writes message contents to logs.
+- Browser-created tenant `copilot-qa-20261128-0655` is listed with primary domain `copilot-qa-20261128-0655.mtmp.local`.
+- The create response and detail readiness show the tenant database reachable, required Core tables present, and an active Owner account.
+- Central activity history records `Complex created`.
+- `MAIL_MAILER` is unset in `backend-laravel/.env`; `backend-laravel/config/mail.php` defaults to `log`, and `OwnerCredentialsDeliveryService` returns `not_configured` for non-delivering mailers.
+- Browser navigation to the tenant host failed with `ERR_NAME_NOT_RESOLVED`. Writing a hosts alias was denied; no OS hosts file change was made.
 
 ## 7. Root Cause
-Physical provisioning is explicitly left to `tenants:provision-local`/operations, rather than being part of the central SaaS onboarding service. The create form and API treat Owner credentials as optional and do not send a notification. In the current local runtime, the configured mailer is `log`, so real email delivery is unavailable.
+The original code omitted physical provisioning and synchronous Owner credential delivery. Provisioning is now implemented and browser-verified. This local runtime has no delivery-capable mailer, so the app correctly reports `not_configured` instead of writing credentials to logs. The new tenant hostname is also absent from the Windows hosts file.
 
 ## 8. Workaround
-Provision the tenant database and run tenant migrations separately, then use the tenant detail page to create an Owner. This does not deliver credentials by email.
+Configure a delivery-capable mailer before expecting an Owner email. Add the tenant host to local DNS/hosts with appropriate permissions before browser-testing that tenant domain.
 
 ## 9. Suggested Fix
-Create only a new database after confirming the name is unused, run all configured tenant migrations, and roll back only resources created by the failed attempt. Create the initial Owner after Core migrations. Send credentials synchronously through an explicitly configured mail transport, and report mail delivery status without logging credentials. Keep each tenant on its own database.
+Provisioning and Owner creation are implemented. Configure the approved local mail transport and tenant hostname resolution, then retest email delivery and Owner login. Never log temporary credentials or reuse/reset an existing tenant database.
 
 ## 10. Impact
 New complexes cannot use tenant-host staff flows until a separate database is provisioned. Owners do not receive onboarding credentials by email.
@@ -46,4 +48,5 @@ New complexes cannot use tenant-host staff flows until a separate database is pr
 ## 11. Related
 - Work item: 114
 - Change report: `work/changes/2026-11-28--114-auto-tenant-provisioning.md`
+- Browser retest: `work/changes/2026-11-28--114-browser-tenant-onboarding.md`
 - Other bugs: none

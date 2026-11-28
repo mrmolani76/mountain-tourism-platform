@@ -4,7 +4,7 @@
 
 | ID | Title | Severity | Status | Created |
 |----|-------|----------|--------|---------|
-| BUG-TENANT-002 | SaaS onboarding does not provision tenant database or email Owner credentials | high | IN_PROGRESS | 2026-11-28 |
+| BUG-TENANT-002 | SaaS onboarding does not provision tenant database or email Owner credentials | high | RETESTING | 2026-11-28 |
 | BUG-AUTH-001 | Owner provisioning can overwrite an existing staff role | high | IN_PROGRESS | 2026-11-27 |
 | BUG-APP-011 | Static Core menu fallback omits Outlets | medium | BUG_CREATED | 2026-11-27 |
 | BUG-APP-010 | Outlets listing shows building ID instead of name | medium | RETESTING | 2026-11-27 |
@@ -14,6 +14,7 @@
 
 | ID | Title | Severity | Status | Verified |
 |----|-------|----------|--------|----------|
+| BUG-AUTH-002 | SaaS login fails when CSRF and login requests exceed the frontend timeout | high | VERIFIED | 2026-11-28 |
 | BUG-DATA-001 | Central SaaS dashboard fails when tenant UUID column is missing | high | VERIFIED | 2026-11-28 |
 | BUG-ENV-004 | Nuxt dev server retains stale SaaS route imports | medium | VERIFIED | 2026-11-28 |
 | BUG-APP-012 | SaaS login route stays blank after session probe | high | VERIFIED | 2026-11-27 |
