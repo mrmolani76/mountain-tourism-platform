@@ -10,11 +10,15 @@ Route::prefix('saas')->group(function () {
 
     Route::middleware('saas.auth')->group(function () {
         Route::get('auth/me', [SaasAuthController::class, 'me']);
+        Route::get('dashboard', [TenantController::class, 'dashboard']);
         Route::get('tenants', [TenantController::class, 'index']);
         Route::post('tenants', [TenantController::class, 'store']);
-        Route::get('tenants/{tenant}', [TenantController::class, 'show']);
-        Route::patch('tenants/{tenant}', [TenantController::class, 'update']);
-        Route::post('tenants/{tenant}/activate', [TenantController::class, 'activate']);
-        Route::post('tenants/{tenant}/deactivate', [TenantController::class, 'deactivate']);
+        Route::get('tenants/{tenantUuid}', [TenantController::class, 'show']);
+        Route::post('tenants/{tenantUuid}/owner', [TenantController::class, 'createOwner']);
+        Route::get('tenants/{tenantUuid}/readiness', [TenantController::class, 'readiness']);
+        Route::get('tenants/{tenantUuid}/activity', [TenantController::class, 'activity']);
+        Route::patch('tenants/{tenantUuid}', [TenantController::class, 'update']);
+        Route::post('tenants/{tenantUuid}/activate', [TenantController::class, 'activate']);
+        Route::post('tenants/{tenantUuid}/deactivate', [TenantController::class, 'deactivate']);
     });
 });

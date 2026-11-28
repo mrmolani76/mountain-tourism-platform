@@ -45,6 +45,6 @@ Implemented in item 126: eager-load the tenant-scoped Building relation and retu
 Staff and owners cannot identify an outlet's Building from the listing without looking up its numeric ID.
 
 ## 11. Related
-- Work item: `work/inprogress/126-show-building-names-in-outlets.md`
+- Work item: `work/todo/126-show-building-names-in-outlets.md`
 - Change report: `work/changes/2026-11-27--126-outlet-building-name.md`
 - Other bugs: None

@@ -12,6 +12,7 @@
 | `saas_tenant` | Saas module |
 | `saas_domain` | Saas module |
 | `saas_user` | Saas module |
+| `saas_tenant_activity` | Saas module, tenant lifecycle and Owner onboarding events |
 | `sessions` | Laravel skeleton (kept; SaaS/staff cookie sessions) |
 | `cache` / `cache_locks` | Laravel skeleton |
 | `jobs` / `job_batches` / `failed_jobs` | Laravel skeleton |
@@ -21,6 +22,8 @@
 
 - Laravel `users` / `password_reset_tokens` — dropped by `2026_11_14_000001_drop_central_users_nexro_strict.php`
 - Any `core_*`, `hotel_*`, `folio_*`, `pos_*`, … — those live under `Modules/*/Database/migrations/tenant/` and run only on tenant DBs (`tenants:provision-local` / tenancy `migration_parameters`)
+
+SaaS lifecycle events are stored in the central `saas_tenant_activity` table, including tenant creation, profile changes, activation changes, and Owner onboarding. Tenant staff security events, including first-password changes, are stored in each tenant's `core_audit_event` table. These are the DB-backed audit logs for their respective scopes. Do not copy generic request-payload logging into the central database, because it can persist temporary passwords and would cross the DB-per-tenant boundary. Temporary passwords must never be written to either audit table or request logs.
 
 ## Tenant schema
 

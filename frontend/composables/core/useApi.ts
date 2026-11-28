@@ -146,7 +146,7 @@ class MountainApi {
     const message = data?.error?.message || data?.detail || data?.message || 'Request failed.'
     const url = String(error?.request || error?.response?.url || '')
 
-    const isAuthProbe = url.includes('/auth/me') || url.includes('/saas/auth/')
+    const isAuthProbe = url.includes('/auth/me')
     const isLogout = url.includes('/auth/logout')
     const isTimeout = error?.name === 'TimeoutError'
       || error?.code === 'TIMEOUT'

@@ -90,6 +90,7 @@ abstract class TenancyTestCase extends TestCase
     {
         Schema::connection('sqlite')->create('saas_tenant', function ($t) {
             $t->id();
+            $t->uuid('uuid')->unique();
             $t->string('name');
             $t->string('slug')->unique();
             $t->string('db_name')->unique();
@@ -110,10 +111,25 @@ abstract class TenancyTestCase extends TestCase
             $t->boolean('is_active')->default(true);
             $t->timestamp('created_at')->nullable();
         });
+        Schema::connection('sqlite')->create('saas_tenant_activity', function ($t) {
+            $t->id();
+            $t->unsignedBigInteger('tenant_id');
+            $t->unsignedBigInteger('actor_id')->nullable();
+            $t->string('actor_email');
+            $t->string('event_type', 32);
+            $t->json('metadata')->nullable();
+            $t->timestamp('created_at')->useCurrent();
+            $t->index(['tenant_id', 'created_at']);
+        });
     }
 
     protected function migrateTenant(): void
     {
+        Schema::connection('tenant')->create('migrations', function ($t) {
+            $t->id();
+            $t->string('migration');
+            $t->integer('batch');
+        });
         Schema::connection('tenant')->create('core_staff', function ($t) {
             $t->id();
             $t->uuid('uuid')->unique();
@@ -121,6 +137,7 @@ abstract class TenancyTestCase extends TestCase
             $t->string('password');
             $t->string('role', 32);
             $t->boolean('is_active')->default(true);
+            $t->boolean('force_reset_password')->default(false);
             $t->dateTime('last_login')->nullable();
             $t->dateTime('created_at');
         });

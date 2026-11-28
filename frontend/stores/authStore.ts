@@ -9,6 +9,7 @@ export const authStore = defineStore('auth', () => {
   const { getUserDetails, logout } = useAuthService()
   const user: Ref<User | undefined> = ref()
   const authenticated = ref<boolean | undefined>()
+  const requiresPasswordReset = ref(false)
   const userImage: Ref<string> = ref('')
   const userPermissions: Ref<Array<string>> = ref([])
   const loginDialog = ref(false)
@@ -23,6 +24,7 @@ export const authStore = defineStore('auth', () => {
     }
 
     user.value = response.data.user as User
+    requiresPasswordReset.value = Boolean(response.data.staff.force_reset_password)
     userImage.value = response.data.userImage || ''
     userPermissions.value = response.data.userPermissions || []
     authenticate()
@@ -34,6 +36,7 @@ export const authStore = defineStore('auth', () => {
     await logout()
 
     user.value = undefined
+    requiresPasswordReset.value = false
     userImage.value = ''
     userPermissions.value = []
     unauthenticate()
@@ -64,6 +67,7 @@ export const authStore = defineStore('auth', () => {
   return {
     user,
     authenticated,
+    requiresPasswordReset,
     getUser,
     saveUser,
     logoutUser,

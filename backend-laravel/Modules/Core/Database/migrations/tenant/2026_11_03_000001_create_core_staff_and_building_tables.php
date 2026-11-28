@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password', 128);
             $table->string('role', 32)->default('front_desk');
             $table->boolean('is_active')->default(true);
+            $table->boolean('force_reset_password')->default(false);
             $table->dateTime('last_login')->nullable();
             $table->dateTime('created_at');
         });

@@ -20,6 +20,7 @@ class AuthApiTest extends TenancyTestCase
         $response->assertOk()
             ->assertJsonPath('email', 'owner@lab.test')
             ->assertJsonPath('role_code', 'owner')
+            ->assertJsonPath('force_reset_password', false)
             ->assertJsonPath('tenant_slug', 'lab')
             ->assertJsonPath('uuid', $this->owner->uuid);
     }
@@ -63,7 +64,48 @@ class AuthApiTest extends TenancyTestCase
         $response->assertOk()
             ->assertJsonPath('email', 'owner@lab.test')
             ->assertJsonPath('role_code', 'owner')
+            ->assertJsonPath('force_reset_password', false)
             ->assertJsonPath('uuid', $this->owner->uuid);
+    }
+
+    public function test_temporary_password_requires_change_before_tenant_api_access(): void
+    {
+        $this->owner->force_reset_password = true;
+        $this->owner->save();
+
+        $this->asTenantHost()
+            ->postJson('/api/auth/login', [
+                'email' => 'owner@lab.test',
+                'password' => 'password123',
+            ])
+            ->assertOk()
+            ->assertJsonPath('force_reset_password', true);
+
+        $this->getJson('/api/staff/'.$this->frontDesk->uuid)->assertForbidden();
+        $this->getJson('/api/auth/me')
+            ->assertOk()
+            ->assertJsonPath('force_reset_password', true);
+
+        $this->postJson('/api/auth/change-password', [
+            'new_password' => 'password123',
+            'new_password_confirmation' => 'password123',
+        ])->assertStatus(422);
+
+        $this->postJson('/api/auth/change-password', [
+            'new_password' => 'NewOwnerPass123!',
+            'new_password_confirmation' => 'NewOwnerPass123!',
+        ])->assertOk()
+            ->assertJsonPath('force_reset_password', false);
+
+        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('NewOwnerPass123!', $this->owner->fresh()->password));
+        $this->assertFalse($this->owner->fresh()->force_reset_password);
+        $this->assertDatabaseHas('core_audit_event', [
+            'actor_staff_id' => $this->owner->getKey(),
+            'entity_type' => 'staff',
+            'entity_id' => $this->owner->getKey(),
+            'reason' => 'temporary_password_changed',
+        ], 'tenant');
+        $this->getJson('/api/staff/'.$this->frontDesk->uuid)->assertOk();
     }
 
     public function test_staff_lookup_endpoints_resolve_persisted_uuid(): void

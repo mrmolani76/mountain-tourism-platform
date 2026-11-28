@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **126** is in progress: show the related Building name in the Core Outlets listing instead of its numeric ID.
+**Focus:** Item **114** is active for Nexro-style SaaS onboarding, including per-tenant database provisioning and Owner credential email. Browser acceptance remains with the user.
 
 ## 1. Work
 
@@ -12,7 +12,7 @@ Refresh on every work / bug / change status update.
 - **111** — Connect reservation departures to transport drop-offs (high). Complete departure details and linked drop-off planning.
 - **112** — Implement approved OSM maps for locations and routes (high). Wait for provider decision in 107 before replacing map workflows.
 - **113** — Build public weather lobby screen with lift status (high). Show lift closures within one minute alongside warnings and avalanche level.
-- **114** — Build Nexro-style SaaS super-admin UI and tenant onboarding (high). Add central dashboard, tenant CRUD/lifecycle, readiness steps, and lifecycle history without non-MVP billing features.
+- **126** — Show Building names in Core Outlets listing (medium). Code is committed; focused test and authenticated browser verification remain pending.
 - **115** — Add automated acceptance tests for Modules D through I (high). Cover module acceptance and cross-module folio/report outcomes.
 - **116** — Document API with OpenAPI and align current project docs (high). Reconcile Laravel/Nuxt docs and resolve stale/missing handover references.
 - **117** — Implement tenant-aware VPS deploy backup and rollback (high). Deliver tenant-aware deployment, seven-day backups, tested restore, and five-release rollback.
@@ -24,7 +24,7 @@ Refresh on every work / bug / change status update.
 - **72** — Module 2 — Hotel, chalets and huts (Laravel) + minimal folio contract (high). Product code ready; migrate + `php artisan test` deferred (no setup).
 
 ### In Progress
-- **126** — Show Building names in Core Outlets listing (medium). Replace the numeric Building ID in the Outlet table with its related Building name.
+- **114** — Build Nexro-style SaaS super-admin UI and tenant onboarding (high). UUID tenant routes, temporary Owner password and forced first-login change, and DB-backed lifecycle events are in place; user browser acceptance remains pending.
 
 ### Completed
 - **125** — Run platform locally with Docker Compose (medium, 2026-11-27). Nuxt dev server runs without starting the migration/reset command; live HMR verified at `http://lab.local.mtmtp.local:3000/`.
@@ -109,10 +109,16 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
+- **BUG-TENANT-002** — SaaS onboarding does not provision tenant database or email Owner credentials (high, IN_PROGRESS, 2026-11-28)
+- **BUG-AUTH-001** — Owner provisioning can overwrite an existing staff role (high, IN_PROGRESS, 2026-11-27)
+- **BUG-APP-011** — Static Core menu fallback omits Outlets (medium, BUG_CREATED, 2026-11-27)
 - **BUG-APP-010** — Outlets listing shows building ID instead of name (medium, RETESTING, 2026-11-27)
 - **BUG-APP-006** — Dev hard refresh drops :3000 / login 502 (high, 2026-11-06)
 
 ### Verified
+- **BUG-DATA-001** — Added/backfilled required unique `saas_tenant.uuid` in central `mountain_tourism`; browser dashboard loads and shows correct counts (high, VERIFIED, 2026-11-28).
+- **BUG-ENV-004** — Nuxt dev server had a stale `[id]/edit.vue` route import; restarting `mtmtp_spa_dev` regenerated routes with `[uuid]/edit.vue`. Browser reaches the SaaS login for unauthenticated tenant-list access (medium, VERIFIED, 2026-11-28).
+- **BUG-APP-012** — SaaS login page now renders before checking the existing session; browser sees the sign-in form (high, VERIFIED, 2026-11-27).
 - **BUG-APP-009** — Owner dashboard `/api/reports/today` returned HTTP 500 (medium, VERIFIED, 2026-11-27). Fixed the invalid Builder call; browser refresh loaded metrics without the error banner.
 - **BUG-APP-008** — Staff detail URLs use persisted UUIDs (medium, VERIFIED, 2026-11-27). Local migration and browser listing/detail/edit checks passed.
 - **BUG-API-002** — Tenant validation used unsupported `Exists::connection()` calls (high, VERIFIED, 2026-11-27). Fixed and verified in item 120.
@@ -131,6 +137,10 @@ Refresh on every work / bug / change status update.
 - **BUG-APP-007** — Staff listing table renders without column header row (medium, CLOSED, 2026-11-26).
 
 ## 3. Testing
+- 2026-11-28 — Item 114 `BUG-DATA-001`: forward migration applied only to local central `mountain_tourism`; `uuid` is non-null and unique, all 1/1 tenant rows are backfilled. Browser dashboard now renders 1 total, 1 active, 0 inactive without an error. No reset; automated tests not run.
+- 2026-11-28 — Item 114 browser UI check reproduced a Vite import error for removed `[id]/edit.vue`. Restarted `mtmtp_spa_dev`; the route module now imports `[uuid]/edit.vue`, SaaS login renders, and unauthenticated `/saas/tenants` redirects to login. Tenant list acceptance still needs a Super Admin session.
+- 2026-11-28 — Item 114: central schema and registered `lab_local` tenant database were reset and re-provisioned; central admin, tenant registry, tenant migrations, and Owner fixture presence verified. Browser and automated tests are deferred to the user. Added DB-backed central activity coverage for tenant creation and profile changes; tests are authored but not run.
+- 2026-11-27 — Item 114: added Owner retry, duplicate-email protection, readiness conflict, and no-role-overwrite API test cases. Browser now renders the SaaS sign-in screen on `saas.mtmtp.local:3000`; tenant create/login acceptance awaits a Super Admin session. Focused API tests remain unrun.
 - 2026-11-27 — Item 126: eager-loaded the related Building for the Outlets list and serialized its name into the existing display cell. Regression test authored; execution could not start because `php` is not available on the Windows host. Browser verification is pending an authenticated tenant-host session.
 - 2026-11-27 — Item 125: Compose config validated; `mtmtp_spa_dev` is running and `http://lab.local.mtmtp.local:3000/` returns HTTP 200. Browser rendered the tenant-host login page and applied a source edit through HMR without a manual reload or navigation. No migrations, resets, or volume removals were run.
 - 2026-11-27 — Staff UUID routes: applied only the UUID migration to `lab_local`; 8 of 8 Staff rows have unique non-null UUIDs. Browser listing, detail, and edit routes passed. Regression tests were authored but not run under the code-only workflow.
@@ -144,6 +154,13 @@ Refresh on every work / bug / change status update.
 - 2026-11-02 — prior shared-DB isolation/auth results obsolete after tenancy change
 
 ## 4. Changes
+- 2026-11-28 — `work/changes/2026-11-28--114-auto-tenant-provisioning.md` — added per-tenant PostgreSQL provisioning/migrations, safe initial Owner setup, and credential-email delivery status. Existing databases are not reused or reset; browser acceptance remains pending.
+- 2026-11-28 — `work/changes/2026-11-28--114-fix-saas-tenant-uuid.md` — added and applied a forward-safe central UUID migration; verified constraints, backfill, and dashboard rendering.
+- 2026-11-28 — `work/changes/2026-11-28--114-central-saas-uuid-schema-mismatch.md` — traced the SaaS dashboard HTTP 500 to the missing `saas_tenant.uuid` column in the active central database; no migration/reset performed.
+- 2026-11-28 — `work/changes/2026-11-28--114-stale-nuxt-route-import.md` — restarted the local Nuxt dev container, verified current UUID route imports and SaaS login rendering, and verified BUG-ENV-004.
+- 2026-11-28 — `work/changes/2026-11-28--114-central-saas-db-activity.md` — clarified the central-versus-tenant DB audit boundary and added a central event for actual tenant-name changes; temporary credentials remain excluded.
+- 2026-11-28 — `work/changes/2026-11-28--114-local-central-tenant-db-reset.md` — reset and re-provisioned the local central database and registered lab tenant database after explicit user approval; system `postgres` database preserved.
+- 2026-11-27 — `work/changes/2026-11-27--114-saas-owner-retry-and-admin.md` — reviewed Nexro UI patterns and adapted them to the central SaaS admin, readiness/activity APIs, and safe Owner retry; sign-in screen is browser-verified, tenant create/login awaits Super Admin session.
 - 2026-11-27 — `work/changes/2026-11-27--126-outlet-building-name.md` — changed the Core Outlets listing response to show the related Building name without changing the DataTable component or CRUD IDs; verification remains pending.
 - 2026-11-27 — `work/changes/2026-11-27--125-docker-hmr.md` — added the Nuxt Docker development target, enabled bind-mount polling for HMR, and verified the requested tenant host without resetting data.
 - 2026-11-27 — `work/changes/2026-11-27--124-nexro-agent-rules-and-skills.md` — adapted Nexro workflows to the Mountain Tourism stack and synchronized 23 skills across Cursor, Claude, and OpenCode.

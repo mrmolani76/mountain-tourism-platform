@@ -128,6 +128,10 @@ export const useAuthService = () => {
     return await API.post<ApiResponse<any>>('auth/reset-password', body)
   }
 
+  const changeOwnPassword = async (body: { new_password: string; new_password_confirmation: string }) => {
+    return await API.post<ApiResponse<{ force_reset_password: boolean }>>('auth/change-password', body)
+  }
+
   const sendResetPasswordMail = async (body: { email: string }) => {
     // MVP: owners/managers reset passwords in-app; no email send yet.
     return await API.post<ApiResponse<any>>('auth/reset-password', body)
@@ -139,6 +143,7 @@ export const useAuthService = () => {
     getUserDetails,
     getMenuItems,
     resetPassword,
+    changeOwnPassword,
     sendResetPasswordMail,
   }
 }

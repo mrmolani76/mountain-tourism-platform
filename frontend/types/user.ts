@@ -78,6 +78,7 @@ export interface StaffUser {
   role: string
   role_code: string
   is_active: boolean
+  force_reset_password: boolean
   tenant_slug: string | null
 }
 

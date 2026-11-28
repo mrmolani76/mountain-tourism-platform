@@ -20,8 +20,10 @@ Route::post('auth/logout', [AuthController::class, 'logout']);
 Route::post('auth/logout/', [AuthController::class, 'logout']);
 
 Route::middleware('staff.auth')->group(function () {
-    Route::get('auth/me', [AuthController::class, 'me']);
-    Route::get('auth/me/', [AuthController::class, 'me']);
+    Route::get('auth/me', [AuthController::class, 'me'])->name('tenant.auth.me');
+    Route::get('auth/me/', [AuthController::class, 'me'])->name('tenant.auth.me.trailing');
+    Route::post('auth/change-password', [AuthController::class, 'changeOwnPassword'])->name('tenant.auth.change-password');
+    Route::post('auth/change-password/', [AuthController::class, 'changeOwnPassword'])->name('tenant.auth.change-password.trailing');
     Route::post('auth/reset-password', [AuthController::class, 'resetPassword']);
     Route::post('auth/reset-password/', [AuthController::class, 'resetPassword']);
 

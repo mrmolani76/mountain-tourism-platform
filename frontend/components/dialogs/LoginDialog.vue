@@ -26,6 +26,9 @@ const submitForm = async () => {
     await saveUser()
     nuxtApp.$toast.success(t('login_successful'))
     store.closeLoginDialog()
+
+    if (store.requiresPasswordReset)
+      await navigateTo('/change-password', { replace: true })
   }
 }
 </script>

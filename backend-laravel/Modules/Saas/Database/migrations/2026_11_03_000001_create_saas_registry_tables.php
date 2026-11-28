@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('saas_tenant', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name', 200);
             $table->string('slug', 64)->unique();
             $table->string('db_name', 128)->unique();

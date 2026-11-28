@@ -1,4 +1,9 @@
+import { IS_SAAS_ADMIN_HOST } from '@/utils/tenantHost'
+
 export default defineNuxtRouteMiddleware(async to => {
+  if (IS_SAAS_ADMIN_HOST || to.path === '/saas' || to.path.startsWith('/saas/'))
+    return
+
   // useAuthStore is an alias of authStore
   const store = useAuthStore()
 
@@ -20,6 +25,12 @@ export default defineNuxtRouteMiddleware(async to => {
   const isLoggedIn = store.isAuthenticated === true
 
   if (isLoggedIn) {
+    if (store.requiresPasswordReset && to.path !== '/change-password')
+      return navigateTo('/change-password', { replace: true })
+
+    if (!store.requiresPasswordReset && to.path === '/change-password')
+      return navigateTo('/', { replace: true })
+
     if (to.meta.unauthenticatedOnly)
       return navigateTo('/', { replace: true })
   }

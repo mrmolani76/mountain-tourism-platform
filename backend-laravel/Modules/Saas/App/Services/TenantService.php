@@ -3,27 +3,38 @@
 namespace Modules\Saas\App\Services;
 
 use App\Tenancy\TenantConnection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use Modules\Saas\App\Exceptions\TenantDatabaseAlreadyExistsException;
+use Modules\Saas\App\Exceptions\TenantDatabaseProvisioningException;
 use Modules\Core\App\Enums\StaffRole;
 use Modules\Core\App\Models\Staff;
 use Modules\Saas\App\Models\Domain;
 use Modules\Saas\App\Models\Tenant;
+use Throwable;
 
 /**
- * Central registry provision + optional Owner staff in the tenant DB.
- *
- * Physical CREATE DATABASE remains ops / `tenants:provision-local`.
- * When owner_email + owner_password are sent and the tenant DB is reachable
- * (migrations applied), an Owner row is written to core_staff (PDF §5.A).
+ * Central registry, tenant database, and optional initial Owner provisioning.
  */
 class TenantService
 {
+    public function __construct(
+        private TenantDatabaseProvisioner $databaseProvisioner
+    ) {}
+
     /**
-     * @param  array{name:string,slug:string,base_domain?:string,owner_email?:string,owner_password?:string}  $data
-     * @return array{tenant: Tenant, owner_created: bool}
+     * @param  array{name:string,slug:string,base_domain?:string,owner_email?:string}  $data
+     * @return array{
+     *     tenant: Tenant,
+     *     tenant_database_ready: bool,
+     *     tenant_migrations_ready: bool,
+     *     owner_created: bool,
+     *     owner_temporary_password: ?string
+     * }
      */
     public function register(array $data): array
     {
@@ -33,10 +44,10 @@ class TenantService
                 'name' => $data['name'],
                 'slug' => $slug,
                 'db_name' => $slug.'_local',
-                'is_active' => true,
+                'is_active' => false,
             ]);
 
-            $base = $data['base_domain'] ?? 'localhost';
+            $base = trim((string) ($data['base_domain'] ?? '')) ?: 'localhost';
             Domain::query()->create([
                 'tenant_id' => $tenant->getKey(),
                 'hostname' => $slug.'.'.$base,
@@ -46,55 +57,133 @@ class TenantService
             return $tenant->fresh(['domains']);
         });
 
-        $ownerCreated = false;
-        $email = isset($data['owner_email']) ? trim((string) $data['owner_email']) : '';
-        $password = isset($data['owner_password']) ? (string) $data['owner_password'] : '';
+        $createdDatabase = null;
 
-        if ($email !== '' && $password !== '') {
-            $ownerCreated = $this->createOwnerStaff($tenant, $email, $password);
+        try {
+            $createdDatabase = $this->databaseProvisioner->provision($tenant);
+            $email = isset($data['owner_email']) ? trim((string) $data['owner_email']) : '';
+            $temporaryPassword = $createdDatabase !== null && $email !== ''
+                ? $this->createOwnerStaff($tenant, $email)
+                : null;
+            $ownerCreated = $temporaryPassword !== null;
+
+            if ($createdDatabase !== null) {
+                $tenant->is_active = $email === '' || $ownerCreated;
+                $tenant->save();
+            }
+        } catch (Throwable $exception) {
+            if ($createdDatabase !== null) {
+                try {
+                    $this->databaseProvisioner->rollbackCreatedDatabase($createdDatabase);
+                } catch (Throwable $cleanupException) {
+                    Log::critical('Could not roll back a new tenant database after onboarding failed.', [
+                        'tenant_uuid' => $tenant->uuid,
+                        'database' => $createdDatabase,
+                        'exception_class' => get_class($cleanupException),
+                    ]);
+                }
+            }
+
+            $this->removeCentralTenant($tenant);
+
+            if (
+                $exception instanceof TenantDatabaseAlreadyExistsException
+                || $exception instanceof TenantDatabaseProvisioningException
+            ) {
+                throw $exception;
+            }
+
+            Log::error('Tenant onboarding failed after registry creation.', [
+                'tenant_uuid' => $tenant->uuid,
+                'exception_class' => get_class($exception),
+            ]);
+
+            throw new TenantDatabaseProvisioningException(
+                'Tenant onboarding failed. The new tenant was not activated.',
+                previous: $exception
+            );
         }
 
         return [
             'tenant' => $tenant,
+            'tenant_database_ready' => $createdDatabase !== null,
+            'tenant_migrations_ready' => $createdDatabase !== null,
             'owner_created' => $ownerCreated,
+            'owner_temporary_password' => $temporaryPassword,
         ];
     }
 
     /**
-     * Create (or upsert) the complex Owner in the tenant database.
-     * Returns false when the tenant DB / core_staff table is not ready yet.
+     * Create a complex Owner without changing an existing staff account.
+     * Returns null when the tenant Core schema is not ready or the email is already used.
      */
-    public function createOwnerStaff(Tenant $tenant, string $email, string $password): bool
+    public function createOwnerStaff(Tenant $tenant, string $email): ?string
     {
+        $conn = config('tenancy.connection_name', 'tenant');
+        $previousConnection = config("database.connections.{$conn}");
+
         try {
             TenantConnection::useRegistryRow($tenant);
 
-            $conn = config('tenancy.connection_name', 'tenant');
-            if (! Schema::connection($conn)->hasTable('core_staff')) {
-                Log::warning('Tenant owner not created: core_staff missing (run tenant migrate first).', [
+            $schema = Schema::connection($conn);
+            if (! $schema->hasTable('core_staff') || ! $schema->hasColumn('core_staff', 'force_reset_password')) {
+                Log::warning('Tenant owner not created: required Core schema is missing (run tenant migrate first).', [
                     'tenant' => $tenant->slug,
                 ]);
 
-                return false;
+                return null;
             }
 
-            Staff::on($conn)->updateOrCreate(
-                ['email' => strtolower($email)],
-                [
-                    'password' => Hash::make($password),
-                    'role' => StaffRole::OWNER,
-                    'is_active' => true,
-                ]
-            );
+            $normalizedEmail = strtolower(trim($email));
 
-            return true;
+            if (Staff::on($conn)->whereRaw('LOWER(email) = ?', [$normalizedEmail])->exists()) {
+                Log::warning('Tenant owner not created: email is already assigned to staff.', [
+                    'tenant' => $tenant->slug,
+                ]);
+
+                return null;
+            }
+
+            $temporaryPassword = Str::password(16);
+            $staff = (new Staff)->setConnection($conn);
+            $staff->fill([
+                'email' => $normalizedEmail,
+                'password' => Hash::make($temporaryPassword),
+                'role' => StaffRole::OWNER,
+                'is_active' => true,
+            ]);
+            $staff->forceFill(['force_reset_password' => true])->save();
+
+            return $temporaryPassword;
         }
-        catch (\Throwable $e) {
-            Log::warning('Tenant owner not created: '.$e->getMessage(), [
-                'tenant' => $tenant->getAttribute('slug'),
+        catch (Throwable $exception) {
+            Log::warning('Tenant owner could not be created.', [
+                'tenant_uuid' => $tenant->uuid,
+                'exception_class' => get_class($exception),
             ]);
 
-            return false;
+            return null;
+        }
+        finally {
+            if (is_array($previousConnection)) {
+                Config::set("database.connections.{$conn}", $previousConnection);
+                DB::purge($conn);
+            }
+        }
+    }
+
+    private function removeCentralTenant(Tenant $tenant): void
+    {
+        try {
+            DB::connection(config('tenancy.central_connection'))->transaction(function () use ($tenant): void {
+                Domain::query()->where('tenant_id', $tenant->getKey())->delete();
+                Tenant::query()->whereKey($tenant->getKey())->delete();
+            });
+        } catch (Throwable $exception) {
+            Log::critical('Could not remove a tenant registry entry after onboarding failed.', [
+                'tenant_uuid' => $tenant->uuid,
+                'exception_class' => get_class($exception),
+            ]);
         }
     }
 

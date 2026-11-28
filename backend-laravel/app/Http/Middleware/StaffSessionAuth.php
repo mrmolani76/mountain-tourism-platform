@@ -76,6 +76,21 @@ class StaffSessionAuth
             return Envelope::errorJson('error', 'Tenant inactive.', [], 401);
         }
 
+        if ((bool) $staff->getAttribute('force_reset_password')
+            && ! in_array($request->route()?->getName(), [
+                'tenant.auth.me',
+                'tenant.auth.me.trailing',
+                'tenant.auth.change-password',
+                'tenant.auth.change-password.trailing',
+            ], true)) {
+            return Envelope::errorJson(
+                'error',
+                'Change your temporary password before continuing.',
+                ['code' => 'password_change_required'],
+                403
+            );
+        }
+
         app()->instance('staff', $staff);
 
         return $next($request);

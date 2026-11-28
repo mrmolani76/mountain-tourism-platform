@@ -4,14 +4,14 @@
 > Keep English in this file. Short bullets only.
 
 ## Current focus
-- **126** Show the related Building name in the Core Outlets listing instead of its numeric ID; BUG-APP-010.
+- **126** Outlets Building-name display is implemented and committed; focused test and authenticated browser verification remain pending under `work/todo/`.
 - **105** Full MVP PDF versus project audit completed at `docs/MVP_SCOPE_AUDIT.md`. Treat PDF as contract and mark unverified work honestly.
 - **123** Dashboard `/api/reports/today` HTTP 500 fixed and browser-verified (BUG-APP-009). Regression test authored but not run under the code-only workflow.
 - **103** Manual browser acceptance is next in `work/todo/`; Staff UUID migration is applied to `lab_local`, and listing/detail/edit routes passed. Broader auth and module checks remain.
 - **104** Staff listing header bug is fixed and browser-verified using Nexro's `fields` + `default_order` listing pattern.
 - **Fullstack product code** (Laravel API + Nuxt UI together). No Docker/VPS/CI/env/setup unless user asks.
 - **Tenancy = DB-per-tenant**; Host/`Domain` resolve. Prefer local `{slug}.mtmp.local` (`docs/LOCAL_MTMP_SETUP.md`).
-- **WIP limit = 1**. Item **126** is active; preserve tenant data and require explicit authorization before any migration or reset. Item **90** MySQL switch remains pending.
+- **WIP limit = 1**. Item **114** is active for Nexro-style temporary Owner onboarding and DB-backed SaaS lifecycle logs. Central `mountain_tourism` and `lab_local` were reset with approval on 2026-11-28; `postgres` was preserved. Require explicit authorization before future resets. Item **90** MySQL switch remains pending.
 - New modules: always `php artisan module:make <Name> --api`. One migration per table.
 
 ## Next suggested pickups (kanban order)
@@ -62,7 +62,7 @@ Notifications: every todo completion mails anhali736@gmail.com (`scripts/todo-no
 - **01–17** — foundation, tenancy, auth, core config, docs
 
 ## Blocked / waiting on user
-- (none)
+- **114** — Compare Nexro's temporary Owner credentials/first-login flow and implement the requested matching behavior. User will browser-test on the freshly reset local setup.
 
 ## Do not forget
 - Folder = status; WIP = 1

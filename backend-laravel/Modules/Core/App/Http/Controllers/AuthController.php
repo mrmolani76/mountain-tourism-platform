@@ -7,6 +7,7 @@ use App\Support\Http\Envelope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\App\Http\Requests\ChangeOwnPasswordRequest;
 use Modules\Core\App\Http\Requests\LoginRequest;
 use Modules\Core\App\Http\Requests\ResetPasswordRequest;
 use Modules\Core\App\Models\AuditEvent;
@@ -71,6 +72,43 @@ class AuthController extends Controller
         return response()->json($this->mePayload($staff, $tenant), 200);
     }
 
+    public function changeOwnPassword(ChangeOwnPasswordRequest $request): JsonResponse
+    {
+        $staff = app('staff');
+        $newPassword = $request->validated('new_password');
+
+        if (! (bool) $staff->getAttribute('force_reset_password')) {
+            return Envelope::errorJson('error', 'A temporary password change is not required.', [], 409);
+        }
+
+        if (Hash::check($newPassword, (string) $staff->getAttribute('password'))) {
+            return Envelope::errorJson(
+                'error',
+                'Choose a password different from your temporary password.',
+                ['new_password' => ['The new password must be different from the temporary password.']],
+                422
+            );
+        }
+
+        $staff->setAttribute('password', Hash::make($newPassword));
+        $staff->setAttribute('force_reset_password', false);
+        $staff->save();
+
+        CoreAudit::record(
+            AuditEvent::ACTION_UPDATE,
+            'staff',
+            (int) $staff->getKey(),
+            reason: 'temporary_password_changed',
+            newValues: ['id' => $staff->getKey(), 'email' => $staff->email],
+        );
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password updated.',
+            'force_reset_password' => false,
+        ], 200);
+    }
+
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         if ($denied = StaffAuthz::denyUnlessManagerPlus()) {
@@ -116,6 +154,7 @@ class AuthController extends Controller
             'role' => $staff->roleDisplay(),
             'role_code' => $staff->getAttribute('role'),
             'is_active' => (bool) $staff->getAttribute('is_active'),
+            'force_reset_password' => (bool) $staff->getAttribute('force_reset_password'),
             'tenant_slug' => $tenant->getAttribute('slug'),
             'all_outlets' => $allOutlets,
             'outlet_ids' => $outletIds,

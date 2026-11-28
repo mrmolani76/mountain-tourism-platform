@@ -20,7 +20,7 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 | 111 | Connect reservation departures to transport drop-offs | high | G-transport | backend | M |
 | 112 | Implement approved OSM maps for locations and routes | high | G-transport | frontend | L |
 | 113 | Build public weather lobby screen with lift status | high | H-weather | frontend | M |
-| 114 | Build Nexro-style SaaS super-admin UI and tenant onboarding | high | A-core | backend/frontend | L |
+| 126 | Show Building names in Core Outlets listing | medium | A-core | backend | S |
 | 115 | Add automated acceptance tests for Modules D through I | high | docs | tests | L |
 | 116 | Document API with OpenAPI and align current project docs | high | docs | docs | L |
 | 117 | Implement tenant-aware VPS deploy backup and rollback | high | infra | devops | L |
@@ -35,7 +35,7 @@ See `work/phases/`. **Current focus: fullstack** (Laravel API + Nuxt UI together
 
 | ID | Title | Priority | Module | Area | Effort |
 |----|-------|----------|--------|------|--------|
-| 126 | Show Building names in Core Outlets listing | medium | A-core | backend | S |
+| 114 | Build Nexro-style SaaS super-admin UI and tenant onboarding | high | A-core | backend/frontend | L |
 
 ## Completed
 

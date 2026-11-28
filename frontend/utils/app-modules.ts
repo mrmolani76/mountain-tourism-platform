@@ -287,6 +287,11 @@ const coreNavigation: Array<NavLink> = [
     icon: { icon: 'tabler-building' },
   },
   {
+    title: 'Outlets',
+    to: { path: '/outlets' },
+    icon: { icon: 'tabler-building-store' },
+  },
+  {
     title: 'Seasons',
     to: { path: '/seasons' },
     icon: { icon: 'tabler-calendar' },

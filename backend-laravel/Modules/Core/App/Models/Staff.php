@@ -55,6 +55,7 @@ class Staff extends BaseModel
 
     protected $casts = [
         'is_active' => 'boolean',
+        'force_reset_password' => 'boolean',
         'last_login' => 'datetime',
         'created_at' => 'datetime',
     ];

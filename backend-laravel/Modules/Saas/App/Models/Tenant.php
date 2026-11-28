@@ -3,6 +3,7 @@
 namespace Modules\Saas\App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Support\Str;
 
 class Tenant extends BaseModel
 {
@@ -19,6 +20,13 @@ class Tenant extends BaseModel
     protected $fillable = ['name', 'slug', 'db_name', 'is_active'];
 
     protected $casts = ['is_active' => 'boolean'];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $tenant): void {
+            $tenant->setAttribute('uuid', $tenant->getAttribute('uuid') ?: (string) Str::uuid());
+        });
+    }
 
     public function domains()
     {

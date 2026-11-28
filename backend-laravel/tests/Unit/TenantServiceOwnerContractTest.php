@@ -8,7 +8,7 @@ use ReflectionMethod;
 
 /**
  * Documents Owner-on-create contract without hitting a live DB.
- * Full createOwnerStaff path is exercised on setup machine via provision + POST /api/saas/tenants.
+ * The owner creation and conflict paths are covered by SaasRegistryTest.
  */
 class TenantServiceOwnerContractTest extends TestCase
 {

@@ -46,6 +46,11 @@ const onSubmit = async () => {
     const user = await store.saveUser()
 
     if (user) {
+      if (store.requiresPasswordReset) {
+        await navigateTo('/change-password', { replace: true })
+        return
+      }
+
       const target = route.query.to ? String(route.query.to) : '/'
       const safeTarget = target === '/login' || target.startsWith('/login?') ? '/' : target
 

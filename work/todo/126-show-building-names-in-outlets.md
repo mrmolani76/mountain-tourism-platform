@@ -2,7 +2,7 @@
 title: Show Building names in Core Outlets listing
 id: 126
 priority: medium
-status: inprogress
+status: todo
 milestone: none
 module: A-core
 area: backend
@@ -53,7 +53,11 @@ The user clarified: “id nhi name show karo isme”. Staff need to identify the
 ---
 
 ## Return to Pending Log (when work stops midway)
-
+- **Returned by**: Copilot
+- **Date**: 2026-11-27
+- **Reason**: The Building-name listing change is committed, but its focused regression test could not run because PHP is unavailable on the Windows host, and authenticated browser verification is still pending. The user asked to prioritize completing Module A Core.
+- **Next step**: Resume after the Module A SaaS admin work, then run the focused API test or authenticated tenant-host browser check.
+- **Change report**: `work/changes/2026-11-27--126-outlet-building-name.md`
 ---
 
 ## Completion Log (when the work is complete)
