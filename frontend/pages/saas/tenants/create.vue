@@ -32,6 +32,19 @@ const slugRule = (value: string) =>
 const ownerEmailRule = (value: string) =>
   !value || emailValidator(value) || 'Enter a valid email.'
 
+const tenantDomainSyncMessage = computed(() => {
+  switch (tenant.value?.tenant_domain_sync_status) {
+    case 'synced':
+      return 'Added to the configured local hosts file.'
+    case 'not_applicable':
+      return 'Use public DNS for this environment.'
+    case 'permission_required':
+      return 'Hosts file needs write permission. Run php artisan hosts:sync with elevated access.'
+    default:
+      return 'Could not sync hosts. Check the hosts file path and write access.'
+  }
+})
+
 const save = async () => {
   const validation = await formRef.value?.validate()
   if (!validation?.valid || saving.value)
@@ -143,6 +156,10 @@ const copyTemporaryPassword = async () => {
         <VListItem
           title="Tenant migrations"
           :subtitle="tenant.tenant_migrations_ready ? 'Core schema is ready' : 'Not complete'"
+        />
+        <VListItem
+          title="Tenant domain"
+          :subtitle="tenantDomainSyncMessage"
         />
       </VList>
       <div

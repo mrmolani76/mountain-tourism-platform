@@ -113,6 +113,27 @@ php artisan hosts:sync --dry-run
 sudo php artisan hosts:sync
 ```
 
+#### Automatic SaaS tenant-domain access
+
+When a complex is created from the SaaS UI in `APP_ENV=local`, onboarding runs
+`php artisan hosts:sync` after database and Owner provisioning. The create result
+shows whether the host file was synced or needs write permission. Registered
+tenant domains are also added to Sanctum's stateful-host list on Laravel startup,
+so cookie login works on newly created tenant hosts without restarting Laravel.
+
+For Docker Desktop on Windows, create or update the **repository-root** `.env`
+(not `backend-laravel/.env`) with:
+
+```dotenv
+HOSTS_FILE_SOURCE=C:/Windows/System32/drivers/etc/hosts
+```
+
+The dev Compose file bind-mounts that file at `/etc/hosts` in Laravel. Recreate
+the Laravel service after changing the mount. The container needs permission to
+write the mounted file. On Linux, the default `/etc/hosts` source is retained.
+Production skips local host-file syncing and still requires public DNS for each
+tenant domain.
+
 Remove managed block:
 
 ```bash
@@ -152,7 +173,8 @@ Optional Apache: see `APACHE_LOCAL_SETUP.md` (proxy or DocumentRoot). Wildcard v
 | Nexro | Mountain Tourism |
 |-------|------------------|
 | `php artisan hosts:sync` | Same: `backend-laravel` → `hosts:sync` |
-| `SyncHostsOnDomainChange` listener | Not wired yet (optional later) |
+| Domain-created sync listener | Tenant onboarding runs `hosts:sync` after successful DB/Owner provisioning |
+| `sanctum:sync` registered hosts | Registered tenant hosts merge into Sanctum stateful config at Laravel startup |
 | Docker `HOSTS_FILE_SOURCE` | Not used (no Docker default path) |
 | Manual hosts seed | `scripts/mtmp-hosts-sync.sh` |
 

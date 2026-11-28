@@ -25,6 +25,8 @@ return [
         // Sanctum::currentRequestHost(),
     ))),
 
+    'frontend_port' => (int) env('SANCTUM_FRONTEND_PORT', 3000),
+
     /*
     |--------------------------------------------------------------------------
     | Sanctum Guards

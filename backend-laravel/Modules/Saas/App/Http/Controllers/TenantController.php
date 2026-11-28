@@ -130,6 +130,7 @@ class TenantController extends Controller
         $payload['owner_created'] = $result['owner_created'];
         $payload['owner_temporary_password'] = $result['owner_temporary_password'];
         $payload['owner_email_delivery_status'] = $deliveryStatus;
+        $payload['tenant_domain_sync_status'] = $result['tenant_domain_sync_status'];
         $this->lifecycle->record($tenant, 'tenant_created', [
             'tenant_database_ready' => $result['tenant_database_ready'],
             'tenant_migrations_ready' => $result['tenant_migrations_ready'],
@@ -137,6 +138,7 @@ class TenantController extends Controller
             'temporary_password_generated' => $result['owner_temporary_password'] !== null,
             'force_reset_password' => $result['owner_created'],
             'owner_email_delivery_status' => $deliveryStatus,
+            'tenant_domain_sync_status' => $result['tenant_domain_sync_status'],
         ]);
 
         return response()->json($payload, 201);

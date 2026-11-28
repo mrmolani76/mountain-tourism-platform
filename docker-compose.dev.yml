@@ -52,11 +52,15 @@ services:
       TENANCY_CENTRAL_HOSTS: saas.mtmtp.local
       CENTRAL_DOMAIN: saas.mtmtp.local
       SANCTUM_STATEFUL_DOMAINS: localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,lab.local.mtmtp.local,lab.local.mtmtp.local:3000,saas.mtmtp.local,saas.mtmtp.local:3000
+      SANCTUM_FRONTEND_PORT: "3000"
     ports:
       - "127.0.0.1:8010:8000"
     volumes:
       - ./backend-laravel:/app
       - ./backend-laravel/.env.docker:/app/.env
+      # On Windows, set HOSTS_FILE_SOURCE in the repository-root .env to the
+      # Windows hosts file so hosts:sync updates the browser-visible host file.
+      - ${HOSTS_FILE_SOURCE:-/etc/hosts}:/etc/hosts:rw
       # Windows bind mount makes PHP read thousands of vendor files over the
       # slow 9p/virtiofs bridge (~40s per artisan boot -> SPA API timeouts).
       # Keep vendor on the container's native FS (same pattern as nexro).

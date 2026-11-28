@@ -11,6 +11,7 @@ export interface SaasTenant {
   tenant_database_ready?: boolean
   tenant_migrations_ready?: boolean
   owner_email_delivery_status?: 'not_requested' | 'not_sent' | 'not_configured' | 'sent' | 'failed'
+  tenant_domain_sync_status?: 'synced' | 'permission_required' | 'failed' | 'not_applicable'
 }
 
 export interface SaasTenantCreateResponse extends SaasTenant {
@@ -18,6 +19,7 @@ export interface SaasTenantCreateResponse extends SaasTenant {
   tenant_database_ready: boolean
   tenant_migrations_ready: boolean
   owner_email_delivery_status: 'not_requested' | 'not_sent' | 'not_configured' | 'sent' | 'failed'
+  tenant_domain_sync_status: 'synced' | 'permission_required' | 'failed' | 'not_applicable'
 }
 
 export interface SaasTenantPage {

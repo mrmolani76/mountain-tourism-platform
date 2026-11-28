@@ -23,7 +23,8 @@ use Throwable;
 class TenantService
 {
     public function __construct(
-        private TenantDatabaseProvisioner $databaseProvisioner
+        private TenantDatabaseProvisioner $databaseProvisioner,
+        private TenantDomainSyncService $domainSync
     ) {}
 
     /**
@@ -33,7 +34,8 @@ class TenantService
      *     tenant_database_ready: bool,
      *     tenant_migrations_ready: bool,
      *     owner_created: bool,
-     *     owner_temporary_password: ?string
+     *     owner_temporary_password: ?string,
+     *     tenant_domain_sync_status: 'synced'|'permission_required'|'failed'|'not_applicable'
      * }
      */
     public function register(array $data): array
@@ -104,12 +106,16 @@ class TenantService
             );
         }
 
+        $primaryHost = (string) $tenant->domains->firstWhere('is_primary', true)?->hostname;
+        $domainSyncStatus = $this->domainSync->syncLocalHosts($primaryHost);
+
         return [
             'tenant' => $tenant,
             'tenant_database_ready' => $createdDatabase !== null,
             'tenant_migrations_ready' => $createdDatabase !== null,
             'owner_created' => $ownerCreated,
             'owner_temporary_password' => $temporaryPassword,
+            'tenant_domain_sync_status' => $domainSyncStatus,
         ];
     }
 

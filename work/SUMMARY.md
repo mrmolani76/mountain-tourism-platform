@@ -2,7 +2,7 @@
 
 Refresh on every work / bug / change status update.
 
-**Focus:** Item **114** is active for Nexro-style SaaS onboarding. SaaS admin login and local tenant database/Core/Owner provisioning are browser-verified; Owner email and tenant-domain login remain blocked by missing local mail transport and hostname resolution.
+**Focus:** Item **114** is active for Nexro-style SaaS onboarding. Tenant database/Core/Owner provisioning is browser-verified; tenant-domain login is blocked because Windows hosts mapping is not configured/applied, and Owner email needs a delivery-capable mailer.
 
 ## 1. Work
 
@@ -109,7 +109,7 @@ Refresh on every work / bug / change status update.
 ## 2. Bugs
 
 ### Open
-- **BUG-TENANT-002** — SaaS onboarding does not provision tenant database or email Owner credentials (high, RETESTING, 2026-11-28)
+- **BUG-TENANT-002** — SaaS tenant onboarding leaves email delivery and domain login unconfigured (high, IN_PROGRESS, 2026-11-28)
 - **BUG-AUTH-001** — Owner provisioning can overwrite an existing staff role (high, IN_PROGRESS, 2026-11-27)
 - **BUG-APP-011** — Static Core menu fallback omits Outlets (medium, BUG_CREATED, 2026-11-27)
 - **BUG-APP-010** — Outlets listing shows building ID instead of name (medium, RETESTING, 2026-11-27)
@@ -139,7 +139,8 @@ Refresh on every work / bug / change status update.
 
 ## 3. Testing
 - 2026-11-28 — Item 114 / BUG-AUTH-002: observed CSRF bootstrap at ~39s and login at ~34s, exceeding the old 30s timeout. After the 60s timeout and one-time HTTP 419 recovery, browser login redirects to `/saas` and confirms the platform admin. Initial 20s HTTP probes timed out, but later longer browser waits completed tenant creation and readiness checks below.
-- 2026-11-28 — Item 114 / BUG-TENANT-002: created `copilot-qa-20261128-0655` through the SaaS UI. Tenant database, Core migrations, active Owner, and central `Complex created` activity report ready. Email status is `not_configured` (default `log` mailer); domain `copilot-qa-20261128-0655.mtmp.local` cannot resolve locally and the hosts-file write was denied. Owner domain login and email delivery are not verified; no existing tenant/database was touched.
+- 2026-11-28 — Item 114 / BUG-TENANT-002: created `copilot-qa-20261128-0655` through the SaaS UI. Tenant database, Core migrations, active Owner, and central `Complex created` activity report ready. Email status is `not_configured` (default `log` mailer); the domain could not resolve and Windows hosts-file writing was denied. Follow-up Nexro-style implementation now triggers local hosts sync during onboarding, merges registered hosts into Sanctum, and supports a Windows hosts-file bind mount; runtime retest remains pending. No existing tenant/database was touched.
+- 2026-11-28 — Item 114 / BUG-TENANT-002: user's screenshot re-confirms `ERR_NAME_NOT_RESOLVED` for `copilot-qa-20261128-0655.mtmp.local`. Windows hosts has no alias and repository-root `.env` is absent, so Compose still has not been configured/recreated with Nexro-style Windows hosts-file bind mount. This is DNS failure before tenant login/API; no tenant data was changed.
 - 2026-11-28 — Item 114 `BUG-DATA-001`: forward migration applied only to local central `mountain_tourism`; `uuid` is non-null and unique, all 1/1 tenant rows are backfilled. Browser dashboard now renders 1 total, 1 active, 0 inactive without an error. No reset; automated tests not run.
 - 2026-11-28 — Item 114 browser UI check reproduced a Vite import error for removed `[id]/edit.vue`. Restarted `mtmtp_spa_dev`; the route module now imports `[uuid]/edit.vue`, SaaS login renders, and unauthenticated `/saas/tenants` redirects to login. Tenant list acceptance still needs a Super Admin session.
 - 2026-11-28 — Item 114: central schema and registered `lab_local` tenant database were reset and re-provisioned; central admin, tenant registry, tenant migrations, and Owner fixture presence verified. Browser and automated tests are deferred to the user. Added DB-backed central activity coverage for tenant creation and profile changes; tests are authored but not run.
@@ -159,6 +160,8 @@ Refresh on every work / bug / change status update.
 ## 4. Changes
 - 2026-11-28 — `work/changes/2026-11-28--114-saas-login-csrf-recovery.md` — increased the request timeout and added Nexro-style XSRF refresh/one retry; browser SaaS login verified.
 - 2026-11-28 — `work/changes/2026-11-28--114-browser-tenant-onboarding.md` — browser-created a unique tenant; database, migrations, Owner, readiness, and lifecycle event verified. Tenant-domain login and credential email remain blocked by local host resolution and mail transport configuration.
+- 2026-11-28 — `work/changes/2026-11-28--114-nexro-style-domain-sync.md` — wired successful SaaS onboarding to local `hosts:sync`, added registered tenant hosts to Sanctum stateful configuration, and configured the optional Windows hosts-file mount. Runtime verification is pending.
+- 2026-11-28 — `work/changes/2026-11-28--114-nexro-domain-resolution-retest.md` — compared the screenshot and local host state with Nexro; root cause is missing root `.env` bind-mount configuration and no applied Windows hosts mapping.
 - 2026-11-28 — `work/changes/2026-11-28--114-auto-tenant-provisioning.md` — added per-tenant PostgreSQL provisioning/migrations, safe initial Owner setup, and credential-email delivery status. Existing databases are not reused or reset; browser acceptance remains pending.
 - 2026-11-28 — `work/changes/2026-11-28--114-fix-saas-tenant-uuid.md` — added and applied a forward-safe central UUID migration; verified constraints, backfill, and dashboard rendering.
 - 2026-11-28 — `work/changes/2026-11-28--114-central-saas-uuid-schema-mismatch.md` — traced the SaaS dashboard HTTP 500 to the missing `saas_tenant.uuid` column in the active central database; no migration/reset performed.
